@@ -1,0 +1,13 @@
+{
+  "$schema": "https://www.skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Personal",
+      "description": "Skills pessoais mantidas neste repositorio.",
+      "skills": [
+        "write-handoff"
+      ]
+    }
+  ]
+}
