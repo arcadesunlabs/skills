@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "new": "node scripts/new-skill.mjs",
+    "configure": "node scripts/configure.mjs",
     "validate": "node scripts/validate-skills.mjs",
     "skills:list": "npx skills add . --list",
     "skills:add:local": "npx skills add ."

@@ -2,6 +2,8 @@
 
 Use this reference during **Step 4 — Scope sizing** and when finalizing an epic.
 
+Load [workflow-config](../workflow-config/SKILL.md) first. Use `{cardKey}`, `{cardKeyPrefix}`, and `{docs.root}` from config below.
+
 ## When to decompose
 
 Score the request against these signals. **If 2 or more fire**, treat the work as an **epic** (multi-card), not a single implementation task.
@@ -11,7 +13,7 @@ Score the request against these signals. **If 2 or more fire**, treat the work a
 | Files to create or modify       | > 8                                                          |
 | Independent user-facing slices  | ≥ 2 (each could ship as its own PR)                          |
 | `write-plan` phases anticipated | > 3 with weak coupling between them                          |
-| Layers touched                  | web UI + Supabase migration/RPC in one task                  |
+| Layers touched                  | UI + data/schema migration in one task                      |
 | Testable acceptance criteria    | > 8 independent scenarios                                    |
 | Estimated agent session         | > 1 focused session (~2–3 h)                                 |
 
@@ -30,7 +32,7 @@ Each slice must have:
 - One-sentence objective
 - 3–5 testable acceptance criteria
 - Explicit **out of scope** for that slice
-- **Depends on** column (other `PM-XXX` or "none")
+- **Depends on** column (other `{cardKey}` or "none")
 - Target PR size: reviewable in one pass (~≤ 400 lines diff when possible)
 
 ## Decomposition proposal template
@@ -40,32 +42,26 @@ Present this table to the user **before** writing the full spec. Revise until ap
 | Order | Proposed title | Objective | Depends on | Out of scope (this slice) |
 | ----- | -------------- | --------- | ---------- | ------------------------- |
 | 1     | …              | …         | none       | …                         |
-| 2     | …              | …         | PM-???     | …                         |
+| 2     | …              | …         | {cardKey}? | …                         |
 
-Ask explicitly:
+Ask explicitly (adapt tracker name from config):
 
-> "O escopo parece grande para um único card/PR. Quer que eu trate `PM-{parent}` como épico e crie cards filhos no Trello com esta decomposição?"
+> "The scope looks large for a single card/PR. Should I treat `{parentCardKey}` as an epic and create child cards on the task tracker with this decomposition?"
 
-**Never create Trello cards without user approval.**
+**Never create tracker cards without user approval.**
 
 ## Epic vs single-slice outcomes
 
-| Outcome          | Parent card (`PM-{parent}`)            | Child cards                               | Repo artifacts                         | Next step                                     |
-| ---------------- | -------------------------------------- | ----------------------------------------- | -------------------------------------- | --------------------------------------------- |
-| **Single slice** | Implementation card                    | —                                         | `01-spec.md` + `02-tech.md` only       | `write-plan` → `write-finalize-docs`          |
-| **Epic**         | Tracker — spec, decisions, child links | One per slice in **A Fazer (Priorizado)** | `01-spec.md` (+ `02-tech.md` per slice)| **STOP** — pick child; then finalize per slice |
+| Outcome          | Parent card                    | Child cards                          | Repo artifacts                          | Next step                                     |
+| ---------------- | ------------------------------ | ------------------------------------ | --------------------------------------- | --------------------------------------------- |
+| **Single slice** | Implementation card            | —                                    | `01-spec.md` + `02-tech.md` only        | `write-plan` → `write-finalize-docs`          |
+| **Epic**         | Tracker — spec, child links    | One per slice in **todo** list       | `01-spec.md` (+ `02-tech.md` per slice) | **STOP** — pick child; finalize per slice     |
 
-## Trello conventions (epic flow)
+## Tracker conventions (epic flow)
 
-Board: [Pomar](https://trello.com/b/RMO2g1vS/pomar) — ID `6a35aaa5887da4dae7ce02d5`
+When `taskTracker.provider` is `trello`, use board and lists from `skills.config.json` → `taskTracker.trello`.
 
-| List                 | ID                         | Use                                |
-| -------------------- | -------------------------- | ---------------------------------- |
-| A Fazer (Priorizado) | `6a35aaa5887da4dae7ce02d2` | New child implementation cards     |
-| Em Andamento         | `6a35aaa5887da4dae7ce02cf` | Parent epic while active           |
-| Backlog              | `6a35aaa5887da4dae7ce02d1` | Optional — lower-priority children |
-
-Follow [trello-workflow](../trello-workflow/SKILL.md) for MCP tool usage, card lookup, and branch rules.
+Follow [task-workflow](../task-workflow/SKILL.md) for MCP tool usage, card lookup, and branch rules.
 
 ### Parent card description (after children exist)
 
@@ -76,34 +72,32 @@ Follow [trello-workflow](../trello-workflow/SKILL.md) for MCP tool usage, card l
 
 ## Spec
 
-`docs/<domain>/<feature>/01-spec.md`
+`{docs.root}/<domain>/<feature>/01-spec.md`
 
 ## Child cards
 
-| PM      | Title   | Status  |
+| Key     | Title   | Status  |
 | ------- | ------- | ------- |
-| PM-193  | {title} | backlog |
-| PM-194  | {title} | backlog |
+| {cardKey} | {title} | backlog |
 
 ## Implementation order
 
-1. PM-193 — {why first}
-2. PM-194 — depends on PM-193
+1. {cardKey} — {why first}
 ```
 
-Update via `trello_update_card` using the parent `cardId` from search.
+Update via tracker MCP (e.g. `trello_update_card`) using the parent `cardId` from search.
 
 ### Child card description template
 
 ```markdown
 ## Parent epic
 
-PM-{parent} — {parent title}
+{parentCardKey} — {parent title}
 {parent.url from API}
 
 ## Spec section
 
-See `docs/<domain>/<feature>/01-spec.md` — slice "{slice name}"
+See `{docs.root}/<domain>/<feature>/01-spec.md` — slice "{slice name}"
 
 ## Scope
 
@@ -120,16 +114,16 @@ See `docs/<domain>/<feature>/01-spec.md` — slice "{slice name}"
 
 ## Depends on
 
-PM-{other} or none
+{otherCardKey} or none
 ```
 
-Create via `trello_add_card` on list `6a35aaa5887da4dae7ce02d2`. After creation, search the new card to obtain `idShort`, `url`, and `id` — never invent `PM-*` numbers.
+Create via tracker MCP on the **todo** list ID from config. After creation, search the new card for real key, `url`, and `id` — never invent numbers.
 
 ## Starting implementation on a child
 
 When the user picks a slice:
 
-1. Invoke [trello-workflow](../trello-workflow/SKILL.md) for the **child** `PM-XXX` (branch + confirm card).
+1. Invoke [task-workflow](../task-workflow/SKILL.md) for the **child** `{cardKey}` (branch + confirm card).
 2. Read the child card description (scope + acceptance criteria) and epic `01-spec.md` for shared context.
 3. Invoke [write-plan](../write-plan/SKILL.md) path A′ — scope is **that slice only**; do not re-spec the whole epic.
-4. Parent branch may hold only spec/skills/docs commits; web code commits belong on child branches.
+4. Parent branch may hold only spec/skills/docs commits; application code commits belong on child branches.

@@ -7,12 +7,12 @@ description: Finalize feature documentation after implementation — consolidate
 
 **Announce at start:** "I'm using the write-finalize-docs skill."
 
-**When:** Always the **last documentation step** after implementation is complete (tests pass, code review done if applicable). Run before merge or when closing a `PM-XXXX` slice.
+**When:** Always the **last documentation step** after implementation is complete (tests pass, code review done if applicable). Run before merge or when closing a `{cardKey}` slice.
 
-**Goal:** `docs/<domain>/<feature>/` contains **only**:
+**Goal:** `{docs.root}/<domain>/<feature>/` contains **only**:
 
 ```
-docs/<domain>/<feature>/
+{docs.root}/<domain>/<feature>/
 ├── 01-spec.md   # Product spec — no code snippets
 └── 02-tech.md   # Technical reference — paths, APIs, code OK
 ```
@@ -23,9 +23,10 @@ All other files in that folder (`03-plan.md`, `04-tasks.md`, `handoff.md`, draft
 
 ## Prerequisites
 
+- Load [workflow-config](../workflow-config/SKILL.md)
 - Implementation matches (or intentionally updates) the spec
-- `npm run lint` and relevant tests pass
-- You know the feature folder path (`docs/<domain>/<feature>/`)
+- `code.lintCommand` and relevant tests pass (from config)
+- You know the feature folder path (`{docs.root}/<domain>/<feature>/`)
 
 If the folder does not exist but the work was tracked, create the folder and both files from scratch using git diff + [write-feature-spec](../write-feature-spec/SKILL.md) / [write-plan REFERENCE](../write-plan/REFERENCE.md#02-techmd-sections-during-implementation).
 
@@ -35,7 +36,7 @@ If the folder does not exist but the work was tracked, create the folder and bot
 
 ### Step 1 — Inventory
 
-List every file under `docs/<domain>/<feature>/`:
+List every file under `{docs.root}/<domain>/<feature>/`:
 
 | File | Action |
 |------|--------|
@@ -80,7 +81,7 @@ Use this skeleton (adapt sections; omit empty):
 
 ## Status
 
-- Shipped in {PM-XXX} / merged {PR link if known}
+- Shipped in {cardKey} / merged {PR link if known}
 - Entry point: {page or trigger}
 - Route: {path if applicable}
 
@@ -101,9 +102,8 @@ Use this skeleton (adapt sections; omit empty):
 ## Validation
 
 ```bash
-cd web
-npm run lint
-npm test -- {relevant suites}
+{code.lintCommand from config}
+{code.testCommand from config}
 ```
 
 - [ ] {AC-derived manual checks}
@@ -141,7 +141,7 @@ Finalize docs for {feature}: keep 01-spec and 02-tech only.
 
 Tell the user:
 
-> Docs finalized at `docs/<domain>/<feature>/` — only `01-spec.md` and `02-tech.md` remain.
+> Docs finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-tech.md` remain.
 
 ---
 
@@ -149,7 +149,7 @@ Tell the user:
 
 When multiple slices share one epic folder:
 
-- **Parent epic folder** (`docs/<domain>/<epic>/`): keep epic-level `01-spec.md`; `02-tech.md` covers shared architecture; add `## Epic slices` with delivered slices and `PM-XXX` keys.
+- **Parent epic folder** (`{docs.root}/<domain>/<epic>/`): keep epic-level `01-spec.md`; `02-tech.md` covers shared architecture; add `## Epic slices` with delivered slices and `{cardKey}` entries.
 - **Child slice folder** (if separate, e.g. `history-collapsible/`): finalize **that** folder independently when the slice merges.
 - Remove `04-tasks.md` from the epic folder once all slices are delivered or the table is captured in `02-tech.md`.
 

@@ -1,22 +1,22 @@
 ---
 name: write-plan
-description: Plan and implement non-trivial Pomar Web work — map flow, architecture, files, execute in phased order, and review. Use after task inception or after brainstorm/spec.
+description: Plan and implement non-trivial feature work — map flow, architecture, files, execute in phased order, and review. Use after task inception or after brainstorm/spec.
 ---
 
 # Write Plan
 
 **Announce at start:** "I'm using the write-plan skill."
 
-Plan **and** implement non-trivial Pomar Web work. Two modes:
+Plan **and** implement non-trivial feature work. Two modes:
 
 | Mode             | What it does                                                                  |
 | ---------------- | ----------------------------------------------------------------------------- |
 | **Write**        | Map scope, architecture, files, phases; save artifacts; get user confirmation |
 | **Read/Execute** | Implement phase by phase from the saved plan                                  |
 
-**Prerequisite:** Trello card `PM-XXXX` and branch named after the card when work is tracked — use [trello-workflow](../trello-workflow/SKILL.md) first.
+**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). When `taskTracker.enabled`, use tracked card `{cardKeyPattern}` and branch per config — run [task-workflow](../task-workflow/SKILL.md) first.
 
-**Artifacts:** `docs/<domain>/<feature>/03-plan.md` + updates to `02-tech.md` (see [CLAUDE.md](../../../CLAUDE.md))
+**Artifacts:** `{docs.root}/<domain>/<feature>/03-plan.md` + updates to `02-tech.md` (see `project.conventionsFile` in config)
 
 **Reference:** templates, tables, and per-phase details → [REFERENCE.md](REFERENCE.md)
 
@@ -27,12 +27,12 @@ Plan **and** implement non-trivial Pomar Web work. Two modes:
 | Path   | When                                                                              | Input                                                      |
 | ------ | --------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | **A**  | After `mode-brainstorm` → `write-feature-spec`                                    | `01-spec.md`                                               |
-| **A′** | Epic child slice — after user picks a child `PM-XXX` from the parent Trello card | `01-spec.md` + child card description (current slice only) |
+| **A′** | Epic child slice — after user picks a child `{cardKey}` from the parent tracker card | `01-spec.md` + child card description (current slice only) |
 | **B**  | No spec — direct implementation task                                              | Conversation                                               |
 
-**Epic scoping (path A′):** Fetch the child card via Trello MCP. Plan and implement **only** the slice matching the current branch's `PM-XXX`, using the child card description for scope and acceptance criteria. Reference the epic `01-spec.md` for shared context; do not plan phases for other slices.
+**Epic scoping (path A′):** Fetch the child card via task tracker MCP/CLI. Plan and implement **only** the slice matching the current branch's `{cardKey}`, using the child card description for scope and acceptance criteria. Reference the epic `01-spec.md` for shared context; do not plan phases for other slices.
 
-Skip this skill for trivial tasks (typo, single-line fix) — implement per [CLAUDE.md](../../../CLAUDE.md).
+Skip this skill for trivial tasks (typo, single-line fix) — implement per `project.conventionsFile` in config.
 
 ---
 
@@ -58,14 +58,14 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 
 | Situation                                      | Pattern               | Reference                                                                                                      |
 | ---------------------------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------- |
-| New feature (greenfield)                       | hooks + queries       | [web/CLAUDE.md](../../../web/CLAUDE.md), [REFERENCE.md](REFERENCE.md#architecture-patterns)                    |
+| New feature (greenfield)                       | Match project stack   | `project.conventionsFile`, [REFERENCE.md](REFERENCE.md#architecture-patterns)                                    |
 | Improvement / bug fix on existing feature code | Match existing files  | Inspect touched files first; same reference for greenfield shape when extending                                |
 
 > **Rule:** never introduce foreign patterns (Redux, RTK Query, React Query) unless the touched area already uses them. Match what the touched files already use. When ambiguous, inspect them and **ask the user**.
 
 ### Step 3 — Scope
 
-- **Domain** — e.g. `tasks`, `projects`, `friends`, `auth` under `web/src/components/<domain>/`.
+- **Domain** — e.g. `tasks`, `projects`, `auth` under `docs.domainMirror` from config.
 - **Layers** — see [layer table](REFERENCE.md#layer-and-location-selection).
 
 ### Step 4 — Files, phases
@@ -147,7 +147,7 @@ For each phase: update `03-plan.md` checkboxes, stop when blocked.
 2. **Mandatory:** Invoke [write-finalize-docs](../write-finalize-docs/SKILL.md) — merge transient docs, delete `03-plan.md`, `04-tasks.md`, `handoff.md`; folder must contain only `01-spec.md` and `02-tech.md`.
 3. Tell the user:
 
-> Implementation complete. Docs finalized at `docs/<domain>/<feature>/` — only `01-spec.md` and `02-tech.md` remain.
+> Implementation complete. Docs finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-tech.md` remain.
 
 ---
 

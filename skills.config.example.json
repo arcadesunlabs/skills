@@ -1,0 +1,35 @@
+{
+  "$schema": "./skills.config.schema.json",
+  "project": {
+    "name": "My Project",
+    "conventionsFile": "CLAUDE.md"
+  },
+  "docs": {
+    "root": ".docs",
+    "indexFile": ".docs/index.md",
+    "domainMirror": "apps/my-app/lib/features"
+  },
+  "taskTracker": {
+    "provider": "trello",
+    "enabled": true,
+    "mcpServer": "user-trello",
+    "cardKeyPrefix": "REV",
+    "branchMatchesCardKey": true,
+    "trello": {
+      "boardName": "My Board",
+      "boardUrl": "https://trello.com/b/BOARD_ID/board-name",
+      "boardId": "BOARD_ID",
+      "lists": {
+        "todo": { "name": "To Do", "id": "LIST_ID_TODO" },
+        "inProgress": { "name": "In Progress", "id": "LIST_ID_IN_PROGRESS" },
+        "backlog": { "name": "Backlog", "id": "LIST_ID_BACKLOG" },
+        "done": { "name": "Done", "id": "LIST_ID_DONE" }
+      }
+    }
+  },
+  "code": {
+    "appRoot": "apps/my-app",
+    "lintCommand": "cd apps/my-app && npm run lint",
+    "testCommand": "cd apps/my-app && npm test"
+  }
+}

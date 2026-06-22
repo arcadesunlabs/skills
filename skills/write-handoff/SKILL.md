@@ -5,26 +5,30 @@ description: Compact the current conversation into a handoff document for anothe
 
 Write a handoff document summarising the current conversation so a fresh agent can continue the work.
 
+## Step 0 — Load config
+
+Invoke [workflow-config](../workflow-config/SKILL.md) and read `skills.config.json`. Paths below use `{docs.root}` from config.
+
 ## Where to save
 
-**Always save in the repo** under `.docs/`, in the subdirectory that matches the work being handed off — never in the OS temp directory or outside the workspace.
+**Always save in the repo** under `{docs.root}/`, in the subdirectory that matches the work being handed off — never in the OS temp directory or outside the workspace.
 
 | Work context                              | Path                                                                                                             |
 | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Feature with subfolder in code            | `.docs/<domain>/<feature>/handoff.md`                                                                            |
-| Flat domain (e.g. `calendar/`, `splash/`) | `.docs/<domain>/handoff.md`                                                                                      |
-| Architecture, navigation, refactors       | `.docs/codebase/handoff.md`                                                                                      |
-| External integration or extension guide   | `.docs/integrations/handoff.md`                                                                                  |
-| Dev setup, env, CI                        | `.docs/setup/handoff.md`                                                                                         |
+| Feature with subfolder in code            | `{docs.root}/<domain>/<feature>/handoff.md`                                                                      |
+| Flat domain (e.g. `calendar/`, `splash/`) | `{docs.root}/<domain>/handoff.md`                                                                                |
+| Architecture, navigation, refactors       | `{docs.root}/codebase/handoff.md`                                                                                |
+| External integration or extension guide   | `{docs.root}/integrations/handoff.md`                                                                            |
+| Dev setup, env, CI                        | `{docs.root}/setup/handoff.md`                                                                                   |
 | Multiple features in one session          | One `handoff.md` per affected feature folder, or a single handoff in the primary folder with links to the others |
 
 **Naming:** use `handoff.md` (not numbered `01`–`04` — those are spec/tech/plan/tasks). Remove or replace an existing `handoff.md` in the same folder when writing a new handoff for the same slice of work.
 
-Folder names mirror `apps/revelio/lib/app/features/` in kebab-case (`expense_list` → `expense-list`). See [`.docs/index.md`](../../../.docs/index.md) for the index and conventions.
+Folder names mirror `docs.domainMirror` in kebab-case (`expense_list` → `expense-list`). See `docs.indexFile` in config for the index and conventions.
 
 ## What to include
 
-- Current objective and Trello card (`REV-XXX`) if any
+- Current objective and tracker card (`{cardKey}`) if `taskTracker.enabled`
 - What was done (commits, branches, key files)
 - What is in progress or blocked
 - Explicit next steps for the receiving agent
@@ -36,4 +40,4 @@ Folder names mirror `apps/revelio/lib/app/features/` in kebab-case (`expense_lis
 - Do not duplicate content already captured in other artifacts (specs, tech docs, plans, issues, commits, diffs). Reference them by path or URL instead.
 - Redact any sensitive information (API keys, passwords, PII).
 - If the user passed arguments, treat them as a description of what the next session will focus on and tailor the doc accordingly.
-- After writing, run Prettier: `npx prettier --write "path/to/handoff.md"`.
+- After writing, run Prettier on the handoff file if the project uses it.

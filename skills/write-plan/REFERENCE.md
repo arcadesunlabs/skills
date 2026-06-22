@@ -2,6 +2,10 @@
 
 Detailed tables, templates, and per-phase rules. Load when drafting artifacts or executing a specific phase.
 
+Load [workflow-config](../workflow-config/SKILL.md) first. Paths use `{docs.root}`; ticket keys use `{cardKey}` from config.
+
+> **Project-specific layers:** The architecture and file-path tables below are **examples** (React + Supabase). Replace with paths from `docs.domainMirror`, `code.appRoot`, and `project.conventionsFile` in your project.
+
 ---
 
 ## Architecture patterns
@@ -106,7 +110,7 @@ Implementation plan
 Type:     New feature | Improvement | Bug fix
 Pattern:  hooks + queries (new) | Match existing files (fix/improvement)
 Domain:   e.g. tasks, projects, friends
-Ticket:   PM-XXX
+Ticket:   {cardKey}
 Entry:    A (with spec) | B (direct)
 
 Files:
@@ -119,7 +123,7 @@ Implementation phases:
   ...
 
 Skipped phases:
-  8. Analytics — no analytics pipeline in Pomar Web
+  8. Analytics — skip unless product explicitly requests tracking
 
 Waiting for confirmation to start implementation.
 ```
@@ -128,7 +132,7 @@ Waiting for confirmation to start implementation.
 
 ## 03-plan.md template
 
-Save to `docs/<domain>/<feature>/03-plan.md`. Remove after merge.
+Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Remove after merge.
 
 ```markdown
 # [Feature Name] Implementation Plan
@@ -138,7 +142,7 @@ Save to `docs/<domain>/<feature>/03-plan.md`. Remove after merge.
 **Pattern:** hooks + queries | Match existing files
 **Domain:** e.g. tasks, projects
 **Entry path:** A (with spec) | B (direct)
-**Ticket:** PM-XXX
+**Ticket:** {cardKey}
 
 ## Files
 
@@ -203,7 +207,7 @@ MODIFY ...
 
 ## 02-tech.md sections (during implementation)
 
-Update `docs/<domain>/<feature>/02-tech.md` with technical detail. Append or revise these sections as implementation progresses:
+Update `{docs.root}/<domain>/<feature>/02-tech.md` with technical detail. Append or revise these sections as implementation progresses:
 
 ```markdown
 # {Feature Name} — Context
@@ -211,7 +215,7 @@ Update `docs/<domain>/<feature>/02-tech.md` with technical detail. Append or rev
 ## Feature Snapshot
 
 - Feature: {short description}
-- Status: In progress (PM-XXX)
+- Status: In progress ({cardKey})
 - Entry point: {page or trigger}
 - Route: {path}
 - Domain: {e.g. tasks, projects}
@@ -323,7 +327,7 @@ Default order is **UI-first**. Omit phases that do not apply; record them in `##
 
 ### Phase 8 — Analytics
 
-- Pomar Web has no analytics pipeline today — skip unless product explicitly requests tracking.
+- Skip analytics unless product explicitly requests tracking.
 
 ### Phase 9 — Code review
 

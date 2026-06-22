@@ -11,9 +11,29 @@ skills/
     scripts/       # opcional
     references/    # opcional
     assets/        # opcional
+skills.config.json       # config local do usuario (gitignored)
+skills.config.example.json
 ```
 
 Cada skill fica em `skills/<nome-da-skill>/SKILL.md`.
+
+## Configurar workflow (por usuario / por projeto)
+
+Varias skills (`task-workflow`, `write-plan`, `mode-brainstorm`, etc.) leem **`skills.config.json`** na raiz do **projeto onde voce trabalha** — nao valores fixos de um repo especifico.
+
+1. Copie o exemplo ou rode o assistente:
+
+```bash
+npm run configure
+```
+
+2. Informe: nome do projeto, pasta de docs, prefixo de card (ex. `REV`, `PM`), task tracker (Trello, GitHub, Linear ou `none`), regra de branch, e IDs do board Trello se aplicavel.
+
+3. No projeto alvo (ex. monorepo Revelio), crie o mesmo `skills.config.json` na raiz ou rode `npm run configure` la.
+
+A skill `workflow-config` e o ponto de entrada: o agente carrega o arquivo antes das demais skills de workflow.
+
+Campos principais: `project`, `docs`, `taskTracker`, `code`. Veja [skills.config.example.json](./skills.config.example.json).
 
 ## Criar uma skill
 
