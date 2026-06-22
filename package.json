@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "skills-configure": "./scripts/configure.mjs"
+  },
   "scripts": {
     "new": "node scripts/new-skill.mjs",
     "configure": "node scripts/configure.mjs",

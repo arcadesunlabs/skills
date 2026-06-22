@@ -1,90 +1,148 @@
 # Personal Agent Skills
 
-Repositorio para manter skills pessoais no formato `SKILL.md`, compatível com o ecossistema [skills.sh](https://www.skills.sh/) e com o CLI `npx skills`.
+Skills de agente para workflow de desenvolvimento — rastreamento de tarefas, specs, planos, handoff e documentação. Compatível com o ecossistema [skills.sh](https://www.skills.sh/) e o CLI [`npx skills`](https://github.com/vercel-labs/skills).
 
-## Estrutura
+## Pré-requisitos
+
+| Requisito                                                                   | Por quê                                               |
+| --------------------------------------------------------------------------- | ----------------------------------------------------- |
+| [Node.js](https://nodejs.org/) 18+                                          | O CLI `npx skills` roda via Node                      |
+| Um agente compatível (ex. [Cursor](https://cursor.com), Codex, Claude Code) | As skills são instaladas na pasta de skills do agente |
+
+Você **não precisa clonar** este repositório só para usar as skills no seu projeto.
+
+---
+
+## Começar em 3 passos
+
+Trabalhe sempre a partir da **raiz do projeto onde você codifica** (ex. seu monorepo ou app), não deste repositório de skills.
+
+### 1. Instale as skills
+
+```bash
+cd /caminho/do/seu-projeto
+
+# Todas as skills (recomendado)
+npx skills add reveliotec/skills --skill '*' -a cursor -y
+
+# Ou uma skill específica
+npx skills add reveliotec/skills --skill task-workflow -a cursor -y
+```
+
+Troque `cursor` pelo seu agente (`codex`, `claude-code`, etc.). Para instalar globalmente em vez de no projeto, adicione `-g`.
+
+Ver o que está disponível sem instalar:
+
+```bash
+npx skills add reveliotec/skills --list
+```
+
+### 2. Configure o workflow do seu projeto
+
+As skills de workflow leem **`skills.config.json` na raiz do seu projeto**. **Não precisa clonar** este repositório — rode o assistente interativo via `npx`:
+
+```bash
+npx github:reveliotec/skills skills-configure /caminho/do/seu-projeto
+```
+
+Responda às perguntas (Enter aceita o valor padrão). O arquivo é criado em `/caminho/do/seu-projeto/skills.config.json`.
+
+Para reconfigurar depois, rode o mesmo comando de novo.
+
+Se você já clonou este repo:
+
+```bash
+npm --prefix skills run configure -- /caminho/do/seu-projeto
+```
+
+Campos principais: `project`, `docs`, `taskTracker`, `code`. Referência: [skills.config.example.json](./skills.config.example.json).
+
+### 3. Use no dia a dia
+
+Peça ao agente em linguagem natural. Ele escolhe a skill pelo `description` do `SKILL.md`. Exemplos:
+
+| Situação                     | O que pedir                                                   |
+| ---------------------------- | ------------------------------------------------------------- |
+| Pegar um card e abrir branch | _"Iniciar tarefa REV-42"_ → `task-workflow`                   |
+| Brainstorm de épico          | _"Brainstorm da feature X"_ → `mode-brainstorm`               |
+| Escrever spec de produto     | _"Spec da feature login social"_ → `write-feature-spec`       |
+| Plano técnico antes de codar | _"Plano técnico para REV-42"_ → `write-plan`                  |
+| Handoff entre sessões        | _"Handoff do que fizemos"_ → `write-handoff`                  |
+| Fechar docs após entrega     | _"Finalizar documentação da feature"_ → `write-finalize-docs` |
+
+A skill `workflow-config` é o ponto de entrada: o agente deve carregar `skills.config.json` antes das demais skills de workflow.
+
+---
+
+## Skills incluídas
+
+| Skill                 | Função                                     |
+| --------------------- | ------------------------------------------ |
+| `workflow-config`     | Carrega ou cria `skills.config.json`       |
+| `task-workflow`       | Card/issue + branch a partir do tracker    |
+| `mode-brainstorm`     | Decomposição de épico e artefatos iniciais |
+| `mode-grill`          | Modo de revisão crítica                    |
+| `write-feature-spec`  | Spec de produto (01-spec)                  |
+| `write-plan`          | Plano técnico (03-plan)                    |
+| `write-finalize-docs` | Validação e fechamento de docs             |
+| `write-handoff`       | Handoff entre sessões                      |
+| `write-skill`         | Criar ou melhorar skills                   |
+
+Organização visual no [skills.sh](https://skills.sh/): [skills.sh.json](./skills.sh.json).
+
+---
+
+## Desenvolver ou manter este repositório
+
+Use esta seção se você **clonou ou faz fork** deste repo para criar ou editar skills.
+
+### Estrutura
 
 ```text
 skills/
   nome-da-skill/
-    SKILL.md
-    scripts/       # opcional
-    references/    # opcional
-    assets/        # opcional
-skills.config.json       # config local do usuario (gitignored)
+    SKILL.md          # obrigatório
+    scripts/          # opcional
+    references/       # opcional
+    assets/           # opcional
+skills.config.json       # config local (gitignored)
 skills.config.example.json
 ```
 
-Cada skill fica em `skills/<nome-da-skill>/SKILL.md`.
-
-## Configurar workflow (por usuario / por projeto)
-
-Varias skills (`task-workflow`, `write-plan`, `mode-brainstorm`, etc.) leem **`skills.config.json`** na raiz do **projeto onde voce trabalha** — nao valores fixos de um repo especifico.
-
-1. Copie o exemplo ou rode o assistente:
+### Comandos
 
 ```bash
-npm run configure
-```
+git clone https://github.com/reveliotec/skills.git
+cd skills
 
-2. Informe: nome do projeto, pasta de docs, prefixo de card (ex. `REV`, `PM`), task tracker (Trello, GitHub, Linear ou `none`), regra de branch, e IDs do board Trello se aplicavel.
-
-3. No projeto alvo (ex. monorepo Revelio), crie o mesmo `skills.config.json` na raiz ou rode `npm run configure` la.
-
-A skill `workflow-config` e o ponto de entrada: o agente carrega o arquivo antes das demais skills de workflow.
-
-Campos principais: `project`, `docs`, `taskTracker`, `code`. Veja [skills.config.example.json](./skills.config.example.json).
-
-## Criar uma skill
-
-```bash
-npm run new -- minha-skill
-```
-
-Com recursos opcionais:
-
-```bash
+npm run new -- minha-skill                        # criar skill
 npm run new -- minha-skill --resources scripts,references,assets
+npm run validate                                # validar SKILL.md
+npm run configure -- /caminho/do/projeto        # gerar skills.config.json no projeto alvo
+npm run skills:list                             # listar skills deste repo
 ```
 
-Depois edite `skills/minha-skill/SKILL.md` e substitua o texto inicial por instrucoes reais e concisas.
+Depois de editar uma skill, rode `npm run validate`. O script `new` também adiciona a skill ao grupo em `skills.sh.json`.
 
-O script tambem adiciona a skill ao grupo `Personal` em `skills.sh.json`.
-
-## Validar
+### Testar instalação local
 
 ```bash
-npm run validate
+npx skills add . --skill minha-skill -a cursor -y
 ```
 
-A validacao checa se cada `SKILL.md` tem frontmatter YAML com `name` e `description`, se o nome usa `lowercase-hyphen-case`, e se o nome bate com a pasta.
+---
 
-## Usar com `npx skills`
-
-Listar skills deste repositorio localmente:
+## Referência rápida — `npx skills`
 
 ```bash
-npm run skills:list
+# Do GitHub (uso normal)
+npx skills add reveliotec/skills --skill '*' -a cursor -y
+
+# Deste clone local
+npx skills add . --skill minha-skill -a cursor -y
+
+# Global (todas as pastas)
+npx skills add reveliotec/skills --skill '*' -a cursor -g -y
 ```
 
-Instalar deste repositorio local:
-
-```bash
-npx skills add . --skill minha-skill -a codex
-```
-
-Depois de publicar no GitHub, use:
-
-```bash
-npx skills add owner/repo --skill minha-skill -a codex
-```
-
-Para instalar todas as skills:
-
-```bash
-npx skills add owner/repo --skill '*' -a codex
-```
-
-## Pagina no skills.sh
-
-O arquivo `skills.sh.json` controla apenas a organizacao visual da pagina do repositorio no skills.sh. Quando adicionar novas skills, inclua seus nomes nos grupos desse arquivo.
+Mais opções: [`vercel-labs/skills`](https://github.com/vercel-labs/skills).

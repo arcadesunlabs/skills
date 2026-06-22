@@ -4,14 +4,25 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
+import { fileURLToPath } from "node:url";
 
-const root = process.cwd();
+const skillsRepoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+const projectArg = process.argv.slice(2).find((arg) => !arg.startsWith("-"));
+const root = projectArg ? path.resolve(projectArg) : process.cwd();
 const configPath = path.join(root, "skills.config.json");
 const examplePath = path.join(root, "skills.config.example.json");
+const schemaPath = path.join(root, "skills.config.schema.json");
 
 const rl = readline.createInterface({ input, output });
 
 try {
+  if (!existsSync(root)) {
+    console.error(`Project path does not exist: ${root}`);
+    process.exit(1);
+  }
+
+  await ensureProjectTemplates();
+
   let config = existsSync(examplePath)
     ? JSON.parse(await readFile(examplePath, "utf8"))
     : defaultConfig();
@@ -113,9 +124,12 @@ try {
   );
 
   await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
-  console.log(`\nSaved ${path.relative(root, configPath)}`);
+  console.log(`\nSaved ${configPath}`);
+  if (root !== process.cwd()) {
+    console.log(`Project: ${root}`);
+  }
   console.log(
-    "Commit skills.config.example.json as reference; keep skills.config.json local (gitignored).",
+    "Keep skills.config.json local; commit skills.config.example.json as a team reference if needed.",
   );
 } finally {
   rl.close();
@@ -143,6 +157,19 @@ function listLabel(key) {
     backlog: "Backlog",
     done: "Done",
   }[key];
+}
+
+async function ensureProjectTemplates() {
+  const repoExample = path.join(skillsRepoRoot, "skills.config.example.json");
+  const repoSchema = path.join(skillsRepoRoot, "skills.config.schema.json");
+
+  if (!existsSync(examplePath) && existsSync(repoExample)) {
+    await copyFile(repoExample, examplePath);
+    console.log(`Copied template to ${examplePath}`);
+  }
+  if (!existsSync(schemaPath) && existsSync(repoSchema)) {
+    await copyFile(repoSchema, schemaPath);
+  }
 }
 
 function defaultConfig() {
