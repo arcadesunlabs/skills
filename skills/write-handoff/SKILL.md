@@ -33,7 +33,7 @@ Folder names mirror `docs.domainMirror` in kebab-case (`expense_list` → `expen
 - What is in progress or blocked
 - Explicit next steps for the receiving agent
 - **Suggested skills** — which skills the next agent should invoke and why
-- Links to existing artifacts (`01-spec.md`, `02-tech.md`, `03-plan.md`, PRs, branches) — do not duplicate their content
+- Links to existing artifacts (`01-spec.md`, `02-context.md`, `03-plan.md`, PRs, branches) — do not duplicate their content
 
 ## Rules
 

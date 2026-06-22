@@ -54,8 +54,8 @@ Ask explicitly (adapt tracker name from config):
 
 | Outcome          | Parent card                    | Child cards                          | Repo artifacts                          | Next step                                     |
 | ---------------- | ------------------------------ | ------------------------------------ | --------------------------------------- | --------------------------------------------- |
-| **Single slice** | Implementation card            | —                                    | `01-spec.md` + `02-tech.md` only        | `write-plan` → `write-finalize-docs`          |
-| **Epic**         | Tracker — spec, child links    | One per slice in **todo** list       | `01-spec.md` (+ `02-tech.md` per slice) | **STOP** — pick child; finalize per slice     |
+| **Single slice** | Implementation card            | —                                    | `01-spec.md` + `02-context.md` only        | `write-plan` → `write-finalize-docs`          |
+| **Epic**         | Tracker — spec, child links    | One per slice in **todo** list       | `01-spec.md` (+ `02-context.md` per slice) | **STOP** — pick child; finalize per slice     |
 
 ## Tracker conventions (epic flow)
 

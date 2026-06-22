@@ -16,7 +16,7 @@ Plan **and** implement non-trivial feature work. Two modes:
 
 **Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). When `taskTracker.enabled`, use tracked card `{cardKeyPattern}` and branch per config — run [task-workflow](../task-workflow/SKILL.md) first.
 
-**Artifacts:** `{docs.root}/<domain>/<feature>/03-plan.md` + updates to `02-tech.md` (see `project.conventionsFile` in config)
+**Artifacts:** `{docs.root}/<domain>/<feature>/03-plan.md` + updates to `02-context.md` (see `project.conventionsFile` in config)
 
 **Reference:** templates, tables, and per-phase details → [REFERENCE.md](REFERENCE.md)
 
@@ -76,7 +76,7 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 
 ### Step 5 — Confirm
 
-1. Save `03-plan.md` and update `02-tech.md` using [templates](REFERENCE.md#planmd-template).
+1. Save `03-plan.md` and update `02-context.md` using [templates](REFERENCE.md#planmd-template).
 2. Present [confirmation summary](REFERENCE.md#confirmation-summary-template).
 
 **Do not write implementation code before user confirms.** Revise and re-confirm if requested.
@@ -123,7 +123,7 @@ Per-phase rules: [REFERENCE.md — Implementation phases](REFERENCE.md#implement
 - Phase 5: map **every** navigation entry point — **ask** if unclear.
 - Phase 6: purposeful tests only — test behavior that matters.
 - Phase 9: use `code-reviewer` agent for large or cross-layer changes; run before Phase 10.
-- Phase 10: **mandatory** — invoke `write-finalize-docs`; folder must end with only `01-spec.md` + `02-tech.md`.
+- Phase 10: **mandatory** — invoke `write-finalize-docs`; folder must end with only `01-spec.md` + `02-context.md`.
 - Phase 7: reuse existing i18n keys when possible.
 
 For each phase: update `03-plan.md` checkboxes, stop when blocked.
@@ -143,11 +143,11 @@ For each phase: update `03-plan.md` checkboxes, stop when blocked.
 
 ## Completion
 
-1. Update `03-plan.md` checkboxes and `02-tech.md` (Known Behavior, validation checklist).
-2. **Mandatory:** Invoke [write-finalize-docs](../write-finalize-docs/SKILL.md) — merge transient docs, delete `03-plan.md`, `04-tasks.md`, `handoff.md`; folder must contain only `01-spec.md` and `02-tech.md`.
+1. Update `03-plan.md` checkboxes and `02-context.md` (Known Behavior, validation checklist).
+2. **Mandatory:** Invoke [write-finalize-docs](../write-finalize-docs/SKILL.md) — merge transient docs, delete `03-plan.md`, `04-tasks.md`, `handoff.md`; folder must contain only `01-spec.md` and `02-context.md`.
 3. Tell the user:
 
-> Implementation complete. Docs finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-tech.md` remain.
+> Implementation complete. Docs finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-context.md` remain.
 
 ---
 
@@ -164,4 +164,4 @@ For each phase: update `03-plan.md` checkboxes, stop when blocked.
 
 - [ ] All applicable phases completed
 - [ ] Code review passed (Phase 9)
-- [ ] `write-finalize-docs` completed (Phase 10) — only `01-spec.md` + `02-tech.md` in feature folder
+- [ ] `write-finalize-docs` completed (Phase 10) — only `01-spec.md` + `02-context.md` in feature folder

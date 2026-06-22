@@ -195,7 +195,7 @@ MODIFY ...
 
 - [ ] Invoked `write-finalize-docs`
 - [ ] `01-spec.md` updated to shipped product truth (no code)
-- [ ] `02-tech.md` updated to match implementation
+- [ ] `02-context.md` updated to match implementation
 - [ ] Deleted `03-plan.md`, `04-tasks.md`, `handoff.md` (and any other stray files)
 
 ### Phase 11 — New skill needed?
@@ -205,9 +205,9 @@ MODIFY ...
 
 ---
 
-## 02-tech.md sections (during implementation)
+## 02-context.md sections (during implementation)
 
-Update `{docs.root}/<domain>/<feature>/02-tech.md` with technical detail. Append or revise these sections as implementation progresses:
+Update `{docs.root}/<domain>/<feature>/02-context.md` with technical detail. Append or revise these sections as implementation progresses:
 
 ```markdown
 # {Feature Name} — Context

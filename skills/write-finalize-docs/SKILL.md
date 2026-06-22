@@ -1,6 +1,6 @@
 ---
 name: write-finalize-docs
-description: Finalize feature documentation after implementation — consolidate docs/<domain>/<feature>/ to only 01-spec.md and 02-tech.md, merge transient artifacts, delete 03-plan.md, 04-tasks.md, and handoff.md. Use when implementation is complete, before merge, or when the user asks to finalize or clean up feature docs.
+description: Finalize feature documentation after implementation — consolidate docs/<domain>/<feature>/ to only 01-spec.md and 02-context.md, merge transient artifacts, delete 03-plan.md, 04-tasks.md, and handoff.md. Use when implementation is complete, before merge, or when the user asks to finalize or clean up feature docs.
 ---
 
 # Finalize Feature Docs
@@ -14,7 +14,7 @@ description: Finalize feature documentation after implementation — consolidate
 ```
 {docs.root}/<domain>/<feature>/
 ├── 01-spec.md   # Product spec — no code snippets
-└── 02-tech.md   # Technical reference — paths, APIs, code OK
+└── 02-context.md   # Context — paths, APIs, code OK
 ```
 
 All other files in that folder (`03-plan.md`, `04-tasks.md`, `handoff.md`, drafts) are **removed** after their useful content is merged.
@@ -28,7 +28,7 @@ All other files in that folder (`03-plan.md`, `04-tasks.md`, `handoff.md`, draft
 - `code.lintCommand` and relevant tests pass (from config)
 - You know the feature folder path (`{docs.root}/<domain>/<feature>/`)
 
-If the folder does not exist but the work was tracked, create the folder and both files from scratch using git diff + [write-feature-spec](../write-feature-spec/SKILL.md) / [write-plan REFERENCE](../write-plan/REFERENCE.md#02-techmd-sections-during-implementation).
+If the folder does not exist but the work was tracked, create the folder and both files from scratch using git diff + [write-feature-spec](../write-feature-spec/SKILL.md) / [write-plan REFERENCE](../write-plan/REFERENCE.md#02-contextmd-sections-during-implementation).
 
 ---
 
@@ -41,13 +41,13 @@ List every file under `{docs.root}/<domain>/<feature>/`:
 | File | Action |
 |------|--------|
 | `01-spec.md` | **Update** — shipped product truth |
-| `02-tech.md` | **Update** — final technical reference |
+| `02-context.md` | **Update** — final context reference |
 | `03-plan.md` | **Merge then delete** |
 | `04-tasks.md` | **Merge then delete** (epics) |
 | `handoff.md` | **Merge then delete** |
 | Anything else | **Merge if valuable, then delete** — do not leave stray files |
 
-Read all files before editing. Read the implementation diff if `02-tech.md` is stale.
+Read all files before editing. Read the implementation diff if `02-context.md` is stale.
 
 ### Step 2 — Update `01-spec.md`
 
@@ -63,11 +63,11 @@ Author via [write-feature-spec](../write-feature-spec/SKILL.md) rules. Reflect *
 
 If implementation **changed** scope vs original spec, update scope/out of scope explicitly — do not leave contradictions.
 
-### Step 3 — Update `02-tech.md`
+### Step 3 — Update `02-context.md`
 
-Single brownfield reference for the next agent or developer. Merge from transient docs:
+Single context reference for the next agent or developer. Merge from transient docs:
 
-| Source | Merge into `02-tech.md` |
+| Source | Merge into `02-context.md` |
 |--------|-------------------------|
 | `03-plan.md` | Final file list, architecture decisions, skipped phases worth noting |
 | `04-tasks.md` | Slice boundaries / dependencies (epics only) — under `## Epic slices` or remove if obsolete |
@@ -77,7 +77,7 @@ Single brownfield reference for the next agent or developer. Merge from transien
 Use this skeleton (adapt sections; omit empty):
 
 ```markdown
-# {Feature Name} — Technical Reference
+# {Feature Name} — Context
 
 ## Status
 
@@ -118,7 +118,7 @@ After merge, delete:
 - `03-plan.md`
 - `04-tasks.md`
 - `handoff.md`
-- Any other file in the feature folder except `01-spec.md` and `02-tech.md`
+- Any other file in the feature folder except `01-spec.md` and `02-context.md`
 
 Use git delete so the removal is tracked.
 
@@ -126,7 +126,7 @@ Use git delete so the removal is tracked.
 
 - [ ] Folder contains **exactly** two markdown files
 - [ ] `01-spec.md` has no code snippets or file paths
-- [ ] `02-tech.md` matches current code
+- [ ] `02-context.md` matches current code
 - [ ] No TBD/TODO unless genuinely future work (prefer out of scope in spec)
 - [ ] No duplicated paragraphs between spec and tech
 - [ ] Epic `04-tasks` slice table not left orphaned elsewhere
@@ -136,12 +136,12 @@ Use git delete so the removal is tracked.
 Commit docs separately or with the implementation PR — follow user preference. Suggested message:
 
 ```
-Finalize docs for {feature}: keep 01-spec and 02-tech only.
+Finalize docs for {feature}: keep 01-spec and 02-context only.
 ```
 
 Tell the user:
 
-> Docs finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-tech.md` remain.
+> Docs finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-context.md` remain.
 
 ---
 
@@ -149,9 +149,9 @@ Tell the user:
 
 When multiple slices share one epic folder:
 
-- **Parent epic folder** (`{docs.root}/<domain>/<epic>/`): keep epic-level `01-spec.md`; `02-tech.md` covers shared architecture; add `## Epic slices` with delivered slices and `{cardKey}` entries.
+- **Parent epic folder** (`{docs.root}/<domain>/<epic>/`): keep epic-level `01-spec.md`; `02-context.md` covers shared architecture; add `## Epic slices` with delivered slices and `{cardKey}` entries.
 - **Child slice folder** (if separate, e.g. `history-collapsible/`): finalize **that** folder independently when the slice merges.
-- Remove `04-tasks.md` from the epic folder once all slices are delivered or the table is captured in `02-tech.md`.
+- Remove `04-tasks.md` from the epic folder once all slices are delivered or the table is captured in `02-context.md`.
 
 ---
 

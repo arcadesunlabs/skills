@@ -12,9 +12,9 @@
 - [ ] Open questions: empty or only genuine follow-ups
 - [ ] Assumptions: drop planning-only guesses
 
-## 02-tech.md — merge map from transient files
+## 02-context.md — merge map from transient files
 
-| `03-plan.md` section | Destination in `02-tech.md` |
+| `03-plan.md` section | Destination in `02-context.md` |
 |----------------------|----------------------------|
 | Files CREATE/MODIFY | `## Key files` table |
 | Skipped phases | `## Behavior notes` (if relevant) |
@@ -34,5 +34,5 @@ After edits, verify:
 
 ```bash
 ls docs/<domain>/<feature>/
-# Expected: 01-spec.md  02-tech.md
+# Expected: 01-spec.md  02-context.md
 ```

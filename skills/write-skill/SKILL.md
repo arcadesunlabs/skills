@@ -68,7 +68,7 @@ Before drafting, check the new skill does not overlap an existing one.
 | Repo rules       | `project.conventionsFile` from config                        | Stack, commands, project conventions                                           |
 | Design           | `mode-brainstorm`, `mode-grill`, `write-feature-spec`        | Spec and alignment before planning                                             |
 | Plan + implement | `write-plan`                                                 | Phased implementation; ends with `write-finalize-docs`                         |
-| Docs (delivery)  | `write-finalize-docs`                                        | Folder → only `01-spec.md` + `02-tech.md`                                      |
+| Docs (delivery)  | `write-finalize-docs`                                        | Folder → only `01-spec.md` + `02-context.md`                                      |
 | Review           | agent `code-reviewer`                                        | Quality gate before merge                                                      |
 | Delivery         | `task-workflow`                                              | Card lookup, `{cardKey}` branch                                                |
 
@@ -82,7 +82,7 @@ task-workflow → write-plan (path B, when tracked)
 mode-brainstorm → write-feature-spec → write-plan (path A, single slice)
 mode-brainstorm → write-feature-spec → tracker children + parent links → STOP (epic)
   → user picks child {cardKey} → task-workflow → write-plan (slice only)
-write-plan → write-finalize-docs (mandatory last — only 01-spec + 02-tech remain)
+write-plan → write-finalize-docs (mandatory last — only 01-spec + 02-context remain)
 write-plan phase 11 → write-skill (if a recurring gap justifies a new skill)
 ```
 

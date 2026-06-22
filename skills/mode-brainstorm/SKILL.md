@@ -154,7 +154,7 @@ The spec MUST be authored through the [write-feature-spec](../write-feature-spec
 
 Reminders that the design flow enforces on top of the template:
 
-- **No code snippets** — no TypeScript, JSX, JSON, file paths, or component names in `01-spec.md`. Architecture belongs in `02-tech.md`, implementation belongs in `03-plan.md`.
+- **No code snippets** — no TypeScript, JSX, JSON, file paths, or component names in `01-spec.md`. Architecture belongs in `02-context.md`, implementation belongs in `03-plan.md`.
 - **Acceptance criteria must be testable**, and business rules must stay separate from acceptance criteria.
 - **Scope and Out of scope are both explicit.**
 - **Epic specs** cover the full feature vision; per-slice acceptance criteria live on child tracker cards
@@ -185,7 +185,7 @@ Wait for the user's response. If they request changes, make them and re-run the 
 
 **Implementation:**
 
-- **Single slice:** Invoke the `write-plan` skill with the approved spec as input (path A). `write-plan` saves transient `03-plan.md`, updates `02-tech.md`, implements phase by phase, then **must** invoke `write-finalize-docs` so the folder ends with only `01-spec.md` and `02-tech.md`.
+- **Single slice:** Invoke the `write-plan` skill with the approved spec as input (path A). `write-plan` saves transient `03-plan.md`, updates `02-context.md`, implements phase by phase, then **must** invoke `write-finalize-docs` so the folder ends with only `01-spec.md` and `02-context.md`.
 - **Epic:** Do **not** invoke `write-plan` for the full epic. Ask which child `{cardKey}` to implement, run `task-workflow` for that card, then `write-plan` scoped to that slice only (ends with `write-finalize-docs` per slice folder).
 
 ## Key Principles
