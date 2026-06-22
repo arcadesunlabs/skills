@@ -9,4 +9,3 @@ This repository stores personal agent skills.
 - Put detailed optional context in `references/`, deterministic helpers in `scripts/`, and reusable output files in `assets/`.
 - Workflow skills read `skills.config.json` at the workspace root; use `npm run configure` to generate it.
 - Run `npm run validate` after adding or changing skills.
-

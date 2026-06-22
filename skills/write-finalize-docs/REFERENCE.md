@@ -14,19 +14,19 @@
 
 ## 02-context.md — merge map from transient files
 
-| `03-plan.md` section | Destination in `02-context.md` |
-|----------------------|----------------------------|
-| Files CREATE/MODIFY | `## Key files` table |
-| Skipped phases | `## Behavior notes` (if relevant) |
-| Phase checkboxes | **Delete** — do not copy verbatim |
-| Validation commands | `## Validation` |
+| `03-plan.md` section | Destination in `02-context.md`    |
+| -------------------- | --------------------------------- |
+| Files CREATE/MODIFY  | `## Key files` table              |
+| Skipped phases       | `## Behavior notes` (if relevant) |
+| Phase checkboxes     | **Delete** — do not copy verbatim |
+| Validation commands  | `## Validation`                   |
 
-| `handoff.md` section | Destination |
-|----------------------|-------------|
-| Key files | `## Key files` if missing |
-| PR / branch | `## Status` |
-| Next steps | **Discard** |
-| Decisions vigentes | `## Behavior notes` or update `01-spec.md` |
+| `handoff.md` section | Destination                                |
+| -------------------- | ------------------------------------------ |
+| Key files            | `## Key files` if missing                  |
+| PR / branch          | `## Status`                                |
+| Next steps           | **Discard**                                |
+| Decisions vigentes   | `## Behavior notes` or update `01-spec.md` |
 
 ## Folder hygiene command
 

@@ -8,14 +8,14 @@ Load [workflow-config](../workflow-config/SKILL.md) first. Use `{cardKey}`, `{ca
 
 Score the request against these signals. **If 2 or more fire**, treat the work as an **epic** (multi-card), not a single implementation task.
 
-| Signal                          | Threshold                                                    |
-| ------------------------------- | ------------------------------------------------------------ |
-| Files to create or modify       | > 8                                                          |
-| Independent user-facing slices  | ≥ 2 (each could ship as its own PR)                          |
-| `write-plan` phases anticipated | > 3 with weak coupling between them                          |
-| Layers touched                  | UI + data/schema migration in one task                      |
-| Testable acceptance criteria    | > 8 independent scenarios                                    |
-| Estimated agent session         | > 1 focused session (~2–3 h)                                 |
+| Signal                          | Threshold                              |
+| ------------------------------- | -------------------------------------- |
+| Files to create or modify       | > 8                                    |
+| Independent user-facing slices  | ≥ 2 (each could ship as its own PR)    |
+| `write-plan` phases anticipated | > 3 with weak coupling between them    |
+| Layers touched                  | UI + data/schema migration in one task |
+| Testable acceptance criteria    | > 8 independent scenarios              |
+| Estimated agent session         | > 1 focused session (~2–3 h)           |
 
 **Do not decompose** when slices are tightly coupled and splitting would block every PR (shared migration + all consumers in one atomic change). In that case, keep one card but split `write-plan` phases only.
 
@@ -23,9 +23,9 @@ Score the request against these signals. **If 2 or more fire**, treat the work a
 
 Prefer **vertical slices** (deliverable user value), not horizontal layers.
 
-| Avoid                                              | Prefer                                                              |
-| -------------------------------------------------- | ------------------------------------------------------------------- |
-| Card 1: Hooks, Card 2: Queries, Card 3: UI         | Card 1: Metrics panel redesign, Card 2: Friends invite flow         |
+| Avoid                                      | Prefer                                                      |
+| ------------------------------------------ | ----------------------------------------------------------- |
+| Card 1: Hooks, Card 2: Queries, Card 3: UI | Card 1: Metrics panel redesign, Card 2: Friends invite flow |
 
 Each slice must have:
 
@@ -52,10 +52,10 @@ Ask explicitly (adapt tracker name from config):
 
 ## Epic vs single-slice outcomes
 
-| Outcome          | Parent card                    | Child cards                          | Repo artifacts                          | Next step                                     |
-| ---------------- | ------------------------------ | ------------------------------------ | --------------------------------------- | --------------------------------------------- |
-| **Single slice** | Implementation card            | —                                    | `01-spec.md` + `02-context.md` only        | `write-plan` → `write-finalize-docs`          |
-| **Epic**         | Tracker — spec, child links    | One per slice in **todo** list       | `01-spec.md` (+ `02-context.md` per slice) | **STOP** — pick child; finalize per slice     |
+| Outcome          | Parent card                 | Child cards                    | Repo artifacts                             | Next step                                 |
+| ---------------- | --------------------------- | ------------------------------ | ------------------------------------------ | ----------------------------------------- |
+| **Single slice** | Implementation card         | —                              | `01-spec.md` + `02-context.md` only        | `write-plan` → `write-finalize-docs`      |
+| **Epic**         | Tracker — spec, child links | One per slice in **todo** list | `01-spec.md` (+ `02-context.md` per slice) | **STOP** — pick child; finalize per slice |
 
 ## Tracker conventions (epic flow)
 
@@ -76,8 +76,8 @@ Follow [task-workflow](../task-workflow/SKILL.md) for MCP tool usage, card looku
 
 ## Child cards
 
-| Key     | Title   | Status  |
-| ------- | ------- | ------- |
+| Key       | Title   | Status  |
+| --------- | ------- | ------- |
 | {cardKey} | {title} | backlog |
 
 ## Implementation order

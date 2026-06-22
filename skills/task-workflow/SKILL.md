@@ -24,24 +24,24 @@ If `taskTracker.enabled` is `false` or `provider` is `none`, stop this skill and
 
 Use MCP server from `taskTracker.mcpServer` (default `user-trello`). Board and lists: `taskTracker.trello` in config.
 
-| Action | Tool |
-|--------|------|
-| Find board/card | `trello_search_all_boards` |
-| List board lists | `trello_get_lists` |
-| Create card | `trello_add_card` |
-| Update description | `trello_update_card` |
-| Cards in a list | `trello_get_cards_by_list` |
+| Action             | Tool                       |
+| ------------------ | -------------------------- |
+| Find board/card    | `trello_search_all_boards` |
+| List board lists   | `trello_get_lists`         |
+| Create card        | `trello_add_card`          |
+| Update description | `trello_update_card`       |
+| Cards in a list    | `trello_get_cards_by_list` |
 
 Read each tool schema in the MCP folder before calling.
 
 **Lists** (from config `taskTracker.trello.lists`):
 
-| Purpose | Config key |
-|---------|------------|
-| New implementation cards (children) | `todo` |
-| Active epic / work in progress | `inProgress` |
-| Lower-priority backlog | `backlog` |
-| Done | `done` |
+| Purpose                             | Config key   |
+| ----------------------------------- | ------------ |
+| New implementation cards (children) | `todo`       |
+| Active epic / work in progress      | `inProgress` |
+| Lower-priority backlog              | `backlog`    |
+| Done                                | `done`       |
 
 ### Starting work on an existing card
 

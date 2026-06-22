@@ -12,22 +12,22 @@ Before planning file paths or architecture, read `project.conventionsFile` and i
 
 > Choose by the architecture the **touched files already use**, not by task type alone. See [SKILL.md Step 2](SKILL.md).
 
-| Situation | Approach |
-| --------- | -------- |
+| Situation                             | Approach                                                            |
+| ------------------------------------- | ------------------------------------------------------------------- |
 | New feature (greenfield in this area) | Follow the dominant pattern in `docs.domainMirror` / `code.appRoot` |
-| Improvement or bug fix | Match the files you modify — same layers, naming, and data flow |
-| Ambiguous | Inspect neighbors in the same domain folder; **ask the user** |
+| Improvement or bug fix                | Match the files you modify — same layers, naming, and data flow     |
+| Ambiguous                             | Inspect neighbors in the same domain folder; **ask the user**       |
 
 Common layer shapes (labels vary by project — map them from conventions, do not assume):
 
-| Layer | Typical responsibility |
-| ----- | ---------------------- |
-| **Presentation** | Screens, widgets, components — user-visible UI |
-| **Orchestration** | Hooks, controllers, blocs, view models — loading, errors, wiring |
-| **Data access** | Repositories, queries, API clients — persistence and network |
-| **Routing / navigation** | Route tables, deep links, guards |
-| **Shared / cross-cutting** | Auth, layout, design system, utilities |
-| **Schema / migrations** | DB migrations, generated types, RPC definitions |
+| Layer                      | Typical responsibility                                           |
+| -------------------------- | ---------------------------------------------------------------- |
+| **Presentation**           | Screens, widgets, components — user-visible UI                   |
+| **Orchestration**          | Hooks, controllers, blocs, view models — loading, errors, wiring |
+| **Data access**            | Repositories, queries, API clients — persistence and network     |
+| **Routing / navigation**   | Route tables, deep links, guards                                 |
+| **Shared / cross-cutting** | Auth, layout, design system, utilities                           |
+| **Schema / migrations**    | DB migrations, generated types, RPC definitions                  |
 
 ---
 
@@ -35,14 +35,14 @@ Common layer shapes (labels vary by project — map them from conventions, do no
 
 Derive concrete paths from the project — never copy paths from another repo.
 
-| Situation | How to decide |
-| --------- | ------------- |
-| New UI in an existing domain | Same folder pattern as sibling features under `docs.domainMirror` |
-| New data/API surface | Same module as related features (client package, `lib/queries/`, `repositories/`, etc.) |
-| Shared UI or infra | Project's shared component or core package |
-| Routes / entry points | Project router config (grep navigation targets from the spec) |
-| User-facing copy | Project i18n / l10n location from conventions |
-| Tests | Co-located or `test/` tree per project norm |
+| Situation                    | How to decide                                                                           |
+| ---------------------------- | --------------------------------------------------------------------------------------- |
+| New UI in an existing domain | Same folder pattern as sibling features under `docs.domainMirror`                       |
+| New data/API surface         | Same module as related features (client package, `lib/queries/`, `repositories/`, etc.) |
+| Shared UI or infra           | Project's shared component or core package                                              |
+| Routes / entry points        | Project router config (grep navigation targets from the spec)                           |
+| User-facing copy             | Project i18n / l10n location from conventions                                           |
+| Tests                        | Co-located or `test/` tree per project norm                                             |
 
 If conventions are missing, explore the codebase and document assumptions in `02-context.md`.
 
@@ -50,15 +50,15 @@ If conventions are missing, explore the codebase and document assumptions in `02
 
 ## Cross-cutting patterns
 
-| Pattern | Rule |
-| ------- | ---- |
-| **Separation** | UI does not call databases or HTTP clients directly when the project already uses an intermediate layer |
-| **Errors** | Handle and surface errors at the orchestration layer; keep components/widgets thin |
-| **Pending state** | Use the project's existing loading/mutation pattern (`pendingKeys`, `AsyncValue`, etc.) |
-| **Types** | Reuse generated or shared types; avoid duplicate domain models |
-| **Schema changes** | Migrations in the project's canonical migrations folder; update types after apply |
-| **Navigation** | Map every entry point from the spec — links, redirects, post-action navigation |
-| **i18n** | All required locales for new user-facing strings |
+| Pattern            | Rule                                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------- |
+| **Separation**     | UI does not call databases or HTTP clients directly when the project already uses an intermediate layer |
+| **Errors**         | Handle and surface errors at the orchestration layer; keep components/widgets thin                      |
+| **Pending state**  | Use the project's existing loading/mutation pattern (`pendingKeys`, `AsyncValue`, etc.)                 |
+| **Types**          | Reuse generated or shared types; avoid duplicate domain models                                          |
+| **Schema changes** | Migrations in the project's canonical migrations folder; update types after apply                       |
+| **Navigation**     | Map every entry point from the spec — links, redirects, post-action navigation                          |
+| **i18n**           | All required locales for new user-facing strings                                                        |
 
 ---
 
@@ -238,11 +238,11 @@ The default phase order in [SKILL.md](SKILL.md) is a **guide**, not a rigid scri
 
 ### When to parallelize
 
-| Example | Phases | Why |
-| ------- | ------ | --- |
-| Tests while scaffolding orchestration | 6 ∥ 2 | Different files, no shared mutable state |
-| i18n keys while data layer | 7 ∥ 4 | Independent files |
-| Route wiring while UI scaffold | 5 ∥ 1 | Only if page API is already stable |
+| Example                               | Phases | Why                                      |
+| ------------------------------------- | ------ | ---------------------------------------- |
+| Tests while scaffolding orchestration | 6 ∥ 2  | Different files, no shared mutable state |
+| i18n keys while data layer            | 7 ∥ 4  | Independent files                        |
+| Route wiring while UI scaffold        | 5 ∥ 1  | Only if page API is already stable       |
 
 ### When to stay sequential
 
@@ -254,10 +254,10 @@ The default phase order in [SKILL.md](SKILL.md) is a **guide**, not a rigid scri
 
 ### Subagents
 
-| Agent | Typical use |
-| ----- | ----------- |
-| `code-reviewer` | Phase 9 on large or cross-layer diffs |
-| `explore` | Find patterns and navigation before Phase 5 |
+| Agent                   | Typical use                                  |
+| ----------------------- | -------------------------------------------- |
+| `code-reviewer`         | Phase 9 on large or cross-layer diffs        |
+| `explore`               | Find patterns and navigation before Phase 5  |
 | `Task` (generalPurpose) | Isolated research while UI work stays inline |
 
 ---

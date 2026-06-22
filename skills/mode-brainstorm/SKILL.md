@@ -80,9 +80,9 @@ digraph brainstorming {
 
 **Terminal states:**
 
-| Scope        | Next skill                     | Notes                                                                                   |
-| ------------ | ------------------------------ | --------------------------------------------------------------------------------------- |
-| Single slice | `write-plan` (path A)          | Parent `{cardKey}` branch implements the full spec; ends with `write-finalize-docs` |
+| Scope        | Next skill                     | Notes                                                                                       |
+| ------------ | ------------------------------ | ------------------------------------------------------------------------------------------- |
+| Single slice | `write-plan` (path A)          | Parent `{cardKey}` branch implements the full spec; ends with `write-finalize-docs`         |
 | Epic         | **STOP** — no `write-plan` yet | User picks a child `{cardKey}`; then `task-workflow` → `write-plan` → `write-finalize-docs` |
 
 Do NOT write implementation code yourself. `write-plan` handles planning, user confirmation, and phased implementation.

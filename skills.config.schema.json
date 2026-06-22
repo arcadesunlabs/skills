@@ -23,7 +23,12 @@
     },
     "taskTracker": {
       "type": "object",
-      "required": ["provider", "enabled", "cardKeyPrefix", "branchMatchesCardKey"],
+      "required": [
+        "provider",
+        "enabled",
+        "cardKeyPrefix",
+        "branchMatchesCardKey"
+      ],
       "properties": {
         "provider": {
           "type": "string",

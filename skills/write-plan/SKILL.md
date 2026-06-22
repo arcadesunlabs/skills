@@ -24,11 +24,11 @@ Plan **and** implement non-trivial feature work. Two modes:
 
 ## Entry paths
 
-| Path   | When                                                                              | Input                                                      |
-| ------ | --------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| **A**  | After `mode-brainstorm` → `write-feature-spec`                                    | `01-spec.md`                                               |
+| Path   | When                                                                                 | Input                                                      |
+| ------ | ------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| **A**  | After `mode-brainstorm` → `write-feature-spec`                                       | `01-spec.md`                                               |
 | **A′** | Epic child slice — after user picks a child `{cardKey}` from the parent tracker card | `01-spec.md` + child card description (current slice only) |
-| **B**  | No spec — direct implementation task                                              | Conversation                                               |
+| **B**  | No spec — direct implementation task                                                 | Conversation                                               |
 
 **Epic scoping (path A′):** Fetch the child card via task tracker MCP/CLI. Plan and implement **only** the slice matching the current branch's `{cardKey}`, using the child card description for scope and acceptance criteria. Reference the epic `01-spec.md` for shared context; do not plan phases for other slices.
 
@@ -40,7 +40,7 @@ Skip this skill for trivial tasks (typo, single-line fix) — implement per `pro
 
 ### Step 0 — Flow boundaries
 
-Confirm entry point, exit point, pages, and routes. **Stop and ask** if unclear. Do not proceed until boundaries are defined.
+Confirm entry point, exit point, screens/pages, and routes. **Stop and ask** if unclear. Do not proceed until boundaries are defined.
 
 ### Step 1 — Classify the task
 
@@ -56,27 +56,29 @@ Informs — but does not by itself decide — the architecture pattern (see Step
 
 Task type is only the starting hint. The pattern is decided by the **architecture the touched code already uses** — inspect the files you will modify before choosing:
 
-| Situation                                      | Pattern               | Reference                                                                                                      |
-| ---------------------------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------- |
-| New feature (greenfield)                       | Match project stack   | `project.conventionsFile`, [REFERENCE.md](REFERENCE.md#architecture-patterns)                                    |
-| Improvement / bug fix on existing feature code | Match existing files  | Inspect touched files first; same reference for greenfield shape when extending                                |
+| Situation                                      | Pattern              | Reference                                                                     |
+| ---------------------------------------------- | -------------------- | ----------------------------------------------------------------------------- |
+| New feature (greenfield in this area)          | Match project stack  | `project.conventionsFile`, [REFERENCE.md](REFERENCE.md#architecture-patterns) |
+| Improvement / bug fix on existing feature code | Match existing files | Inspect touched files first; same reference when extending                    |
 
-> **Rule:** never introduce foreign patterns (Redux, RTK Query, React Query) unless the touched area already uses them. Match what the touched files already use. When ambiguous, inspect them and **ask the user**.
+> **Rule:** never introduce foreign patterns unless the touched area already uses them. Do not downgrade a screen/module to a simpler pattern just because the task is an "improvement". When ambiguous, inspect neighbors under `docs.domainMirror` and **ask the user**.
 
 ### Step 3 — Scope
 
-- **Domain** — e.g. `tasks`, `projects`, `auth` under `docs.domainMirror` from config.
+- **Domain** — feature area under `docs.domainMirror` from config (e.g. `expense-list`, `auth`).
+- **Module / package** — single app, monorepo package, or client + server? Confirm with user if unclear.
 - **Layers** — see [layer table](REFERENCE.md#layer-and-location-selection).
 
 ### Step 4 — Files, phases
 
 1. List every **CREATE** / **MODIFY** file (see [files example](REFERENCE.md#files-example)).
-2. Group into [increments](REFERENCE.md#increments).
-3. Add checklist items per applicable implementation phase to `03-plan.md`. Document omitted phases under `## Skipped phases`.
+2. Note project-specific atomic skills to invoke during execution, if the repo defines them.
+3. Group into [increments](REFERENCE.md#increments).
+4. Add checklist items per applicable implementation phase to `03-plan.md`. Document omitted phases under `## Skipped phases`.
 
 ### Step 5 — Confirm
 
-1. Save `03-plan.md` and update `02-context.md` using [templates](REFERENCE.md#planmd-template).
+1. Save `03-plan.md` and update `02-context.md` using [templates](REFERENCE.md#03-planmd-template).
 2. Present [confirmation summary](REFERENCE.md#confirmation-summary-template).
 
 **Do not write implementation code before user confirms.** Revise and re-confirm if requested.
@@ -92,41 +94,41 @@ Default order: **UI-first**. Omit irrelevant phases; document skips in `03-plan.
 The phase table is a **guide**, not a rigid script. During implementation the agent may:
 
 - **Run phases in parallel** when they have no dependency on each other (e.g. tests while i18n keys are drafted).
-- **Delegate to subagents** when it speeds up isolated work — e.g. `code-reviewer` for Phase 9, explore agents for route call sites.
-- **Stay inline** when phases are tightly coupled or touch the same files.
+- **Delegate to subagents** when it speeds up isolated work — e.g. `code-reviewer` for Phase 9, explore agents for navigation call sites.
+- **Stay inline** when phases are tightly coupled, touch the same files, or need sequential validation.
 
-Respect **hard dependencies**: do not wire components ↔ hooks (Phase 3) before both exist; do not run Phase 9 before implementation is stable; **Phase 10 (finalize docs) always last** before optional Phase 11.
+Respect **hard dependencies**: do not wire UI ↔ orchestration (Phase 3) before both exist; do not run Phase 9 before implementation is stable; **Phase 10 (finalize docs) always last** before optional Phase 11.
 
 Note parallel work or subagent use in `03-plan.md` when it helps traceability. Details: [REFERENCE.md — Execution strategy](REFERENCE.md#execution-strategy).
 
-| #   | Phase                | Notes                                                                             |
-| --- | -------------------- | --------------------------------------------------------------------------------- |
-| 1   | Components           | Domain UI in `components/`; shadcn/Tailwind patterns                            |
-| 2   | Hooks                | Orchestration in `hooks/`; loading, errors, pending keys                        |
-| 3   | Components ↔ Hooks   | Wire props/callbacks; no Supabase calls in components                             |
-| 4   | Data layer           | `lib/queries/`; Supabase migration if schema changes                              |
-| 5   | Routes               | Lazy routes in `App.tsx` when adding a page                                     |
-| 6   | Tests                | Vitest + Testing Library; co-located `*.test.ts(x)`                               |
-| 7   | Internationalization | `pt-BR.json` + `en-US.json`                                                       |
-| 8   | Analytics            | Skip unless product asks — document in Skipped phases                             |
-| 9   | Code review          | Agent `code-reviewer` or inline review                                            |
-| 10  | Finalize docs        | **Mandatory** — invoke [write-finalize-docs](../write-finalize-docs/SKILL.md)     |
-| 11  | New skill needed?    | `write-skill` if approved                                                         |
+| #   | Phase                | Notes                                                                         |
+| --- | -------------------- | ----------------------------------------------------------------------------- |
+| 1   | UI                   | Screens, pages, components, widgets — match existing domain patterns          |
+| 2   | Orchestration        | Controllers, hooks, view models, blocs — loading, errors, mutations           |
+| 3   | UI ↔ Orchestration   | Wire presentation to orchestration; keep UI thin                              |
+| 4   | Data layer           | Repositories, queries, API clients; migrations if schema changes              |
+| 5   | Routes / navigation  | Register routes; map **every** entry point from the spec                      |
+| 6   | Tests                | Project test stack; co-locate per convention; purposeful coverage only        |
+| 7   | Internationalization | All required locales; reuse existing keys when possible                       |
+| 8   | Analytics            | Skip unless product asks — document in Skipped phases                         |
+| 9   | Code review          | Agent `code-reviewer` or inline review                                        |
+| 10  | Finalize docs        | **Mandatory** — invoke [write-finalize-docs](../write-finalize-docs/SKILL.md) |
+| 11  | New skill needed?    | `write-skill` if approved                                                     |
 
 Per-phase rules: [REFERENCE.md — Implementation phases](REFERENCE.md#implementation-phases-detailed).
 
 **Key rules:**
 
-- Phase 1: follow existing component patterns — **ask** if unclear.
-- Phase 4: queries in `lib/queries/`; schema changes in `supabase/migrations/` — not inline in components.
-- Phase 2–3: hooks call query functions; components receive data and callbacks; localized mutation errors in hooks.
+- Phase 1: match existing UI patterns in the touched domain — **ask** if unclear.
+- Phases 2–3: orchestration calls data-access functions; UI receives data and callbacks.
+- Phase 4: persistence/network in the project's data module; schema changes in the canonical migrations folder.
 - Phase 5: map **every** navigation entry point — **ask** if unclear.
 - Phase 6: purposeful tests only — test behavior that matters.
-- Phase 9: use `code-reviewer` agent for large or cross-layer changes; run before Phase 10.
+- Phase 9: use `code-reviewer` for large or cross-layer changes; run before Phase 10.
 - Phase 10: **mandatory** — invoke `write-finalize-docs`; folder must end with only `01-spec.md` + `02-context.md`.
-- Phase 7: reuse existing i18n keys when possible.
+- Phase 7: reuse existing i18n/l10n keys when possible.
 
-For each phase: update `03-plan.md` checkboxes, stop when blocked.
+For each phase: update `03-plan.md` checkboxes, invoke listed project skills when applicable, stop when blocked.
 
 ---
 
@@ -155,7 +157,7 @@ For each phase: update `03-plan.md` checkboxes, stop when blocked.
 
 **After Write (before code):**
 
-- [ ] Plan saved to `docs/<domain>/<feature>/03-plan.md`
+- [ ] Plan saved to `{docs.root}/<domain>/<feature>/03-plan.md`
 - [ ] Architecture pattern chosen and justified
 - [ ] File list identified
 - [ ] User confirmed

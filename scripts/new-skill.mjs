@@ -32,7 +32,9 @@ for (let index = 0; index < args.length; index += 1) {
 const nameArg = nameParts.join(" ");
 
 if (!nameArg) {
-  console.error("Usage: npm run new -- <skill-name> [--resources scripts,references,assets]");
+  console.error(
+    "Usage: npm run new -- <skill-name> [--resources scripts,references,assets]",
+  );
   process.exit(1);
 }
 
@@ -45,11 +47,16 @@ if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name)) {
 }
 
 const resources = resourcesValue
-  ? resourcesValue.split(",").map((value) => value.trim()).filter(Boolean)
+  ? resourcesValue
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean)
   : [];
 
 const allowedResources = new Set(["scripts", "references", "assets"]);
-const invalidResources = resources.filter((resource) => !allowedResources.has(resource));
+const invalidResources = resources.filter(
+  (resource) => !allowedResources.has(resource),
+);
 
 if (invalidResources.length > 0) {
   console.error(`Invalid resources: ${invalidResources.join(", ")}`);
@@ -61,7 +68,9 @@ const skillDir = path.join(process.cwd(), "skills", name);
 const skillFile = path.join(skillDir, "SKILL.md");
 
 if (existsSync(skillDir)) {
-  console.error(`Skill already exists: ${path.relative(process.cwd(), skillDir)}`);
+  console.error(
+    `Skill already exists: ${path.relative(process.cwd(), skillDir)}`,
+  );
   process.exit(1);
 }
 
@@ -140,7 +149,9 @@ async function updateSkillsShConfig(skillName) {
     config.groupings = [];
   }
 
-  let personalGroup = config.groupings.find((group) => group.title === "Personal");
+  let personalGroup = config.groupings.find(
+    (group) => group.title === "Personal",
+  );
 
   if (!personalGroup) {
     personalGroup = {
@@ -155,7 +166,9 @@ async function updateSkillsShConfig(skillName) {
     personalGroup.skills = [];
   }
 
-  personalGroup.skills = personalGroup.skills.filter((entry) => entry !== placeholder);
+  personalGroup.skills = personalGroup.skills.filter(
+    (entry) => entry !== placeholder,
+  );
 
   if (!personalGroup.skills.includes(skillName)) {
     personalGroup.skills.push(skillName);

@@ -27,7 +27,9 @@ try {
     }
   }
 
-  console.log("\nWorkflow skills setup — answer prompts or press Enter to keep defaults.\n");
+  console.log(
+    "\nWorkflow skills setup — answer prompts or press Enter to keep defaults.\n",
+  );
 
   config.project.name = await ask("Project name", config.project.name);
   config.project.conventionsFile = await ask(
@@ -51,7 +53,10 @@ try {
 
   if (config.taskTracker.enabled) {
     config.taskTracker.cardKeyPrefix = (
-      await ask("Card key prefix (e.g. REV, PM)", config.taskTracker.cardKeyPrefix)
+      await ask(
+        "Card key prefix (e.g. REV, PM)",
+        config.taskTracker.cardKeyPrefix,
+      )
     ).toUpperCase();
     const branchMatch = await ask(
       "Branch name equals card key? (Y/n)",
@@ -94,13 +99,24 @@ try {
   }
 
   config.code ??= {};
-  config.code.appRoot = await ask("App root path (optional)", config.code.appRoot || "");
-  config.code.lintCommand = await ask("Lint command (optional)", config.code.lintCommand || "");
-  config.code.testCommand = await ask("Test command (optional)", config.code.testCommand || "");
+  config.code.appRoot = await ask(
+    "App root path (optional)",
+    config.code.appRoot || "",
+  );
+  config.code.lintCommand = await ask(
+    "Lint command (optional)",
+    config.code.lintCommand || "",
+  );
+  config.code.testCommand = await ask(
+    "Test command (optional)",
+    config.code.testCommand || "",
+  );
 
   await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
   console.log(`\nSaved ${path.relative(root, configPath)}`);
-  console.log("Commit skills.config.example.json as reference; keep skills.config.json local (gitignored).");
+  console.log(
+    "Commit skills.config.example.json as reference; keep skills.config.json local (gitignored).",
+  );
 } finally {
   rl.close();
 }
