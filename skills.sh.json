@@ -1,4 +1,4 @@
-{
+﻿{
   "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
   "notGrouped": "bottom",
   "groupings": [
@@ -11,20 +11,6 @@
         "build-feature",
         "close-workflow",
         "write-skill"
-      ]
-    },
-    {
-      "title": "Legacy (compat)",
-      "description": "Redirects to unified skills — removed in v0.3.0.",
-      "skills": [
-        "workflow-config",
-        "task-workflow",
-        "mode-brainstorm",
-        "mode-grill",
-        "write-feature-spec",
-        "write-plan",
-        "write-finalize-docs",
-        "write-handoff"
       ]
     }
   ]
