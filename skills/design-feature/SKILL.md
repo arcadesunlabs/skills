@@ -7,18 +7,19 @@ description: Brainstorm, grill, and write feature specs before coding — explor
 
 **Announce at start:** "I'm using the design-feature skill."
 
-Turn ideas into approved designs and specs through collaborative dialogue. Three modes — pick by user intent:
+Turn ideas into approved designs and specs through collaborative dialogue. Two entry paths — pick by user intent:
 
-| Mode        | When                                                         | Reference                                      |
-| ----------- | ------------------------------------------------------------ | ---------------------------------------------- |
-| **Brainstorm** | New feature, component, or behavior before implementation | This skill (checklist below)                   |
-| **Grill**      | Stress-test an existing plan or design                      | [references/grill.md](references/grill.md)   |
-| **Spec only**  | Write or refine a spec without full brainstorm             | [references/spec.md](references/spec.md)       |
+| Path           | When                                                         | How                                                          |
+| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **Brainstorm** | New feature, component, or behavior before implementation    | Checklist below (grill is step 2)                            |
+| **Spec only**  | Write or refine a spec — context already clear               | [references/spec.md](references/spec.md)                     |
+
+**Grill-only:** user has a plan and wants it stress-tested → run [references/grill.md](references/grill.md) alone, then continue brainstorm from step 3 or stop.
 
 **Step 0:** Invoke [workflow](../workflow/SKILL.md) and load `skills.config.json`.
 
 <HARD-GATE>
-Do NOT invoke build-feature, write code, scaffold, or implement until design is presented and the user has approved it (brainstorm mode). Grill and spec-only modes follow their own references.
+Do NOT invoke build-feature, write code, scaffold, or implement until design is presented and the user has approved it (brainstorm path). Spec-only skips grill when context is already settled.
 </HARD-GATE>
 
 ---
@@ -28,16 +29,15 @@ Do NOT invoke build-feature, write code, scaffold, or implement until design is 
 Complete in order:
 
 1. **Explore project context** — files, docs, recent commits
-2. **Ask clarifying questions** — one at a time; purpose, constraints, success criteria
-3. **Domain alignment** — run [grill mode](references/grill.md) to stress-test terminology against the domain model
-4. **Scope sizing** — [decomposition heuristics](references/decomposition.md); if epic-sized, propose slice table and get approval
-5. **Propose 2-3 approaches** — trade-offs and recommendation
-6. **Present design** — scaled sections; user approval after each
-7. **Write spec** — follow [references/spec.md](references/spec.md); save to `{docs.root}/<domain>/<feature>/01-spec.md`
-8. **Epic artifacts** — if epic-sized and `taskTracker.enabled`: create child cards (with approval) via [tracker steps](../build-feature/references/tracker.md)
-9. **Spec self-review** — placeholders, contradictions, ambiguity, scope
-10. **User reviews spec** — wait for approval
-11. **Transition** — single slice → `build-feature` | epic → **STOP**, ask which child slice first
+2. **Grill** — follow [references/grill.md](references/grill.md): clarify purpose, constraints, success criteria, and domain alignment; one question at a time until shared understanding
+3. **Scope sizing** — [decomposition heuristics](references/decomposition.md); if epic-sized, propose slice table and get approval
+4. **Propose 2-3 approaches** — trade-offs and recommendation
+5. **Present design** — scaled sections; user approval after each
+6. **Write spec** — follow [references/spec.md](references/spec.md); save to `{docs.root}/<domain>/<feature>/01-spec.md`
+7. **Epic artifacts** — if epic-sized and `taskTracker.enabled`: create child cards (with approval) via [tracker steps](../build-feature/references/tracker.md)
+8. **Spec self-review** — placeholders, contradictions, ambiguity, scope
+9. **User reviews spec** — wait for approval
+10. **Transition** — single slice → `build-feature` | epic → **STOP**, ask which child slice first
 
 ## Epic flow
 

@@ -1,6 +1,6 @@
 # design-feature — Scope sizing and decomposition
 
-Use this reference during **Step 4 — Scope sizing** and when finalizing an epic.
+Use this reference during **Step 3 — Scope sizing** and when finalizing an epic.
 
 Load [workflow](../workflow/SKILL.md) first. Use `{cardKey}`, `{cardKeyPrefix}`, and `{docs.root}` from config below.
 
