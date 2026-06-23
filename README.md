@@ -106,6 +106,28 @@ Para reconfigurar, rode o mesmo comando de novo.
 
 Campos principais: `project`, `docs`, **`implementation.phases`**, `taskTracker` (opcional), `code`. Referência: [skills.config.example.json](./skills.config.example.json).
 
+### Onde as specs ficam (`<domain>` / `<feature>`)
+
+As skills de design e entrega salvam documentação em `{docs.root}/<domain>/<feature>/` — valores de `docs` no `skills.config.json` do **seu projeto**.
+
+| Placeholder   | O que é                                                                | Exemplo                          |
+| ------------- | ---------------------------------------------------------------------- | -------------------------------- |
+| `{docs.root}` | Pasta raiz de docs (ex. `.docs`)                                       | `.docs`                          |
+| `<domain>`    | Área funcional do produto, em kebab-case — espelha `docs.domainMirror` | `auth`, `calendar`               |
+| `<feature>`   | Feature específica dentro do domínio                                   | `social-login`, `password-reset` |
+
+**Caminho típico:** `{docs.root}/<domain>/<feature>/01-spec.md` → `.docs/auth/social-login/01-spec.md`
+
+O agente infere `<domain>` e `<feature>` pela estrutura existente em `docs.domainMirror` (ex. `apps/my-app/lib/features/auth/social-login/`). Preferências explícitas do usuário sobrescrevem o default.
+
+**Domínio flat** — quando não há sub-feature, os arquivos numerados ficam direto em `{docs.root}/<domain>/` (ex. `.docs/calendar/01-spec.md`).
+
+| Arquivo                                   | Função                                                     |
+| ----------------------------------------- | ---------------------------------------------------------- |
+| `01-spec.md`                              | Spec de produto (permanente)                               |
+| `02-context.md`                           | Contexto técnico brownfield (permanente)                   |
+| `03-plan.md`, `04-tasks.md`, `handoff.md` | Transitórios — removidos por `close-workflow` após entrega |
+
 ---
 
 ## Use no dia a dia
