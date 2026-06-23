@@ -4,7 +4,18 @@
   "groupings": [
     {
       "title": "Workflow",
-      "description": "Config, task tracking, planning, specs, and delivery.",
+      "description": "Config, design, build, and close the delivery loop.",
+      "skills": [
+        "workflow",
+        "design-feature",
+        "build-feature",
+        "close-workflow",
+        "write-skill"
+      ]
+    },
+    {
+      "title": "Legacy (compat)",
+      "description": "Redirects to unified skills — removed in v0.3.0.",
       "skills": [
         "workflow-config",
         "task-workflow",
@@ -13,8 +24,7 @@
         "write-feature-spec",
         "write-plan",
         "write-finalize-docs",
-        "write-handoff",
-        "write-skill"
+        "write-handoff"
       ]
     }
   ]

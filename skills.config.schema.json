@@ -14,11 +14,11 @@
     },
     "docs": {
       "type": "object",
-      "required": ["root", "indexFile", "domainMirror"],
+      "required": ["root"],
       "properties": {
-        "root": { "type": "string", "minLength": 1 },
-        "indexFile": { "type": "string", "minLength": 1 },
-        "domainMirror": { "type": "string", "minLength": 1 }
+        "root": { "type": "string" },
+        "indexFile": { "type": "string" },
+        "domainMirror": { "type": "string" }
       }
     },
     "taskTracker": {
@@ -32,7 +32,7 @@
       "properties": {
         "provider": {
           "type": "string",
-          "enum": ["trello", "linear", "github", "none"]
+          "enum": ["trello", "jira", "linear", "github", "none"]
         },
         "enabled": { "type": "boolean" },
         "mcpServer": { "type": "string" },
@@ -54,6 +54,32 @@
                 "inProgress": { "$ref": "#/$defs/list" },
                 "backlog": { "$ref": "#/$defs/list" },
                 "done": { "$ref": "#/$defs/list" }
+              }
+            }
+          }
+        },
+        "jira": {
+          "type": "object",
+          "properties": {
+            "siteUrl": { "type": "string" },
+            "projectKey": { "type": "string" },
+            "boardId": { "type": "string" },
+            "mcpServer": { "type": "string" },
+            "issueTypes": {
+              "type": "object",
+              "properties": {
+                "epic": { "type": "string" },
+                "story": { "type": "string" },
+                "task": { "type": "string" }
+              }
+            },
+            "statuses": {
+              "type": "object",
+              "properties": {
+                "todo": { "type": "string" },
+                "inProgress": { "type": "string" },
+                "backlog": { "type": "string" },
+                "done": { "type": "string" }
               }
             }
           }

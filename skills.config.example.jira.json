@@ -1,0 +1,40 @@
+{
+  "$schema": "./skills.config.schema.json",
+  "project": {
+    "name": "My Project",
+    "conventionsFile": "CLAUDE.md"
+  },
+  "docs": {
+    "root": ".docs",
+    "indexFile": ".docs/index.md",
+    "domainMirror": "apps/my-app/lib/features"
+  },
+  "taskTracker": {
+    "provider": "jira",
+    "enabled": true,
+    "mcpServer": "user-jira",
+    "cardKeyPrefix": "REV",
+    "branchMatchesCardKey": true,
+    "jira": {
+      "siteUrl": "https://company.atlassian.net",
+      "projectKey": "REV",
+      "boardId": "42",
+      "issueTypes": {
+        "epic": "Epic",
+        "story": "Story",
+        "task": "Task"
+      },
+      "statuses": {
+        "todo": "To Do",
+        "inProgress": "In Progress",
+        "backlog": "Backlog",
+        "done": "Done"
+      }
+    }
+  },
+  "code": {
+    "appRoot": "apps/my-app",
+    "lintCommand": "cd apps/my-app && npm run lint",
+    "testCommand": "cd apps/my-app && npm test"
+  }
+}

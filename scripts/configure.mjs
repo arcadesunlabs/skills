@@ -7,11 +7,62 @@ import { stdin as input, stdout as output } from "node:process";
 import { fileURLToPath } from "node:url";
 
 const skillsRepoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const projectArg = process.argv.slice(2).find((arg) => !arg.startsWith("-"));
+const argv = process.argv.slice(2);
+const presetFlag = argv.find((arg) => arg.startsWith("--preset"));
+const presetArg = presetFlag?.includes("=")
+  ? presetFlag.split("=").slice(1).join("=")
+  : presetFlag
+    ? argv[argv.indexOf(presetFlag) + 1]
+    : undefined;
+const projectArg = argv.find((arg) => !arg.startsWith("-"));
 const root = projectArg ? path.resolve(projectArg) : process.cwd();
 const configPath = path.join(root, "skills.config.json");
 const examplePath = path.join(root, "skills.config.example.json");
 const schemaPath = path.join(root, "skills.config.schema.json");
+
+const PRESETS = {
+  minimal: {
+    project: { name: "My Project", conventionsFile: "AGENTS.md" },
+    docs: { root: "docs", indexFile: "docs/README.md", domainMirror: "src" },
+    taskTracker: {
+      provider: "none",
+      enabled: false,
+      cardKeyPrefix: "TASK",
+      branchMatchesCardKey: true,
+    },
+    code: {},
+  },
+  "single-app": {
+    project: { name: "My Project", conventionsFile: "CLAUDE.md" },
+    docs: { root: "docs", indexFile: "docs/index.md", domainMirror: "src" },
+    taskTracker: {
+      provider: "none",
+      enabled: false,
+      cardKeyPrefix: "TASK",
+      branchMatchesCardKey: true,
+    },
+    code: { appRoot: ".", lintCommand: "", testCommand: "" },
+  },
+  monorepo: {
+    project: { name: "My Project", conventionsFile: "CLAUDE.md" },
+    docs: {
+      root: ".docs",
+      indexFile: ".docs/index.md",
+      domainMirror: "apps/my-app/lib/features",
+    },
+    taskTracker: {
+      provider: "none",
+      enabled: false,
+      cardKeyPrefix: "TASK",
+      branchMatchesCardKey: true,
+    },
+    code: {
+      appRoot: "apps/my-app",
+      lintCommand: "cd apps/my-app && npm run lint",
+      testCommand: "cd apps/my-app && npm test",
+    },
+  },
+};
 
 const rl = readline.createInterface({ input, output });
 
@@ -42,21 +93,48 @@ try {
     "\nWorkflow skills setup — answer prompts or press Enter to keep defaults.\n",
   );
 
+  const preset =
+    normalizePreset(presetArg) ||
+    normalizePreset(
+      await ask(
+        "Project preset (minimal | single-app | monorepo | custom)",
+        "minimal",
+      ),
+    ) ||
+    "minimal";
+
+  if (preset !== "custom" && PRESETS[preset]) {
+    config = mergePreset(config, PRESETS[preset]);
+    console.log(`Using preset: ${preset}`);
+  }
+
   config.project.name = await ask("Project name", config.project.name);
   config.project.conventionsFile = await ask(
-    "Project conventions file (e.g. CLAUDE.md)",
+    "Project conventions file (e.g. CLAUDE.md, AGENTS.md)",
     config.project.conventionsFile,
   );
 
-  config.docs.root = await ask("Docs root folder", config.docs.root);
-  config.docs.indexFile = await ask("Docs index file", config.docs.indexFile);
-  config.docs.domainMirror = await ask(
-    "Code path that docs domains mirror",
-    config.docs.domainMirror,
-  );
+  if (preset === "custom") {
+    config.docs.root = await ask("Docs root folder", config.docs.root);
+    config.docs.indexFile = await ask("Docs index file", config.docs.indexFile);
+    config.docs.domainMirror = await ask(
+      "Code path that docs domains mirror (optional)",
+      config.docs.domainMirror || "",
+    );
+  } else if (preset === "minimal") {
+    const docsRoot = await ask("Docs root folder (empty to skip)", config.docs.root);
+    if (!docsRoot) {
+      config.docs = { root: "", indexFile: "", domainMirror: "" };
+    } else {
+      config.docs.root = docsRoot;
+      config.docs.indexFile =
+        config.docs.indexFile || `${docsRoot.replace(/\/$/, "")}/README.md`;
+      config.docs.domainMirror = config.docs.domainMirror || "src";
+    }
+  }
 
   const provider = await ask(
-    "Task tracker provider (trello | linear | github | none)",
+    "Task tracker provider (trello | jira | linear | github | none)",
     config.taskTracker.provider,
   );
   config.taskTracker.provider = normalizeProvider(provider);
@@ -76,52 +154,27 @@ try {
     config.taskTracker.branchMatchesCardKey = !/^n(o)?$/i.test(branchMatch);
 
     if (config.taskTracker.provider === "trello") {
-      config.taskTracker.mcpServer = await ask(
-        "Trello MCP server name",
-        config.taskTracker.mcpServer || "user-trello",
-      );
-      config.taskTracker.trello ??= {};
-      config.taskTracker.trello.boardName = await ask(
-        "Trello board name",
-        config.taskTracker.trello.boardName || "",
-      );
-      config.taskTracker.trello.boardUrl = await ask(
-        "Trello board URL",
-        config.taskTracker.trello.boardUrl || "",
-      );
-      config.taskTracker.trello.boardId = await ask(
-        "Trello board ID",
-        config.taskTracker.trello.boardId || "",
-      );
-      config.taskTracker.trello.lists ??= {};
-      for (const key of ["todo", "inProgress", "backlog", "done"]) {
-        config.taskTracker.trello.lists[key] ??= { name: "", id: "" };
-        const label = listLabel(key);
-        config.taskTracker.trello.lists[key].name = await ask(
-          `${label} list name`,
-          config.taskTracker.trello.lists[key].name,
-        );
-        config.taskTracker.trello.lists[key].id = await ask(
-          `${label} list ID`,
-          config.taskTracker.trello.lists[key].id,
-        );
-      }
+      await configureTrello(config);
+    } else if (config.taskTracker.provider === "jira") {
+      await configureJira(config);
     }
   }
 
-  config.code ??= {};
-  config.code.appRoot = await ask(
-    "App root path (optional)",
-    config.code.appRoot || "",
-  );
-  config.code.lintCommand = await ask(
-    "Lint command (optional)",
-    config.code.lintCommand || "",
-  );
-  config.code.testCommand = await ask(
-    "Test command (optional)",
-    config.code.testCommand || "",
-  );
+  if (preset === "custom" || preset === "monorepo" || preset === "single-app") {
+    config.code ??= {};
+    config.code.appRoot = await ask(
+      "App root path (optional)",
+      config.code.appRoot || "",
+    );
+    config.code.lintCommand = await ask(
+      "Lint command (optional)",
+      config.code.lintCommand || "",
+    );
+    config.code.testCommand = await ask(
+      "Test command (optional)",
+      config.code.testCommand || "",
+    );
+  }
 
   await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
   console.log(`\nSaved ${configPath}`);
@@ -141,13 +194,118 @@ async function ask(question, defaultValue = "") {
   return answer || defaultValue;
 }
 
+function normalizePreset(value) {
+  if (!value) return undefined;
+  const normalized = value.trim().toLowerCase();
+  if (["minimal", "single-app", "monorepo", "custom"].includes(normalized)) {
+    return normalized;
+  }
+  console.warn(`Unknown preset "${value}", using interactive custom flow.`);
+  return "custom";
+}
+
+function mergePreset(base, preset) {
+  return {
+    ...base,
+    $schema: base.$schema || "./skills.config.schema.json",
+    project: { ...base.project, ...preset.project },
+    docs: { ...base.docs, ...preset.docs },
+    taskTracker: { ...base.taskTracker, ...preset.taskTracker },
+    code: { ...base.code, ...preset.code },
+  };
+}
+
 function normalizeProvider(value) {
   const normalized = value.trim().toLowerCase();
-  if (["trello", "linear", "github", "none"].includes(normalized)) {
+  if (["trello", "jira", "linear", "github", "none"].includes(normalized)) {
     return normalized;
   }
   console.warn(`Unknown provider "${value}", using "none".`);
   return "none";
+}
+
+async function configureTrello(config) {
+  config.taskTracker.mcpServer = await ask(
+    "Trello MCP server name",
+    config.taskTracker.mcpServer || "user-trello",
+  );
+  config.taskTracker.trello ??= {};
+  config.taskTracker.trello.boardName = await ask(
+    "Trello board name",
+    config.taskTracker.trello.boardName || "",
+  );
+  config.taskTracker.trello.boardUrl = await ask(
+    "Trello board URL",
+    config.taskTracker.trello.boardUrl || "",
+  );
+  config.taskTracker.trello.boardId = await ask(
+    "Trello board ID",
+    config.taskTracker.trello.boardId || "",
+  );
+  config.taskTracker.trello.lists ??= {};
+  for (const key of ["todo", "inProgress", "backlog", "done"]) {
+    config.taskTracker.trello.lists[key] ??= { name: "", id: "" };
+    const label = listLabel(key);
+    config.taskTracker.trello.lists[key].name = await ask(
+      `${label} list name`,
+      config.taskTracker.trello.lists[key].name,
+    );
+    config.taskTracker.trello.lists[key].id = await ask(
+      `${label} list ID`,
+      config.taskTracker.trello.lists[key].id,
+    );
+  }
+}
+
+async function configureJira(config) {
+  config.taskTracker.mcpServer = await ask(
+    "Jira MCP server name (if installed)",
+    config.taskTracker.mcpServer ||
+      config.taskTracker.jira?.mcpServer ||
+      "user-jira",
+  );
+  config.taskTracker.jira ??= {};
+  config.taskTracker.jira.mcpServer = config.taskTracker.mcpServer;
+  config.taskTracker.jira.siteUrl = await ask(
+    "Jira site URL (e.g. https://company.atlassian.net)",
+    config.taskTracker.jira.siteUrl || "",
+  );
+  config.taskTracker.jira.projectKey = (
+    await ask(
+      "Jira project key (e.g. REV)",
+      config.taskTracker.jira.projectKey || config.taskTracker.cardKeyPrefix || "",
+    )
+  ).toUpperCase();
+  config.taskTracker.jira.boardId = await ask(
+    "Jira board ID (optional, for Scrum/Kanban boards)",
+    config.taskTracker.jira.boardId || "",
+  );
+  config.taskTracker.jira.issueTypes ??= {};
+  config.taskTracker.jira.issueTypes.epic = await ask(
+    "Epic issue type name",
+    config.taskTracker.jira.issueTypes.epic || "Epic",
+  );
+  config.taskTracker.jira.issueTypes.story = await ask(
+    "Story issue type name",
+    config.taskTracker.jira.issueTypes.story || "Story",
+  );
+  config.taskTracker.jira.issueTypes.task = await ask(
+    "Task issue type name",
+    config.taskTracker.jira.issueTypes.task || "Task",
+  );
+  config.taskTracker.jira.statuses ??= {};
+  for (const key of ["todo", "inProgress", "backlog", "done"]) {
+    const defaults = {
+      todo: "To Do",
+      inProgress: "In Progress",
+      backlog: "Backlog",
+      done: "Done",
+    };
+    config.taskTracker.jira.statuses[key] = await ask(
+      `${listLabel(key)} status name`,
+      config.taskTracker.jira.statuses[key] || defaults[key],
+    );
+  }
 }
 
 function listLabel(key) {
@@ -173,20 +331,5 @@ async function ensureProjectTemplates() {
 }
 
 function defaultConfig() {
-  return {
-    $schema: "./skills.config.schema.json",
-    project: { name: "My Project", conventionsFile: "CLAUDE.md" },
-    docs: {
-      root: ".docs",
-      indexFile: ".docs/index.md",
-      domainMirror: "lib/features",
-    },
-    taskTracker: {
-      provider: "none",
-      enabled: false,
-      cardKeyPrefix: "TASK",
-      branchMatchesCardKey: true,
-    },
-    code: {},
-  };
+  return mergePreset({}, PRESETS.minimal);
 }
