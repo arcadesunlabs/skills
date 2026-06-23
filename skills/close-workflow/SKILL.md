@@ -9,9 +9,9 @@ description: Hand off work between sessions or finalize feature docs after imple
 
 Two modes — pick by user intent:
 
-| Mode        | When                                              |
-| ----------- | ------------------------------------------------- |
-| **Handoff** | Switching agents or ending a long session         |
+| Mode         | When                                              |
+| ------------ | ------------------------------------------------- |
+| **Handoff**  | Switching agents or ending a long session         |
 | **Finalize** | Implementation complete, before merge, or cleanup |
 
 **Step 0:** Invoke [workflow](../workflow/SKILL.md) and read `skills.config.json`.
@@ -26,19 +26,19 @@ Write a handoff document so a fresh agent can continue.
 
 **Always in the repo** under `{docs.root}/` — never OS temp or outside workspace.
 
-| Work context            | Path                                      |
-| ----------------------- | ----------------------------------------- |
-| Feature with subfolder  | `{docs.root}/<domain>/<feature>/handoff.md` |
-| Flat domain             | `{docs.root}/<domain>/handoff.md`       |
-| Architecture / refactors| `{docs.root}/codebase/handoff.md`         |
-| Integrations            | `{docs.root}/integrations/handoff.md`   |
-| Dev setup / CI          | `{docs.root}/setup/handoff.md`          |
+| Work context             | Path                                        |
+| ------------------------ | ------------------------------------------- |
+| Feature with subfolder   | `{docs.root}/<domain>/<feature>/handoff.md` |
+| Flat domain              | `{docs.root}/<domain>/handoff.md`           |
+| Architecture / refactors | `{docs.root}/codebase/handoff.md`           |
+| Integrations             | `{docs.root}/integrations/handoff.md`       |
+| Dev setup / CI           | `{docs.root}/setup/handoff.md`              |
 
 Use `handoff.md` (not numbered `01`–`04`). Replace existing handoff in the same folder when updating.
 
 ### What to include
 
-- Current objective and `{cardKey}` if `taskTracker.enabled`
+- Current objective and tracked task ID if `taskTracker.enabled`
 - What was done (commits, branches, key files)
 - What is in progress or blocked
 - Explicit next steps for the receiving agent
@@ -55,7 +55,7 @@ Use `handoff.md` (not numbered `01`–`04`). Replace existing handoff in the sam
 
 ## Finalize mode
 
-**When:** Last documentation step after implementation (tests pass, review done). Run before merge or closing a `{cardKey}` slice.
+**When:** Last documentation step after implementation (tests pass, review done). Run before merge or when closing a delivery slice.
 
 **Goal:** `{docs.root}/<domain>/<feature>/` contains **only** `01-spec.md` and `02-context.md`.
 
@@ -90,8 +90,8 @@ Trivial one-line fixes with no feature folder. Confirm with user if they say not
 
 ## Integration
 
-| Skill           | Relationship                              |
-| --------------- | ----------------------------------------- |
-| `build-feature` | Invokes finalize mode on completion       |
-| `design-feature`| Creates transient `04-tasks.md` at epic time |
-| `workflow`      | Supplies paths and validation commands    |
+| Skill            | Relationship                                 |
+| ---------------- | -------------------------------------------- |
+| `build-feature`  | Invokes finalize mode on completion          |
+| `design-feature` | Creates transient `04-tasks.md` at epic time |
+| `workflow`       | Supplies paths and validation commands       |

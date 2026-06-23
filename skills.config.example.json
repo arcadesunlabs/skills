@@ -10,22 +10,44 @@
     "domainMirror": "apps/my-app/lib/features"
   },
   "taskTracker": {
-    "provider": "trello",
-    "enabled": true,
-    "mcpServer": "user-trello",
-    "cardKeyPrefix": "REV",
-    "branchMatchesCardKey": true,
-    "trello": {
-      "boardName": "My Board",
-      "boardUrl": "https://trello.com/b/BOARD_ID/board-name",
-      "boardId": "BOARD_ID",
-      "lists": {
-        "todo": { "name": "To Do", "id": "LIST_ID_TODO" },
-        "inProgress": { "name": "In Progress", "id": "LIST_ID_IN_PROGRESS" },
-        "backlog": { "name": "Backlog", "id": "LIST_ID_BACKLOG" },
-        "done": { "name": "Done", "id": "LIST_ID_DONE" }
+    "provider": "none",
+    "enabled": false,
+    "cardKeyPrefix": "TASK",
+    "branchMatchesCardKey": true
+  },
+  "implementation": {
+    "preset": "frontend-ui-first",
+    "phases": [
+      { "name": "UI", "notes": "Match existing domain patterns" },
+      { "name": "Orchestration", "notes": "Loading, errors, mutations" },
+      {
+        "name": "UI ↔ Orchestration",
+        "notes": "Wire presentation to orchestration"
+      },
+      { "name": "Data layer", "notes": "Repositories, queries, migrations" },
+      { "name": "Routes / navigation", "notes": "Every entry point from spec" },
+      {
+        "name": "Tests",
+        "notes": "Purposeful coverage only",
+        "optional": true
+      },
+      {
+        "name": "Internationalization",
+        "notes": "All required locales",
+        "optional": true
+      },
+      {
+        "name": "Analytics",
+        "notes": "Only when product asks",
+        "optional": true
+      },
+      { "name": "Code review", "notes": "Inline or code-reviewer subagent" },
+      {
+        "name": "Finalize docs",
+        "notes": "Mandatory — close-workflow",
+        "alwaysLast": true
       }
-    }
+    ]
   },
   "code": {
     "appRoot": "apps/my-app",

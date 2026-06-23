@@ -1,6 +1,6 @@
 ---
 name: build-feature
-description: Pick up a tracked task, plan, and implement feature work — card/issue sync, branch creation, phased implementation, and code review. Use when starting a card, planning technical work, implementing a spec, or after design-feature.
+description: Plan and implement non-trivial feature work — scoped planning, phased implementation from config, and code review. Use when starting a task, planning technical work, implementing a spec, or after design-feature.
 ---
 
 # Build Feature
@@ -24,13 +24,13 @@ Plan **and** implement non-trivial feature work. Two modes:
 
 ## Entry paths
 
-| Path   | When                                                                                 | Input                                                      |
-| ------ | ------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| **A**  | After `design-feature`                                                               | `01-spec.md`                                               |
-| **A′** | Epic child slice — user picked child `{cardKey}`                                     | `01-spec.md` + child card description (current slice only) |
-| **B**  | No spec — direct implementation task                                                 | Conversation                                               |
+| Path   | When                                     | Input                                           |
+| ------ | ---------------------------------------- | ----------------------------------------------- |
+| **A**  | After `design-feature`                   | `01-spec.md`                                    |
+| **A′** | Epic child slice — user picked one slice | `01-spec.md` + slice scope (current slice only) |
+| **B**  | No spec — direct implementation task     | Conversation                                    |
 
-**Epic scoping (path A′):** Fetch child card via tracker MCP/CLI. Plan and implement **only** the current slice. Reference epic `01-spec.md` for shared context.
+**Epic scoping (path A′):** When tracker is enabled, fetch the child work item per [tracker.md](references/tracker.md). Plan and implement **only** the current slice. Reference epic `01-spec.md` for shared context.
 
 Skip for trivial tasks (typo, single-line fix) — implement per `project.conventionsFile`.
 
@@ -54,9 +54,9 @@ Inspect touched files before choosing. Match what the code already uses — see 
 
 Domain under `docs.domainMirror`, module/package, layers — confirm with user if unclear.
 
-### Step 4 — Files, phases
+### Step 4 — Files and phases
 
-List CREATE/MODIFY files, group into increments, add phase checklist to `03-plan.md`. See [references/plan.md](references/plan.md).
+List CREATE/MODIFY files, group into increments, and build the phase checklist in `03-plan.md` from **`implementation.phases`** in config (one `### Phase N — {name}` section per entry). See [references/plan.md](references/plan.md).
 
 ### Step 5 — Confirm
 
@@ -66,25 +66,16 @@ Save `03-plan.md` and `02-context.md`. Present confirmation summary. **Do not co
 
 ## Phase Read/Execute — Implement after confirmation
 
-Default order: **UI-first**. Omit irrelevant phases; document skips in `03-plan.md`.
+Execute phases in **`implementation.phases`** order from `skills.config.json`.
 
-| #   | Phase                | Notes                                                |
-| --- | -------------------- | ---------------------------------------------------- |
-| 1   | UI                   | Match existing domain patterns                       |
-| 2   | Orchestration        | Loading, errors, mutations                           |
-| 3   | UI ↔ Orchestration   | Wire presentation to orchestration                   |
-| 4   | Data layer           | Repositories, queries, migrations                    |
-| 5   | Routes / navigation  | Every entry point from spec                          |
-| 6   | Tests                | Purposeful coverage only                             |
-| 7   | Internationalization | All required locales                                 |
-| 8   | Analytics            | Skip unless product asks                             |
-| 9   | Code review          | Inline or `code-reviewer` subagent                   |
-| 10  | Finalize docs        | **Mandatory** — [close-workflow](../close-workflow/SKILL.md) |
-| 11  | New skill needed?    | `write-skill` if approved                            |
+| Rule            | Detail                                                                   |
+| --------------- | ------------------------------------------------------------------------ |
+| Order           | Array order; defer `alwaysLast: true` until other phases finish          |
+| Optional phases | Skip when irrelevant; document under `## Skipped phases` in `03-plan.md` |
+| Stack hints     | Use each phase's `notes`; match patterns from `project.conventionsFile`  |
+| Details         | [references/plan.md](references/plan.md#implementation-phase-hints)      |
 
-Per-phase details: [references/plan.md](references/plan.md#implementation-phases-detailed).
-
-**Hard dependencies:** Phase 10 always last before optional Phase 11.
+If `implementation.phases` is missing, stop and run [workflow discovery](../workflow/references/discovery.md).
 
 ---
 
@@ -97,5 +88,5 @@ Flow boundaries unclear, architecture ambiguous, blocker, or user has not confir
 ## Completion
 
 1. Update `03-plan.md` checkboxes and `02-context.md`.
-2. **Mandatory:** Invoke [close-workflow](../close-workflow/SKILL.md).
+2. Complete the phase with `alwaysLast: true` (typically **Finalize docs**) via [close-workflow](../close-workflow/SKILL.md).
 3. Tell the user docs are finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-context.md` remain.

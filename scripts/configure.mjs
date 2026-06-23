@@ -5,6 +5,11 @@ import path from "node:path";
 import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { fileURLToPath } from "node:url";
+import {
+  PHASE_PRESETS,
+  PRESET_IDS,
+  normalizePhasePreset,
+} from "./phase-presets.mjs";
 
 const skillsRepoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const argv = process.argv.slice(2);
@@ -31,6 +36,10 @@ const PRESETS = {
       branchMatchesCardKey: true,
     },
     code: {},
+    implementation: {
+      preset: "minimal",
+      phases: PHASE_PRESETS.minimal.phases,
+    },
   },
   "single-app": {
     project: { name: "My Project", conventionsFile: "CLAUDE.md" },
@@ -42,6 +51,10 @@ const PRESETS = {
       branchMatchesCardKey: true,
     },
     code: { appRoot: ".", lintCommand: "", testCommand: "" },
+    implementation: {
+      preset: "minimal",
+      phases: PHASE_PRESETS.minimal.phases,
+    },
   },
   monorepo: {
     project: { name: "My Project", conventionsFile: "CLAUDE.md" },
@@ -60,6 +73,10 @@ const PRESETS = {
       appRoot: "apps/my-app",
       lintCommand: "cd apps/my-app && npm run lint",
       testCommand: "cd apps/my-app && npm test",
+    },
+    implementation: {
+      preset: "frontend-ui-first",
+      phases: PHASE_PRESETS["frontend-ui-first"].phases,
     },
   },
 };
@@ -143,12 +160,12 @@ try {
   if (config.taskTracker.enabled) {
     config.taskTracker.cardKeyPrefix = (
       await ask(
-        "Card key prefix (e.g. REV, PM)",
+        "Task ID prefix (e.g. REV, PM)",
         config.taskTracker.cardKeyPrefix,
       )
     ).toUpperCase();
     const branchMatch = await ask(
-      "Branch name equals card key? (Y/n)",
+      "Branch name equals task ID? (Y/n)",
       config.taskTracker.branchMatchesCardKey ? "y" : "n",
     );
     config.taskTracker.branchMatchesCardKey = !/^n(o)?$/i.test(branchMatch);
@@ -159,6 +176,8 @@ try {
       await configureJira(config);
     }
   }
+
+  await configureImplementation(config);
 
   if (preset === "custom" || preset === "monorepo" || preset === "single-app") {
     config.code ??= {};
@@ -212,7 +231,106 @@ function mergePreset(base, preset) {
     docs: { ...base.docs, ...preset.docs },
     taskTracker: { ...base.taskTracker, ...preset.taskTracker },
     code: { ...base.code, ...preset.code },
+    implementation: {
+      ...base.implementation,
+      ...preset.implementation,
+      phases: clonePhases(
+        preset.implementation?.phases ?? base.implementation?.phases ?? [],
+      ),
+    },
   };
+}
+
+function clonePhases(phases) {
+  return phases.map((phase) => ({ ...phase }));
+}
+
+async function configureImplementation(config) {
+  console.log(
+    "\nImplementation workflow — map how you go from approved plan to shipped code.",
+  );
+  for (const id of PRESET_IDS) {
+    console.log(`  ${id}: ${PHASE_PRESETS[id].label}`);
+  }
+  console.log("  custom: define your own ordered phases\n");
+
+  const currentPreset = config.implementation?.preset || "minimal";
+  const phasePreset =
+    normalizePhasePreset(
+      await ask(
+        `Implementation preset (${PRESET_IDS.join(" | ")} | custom)`,
+        currentPreset,
+      ),
+    ) || currentPreset;
+
+  if (phasePreset === "custom") {
+    config.implementation = {
+      preset: "custom",
+      phases: await buildCustomPhases(config.implementation?.phases),
+    };
+    return;
+  }
+
+  config.implementation = {
+    preset: phasePreset,
+    phases: clonePhases(PHASE_PRESETS[phasePreset].phases),
+  };
+}
+
+async function buildCustomPhases(existingPhases = []) {
+  const phases = [];
+  const reuse =
+    existingPhases.length > 0
+      ? (await ask("Start from current phases? (Y/n)", "y")).trim()
+      : "n";
+
+  if (!/^n(o)?$/i.test(reuse)) {
+    phases.push(...clonePhases(existingPhases));
+    console.log("Edit by adding phases below; existing order is kept.");
+  }
+
+  console.log(
+    "Add phases in delivery order. Press Enter on an empty name to finish.",
+  );
+  console.log(
+    'Tip: mark finalize with "always last" when prompted for optional phases.',
+  );
+
+  while (true) {
+    const name = await ask(`Phase ${phases.length + 1} name`, "");
+    if (!name) break;
+
+    const notes = await ask("  Short note (optional)", "");
+    const optionalAnswer = await ask("  Optional phase? (y/N)", "n");
+    const alwaysLastAnswer = await ask("  Always run last? (y/N)", "n");
+
+    const phase = { name };
+    if (notes) phase.notes = notes;
+    if (/^y(es)?$/i.test(optionalAnswer)) phase.optional = true;
+    if (/^y(es)?$/i.test(alwaysLastAnswer)) phase.alwaysLast = true;
+    phases.push(phase);
+  }
+
+  if (phases.length === 0) {
+    console.warn("No phases entered; falling back to minimal preset.");
+    return clonePhases(PHASE_PRESETS.minimal.phases);
+  }
+
+  if (!phases.some((phase) => phase.alwaysLast)) {
+    const addFinalize = await ask(
+      'Append mandatory "Finalize docs" as last phase? (Y/n)',
+      "y",
+    );
+    if (!/^n(o)?$/i.test(addFinalize)) {
+      phases.push({
+        name: "Finalize docs",
+        notes: "Mandatory — close-workflow",
+        alwaysLast: true,
+      });
+    }
+  }
+
+  return phases;
 }
 
 function normalizeProvider(value) {

@@ -2,7 +2,7 @@
 
 Detailed tables, templates, and per-phase rules. Load when drafting artifacts or executing a specific phase.
 
-Load [workflow](../../workflow/SKILL.md) first. Paths use `{docs.root}`; ticket keys use `{cardKey}` from config.
+Load [workflow](../../workflow/SKILL.md) first. Paths use `{docs.root}`. Phase order comes from `implementation.phases` in config.
 
 Before planning file paths or architecture, read `project.conventionsFile` and inspect the code under `docs.domainMirror` and `code.appRoot`. **Match what the touched area already uses** — do not import patterns from another stack.
 
@@ -97,19 +97,19 @@ Implementation plan
 Type:     New feature | Improvement | Bug fix
 Pattern:  {from touched files / conventions}
 Domain:   e.g. expense-list, auth
-Ticket:   {cardKey}
+Task:     {taskId if taskTracker.enabled, else branch name}
 Entry:    A (with spec) | A′ (epic slice) | B (direct)
 
 Files:
   CREATE ...
   MODIFY ...
 
-Implementation phases:
-  1. …
+Implementation phases (from config):
+  1. {name} — {notes}
   2. …
 
 Skipped phases:
-  N. {phase} — {reason}
+  {name} — {reason}
 
 Waiting for confirmation to start implementation.
 ```
@@ -120,6 +120,8 @@ Waiting for confirmation to start implementation.
 
 Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed by `close-workflow` after delivery.
 
+**Generate one `### Phase N — {name}` section per entry in `implementation.phases`.** Use each phase's `notes` for checklist hints. Phases with `alwaysLast: true` are numbered last in the plan even if listed at the end of the config array.
+
 ```markdown
 # [Feature Name] Implementation Plan
 
@@ -128,7 +130,7 @@ Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed by `close-workflow`
 **Pattern:** {architecture chosen from inspection}
 **Domain:** e.g. expense-list, auth
 **Entry path:** A | A′ | B
-**Ticket:** {cardKey}
+**Tracked task:** {taskId or n/a}
 
 ## Files
 
@@ -137,59 +139,27 @@ MODIFY ...
 
 ## Skipped phases
 
-- Phase N — [reason]
+- {phase name} — [reason]
 
 ## Implementation phases
 
-### Phase 1 — Components / UI
+### Phase 1 — {name from config}
 
-- [ ] ...
+- [ ] …
 
-### Phase 2 — Orchestration (hooks, controllers, etc.)
+### Phase 2 — {name from config}
 
-- [ ] ...
+- [ ] …
 
-### Phase 3 — UI ↔ orchestration
-
-- [ ] ...
-
-### Phase 4 — Data layer
-
-- [ ] ...
-
-### Phase 5 — Routes / navigation
-
-- [ ] ...
-
-### Phase 6 — Tests
-
-- [ ] ...
-
-### Phase 7 — Internationalization
-
-- [ ] ...
-
-### Phase 8 — Analytics
-
-- [ ] ...
-
-### Phase 9 — Code review
-
-- [ ] ...
-
-### Phase 10 — Finalize docs
+### Phase N — Finalize docs (when in config)
 
 - [ ] Invoked `close-workflow`
 - [ ] `01-spec.md` updated to shipped product truth (no code)
 - [ ] `02-context.md` updated to match implementation
 - [ ] Deleted `03-plan.md`, `04-tasks.md`, `handoff.md` (and any other stray files)
-
-### Phase 11 — New skill needed?
-
-- [ ] Evaluated — no new skill required | new skill proposed
 ```
 
-Adapt phase names to the stack (e.g. skip i18n if the app is single-locale). Document omissions under `## Skipped phases`.
+Mark optional phases skipped under `## Skipped phases` instead of leaving empty checklists.
 
 ---
 
@@ -203,7 +173,8 @@ Update `{docs.root}/<domain>/<feature>/02-context.md` with technical detail. App
 ## Feature Snapshot
 
 - Feature: {short description}
-- Status: In progress ({cardKey})
+- Status: In progress
+- Tracked task: {taskId if applicable}
 - Entry point: {screen, page, or trigger}
 - Route / deep link: {path if applicable}
 - Domain: {e.g. expense-list, auth}
@@ -234,92 +205,91 @@ Code snippets and file paths **belong here**, never in `01-spec.md`.
 
 ## Execution strategy
 
-The default phase order in [SKILL.md](../SKILL.md) is a **guide**, not a rigid script.
+`implementation.phases` defines order; dependencies still matter within and across phases.
 
 ### When to parallelize
 
-| Example                               | Phases | Why                                      |
-| ------------------------------------- | ------ | ---------------------------------------- |
-| Tests while scaffolding orchestration | 6 ∥ 2  | Different files, no shared mutable state |
-| i18n keys while data layer            | 7 ∥ 4  | Independent files                        |
-| Route wiring while UI scaffold        | 5 ∥ 1  | Only if page API is already stable       |
+| Example                               | Phases                | Why                                      |
+| ------------------------------------- | --------------------- | ---------------------------------------- |
+| Tests while scaffolding orchestration | Tests ∥ Orchestration | Different files, no shared mutable state |
+| i18n keys while data layer            | i18n ∥ Data layer     | Independent files                        |
+| Route wiring while UI scaffold        | Routes ∥ UI           | Only if page API is already stable       |
 
 ### When to stay sequential
 
 - **UI ↔ orchestration** — props/callbacks depend on both sides existing.
-- **Data layer before orchestration** — hooks/controllers need query/repository functions.
+- **Data layer before orchestration** — when hooks/controllers need repository functions first.
 - **Stable code before broad tests** — unless doing deliberate TDD on an isolated unit.
-- **9 → 10** — code review, then finalize docs.
-- **10 → 11** — docs finalized, then evaluate new skill.
+- **Code review before Finalize docs** — when both are in the config.
+- **`alwaysLast` phases** — run after all other planned work.
 
 ### Subagents
 
-| Agent                   | Typical use                                  |
-| ----------------------- | -------------------------------------------- |
-| `code-reviewer`         | Phase 9 on large or cross-layer diffs        |
-| `explore`               | Find patterns and navigation before Phase 5  |
-| `Task` (generalPurpose) | Isolated research while UI work stays inline |
+| Agent                   | Typical use                                      |
+| ----------------------- | ------------------------------------------------ |
+| `code-reviewer`         | Code review phase on large or cross-layer diffs  |
+| `explore`               | Find patterns and navigation before routes phase |
+| `Task` (generalPurpose) | Isolated research while UI work stays inline     |
 
 ---
 
-## Implementation phases (detailed)
+## Implementation phase hints
 
-Default order is **UI-first**. Omit phases that do not apply; record them in `## Skipped phases`.
+Match hints by **phase name** (case-insensitive). Use `notes` from config when present. Skip optional phases and record under `## Skipped phases`.
 
-### Phase 1 — Components / UI
+### UI / Components / Presentation
 
 - Follow existing patterns in the touched domain folder.
 - Keep presentation thin — no direct DB/HTTP calls if the project uses an intermediate layer.
 - If the correct pattern is unclear, **ask the user** and wait.
 
-### Phase 2 — Orchestration
+### Orchestration
 
 - Match sibling features: loading state, reload, mutation helpers.
 - Call data-access functions — not raw clients when a module already exists.
 
-### Phase 3 — UI ↔ orchestration
+### UI ↔ Orchestration / Wiring
 
 - Wire props/callbacks; show pending/disabled state from the project's mutation pattern.
 
-### Phase 4 — Data layer
+### Data layer / API
 
 - Reads/writes in the project's query/repository/API module.
 - Schema changes: migrations in the canonical folder; update generated types if applicable.
 
-### Phase 5 — Routes / navigation
+### Routes / navigation
 
 - Register routes per project router.
 - Map **every** navigation entry point from the spec.
 - If entry points are unclear, **ask the user**.
 
-### Phase 6 — Tests
+### Tests
 
 - Co-locate or place tests per project convention.
-- Use the project's test stack (unit, widget, integration).
 - Tests must have a **clear purpose** — not coverage for its own sake.
-- Mock at the repository/query boundary when testing UI behavior.
 
-### Phase 7 — Internationalization
+### Internationalization / i18n
 
-- Add keys to all required locales.
-- Reuse existing keys when the string already exists.
-- Skip if the project is single-locale — document in Skipped phases.
+- Add keys to all required locales; skip when single-locale — document in Skipped phases.
 
-### Phase 8 — Analytics
+### Analytics
 
 - Skip unless product explicitly requests tracking.
 
-### Phase 9 — Code review
+### Code review
 
 - Run inline review or delegate to `code-reviewer` for large diffs.
-- Check: layer boundaries respected, locales updated, migrations safe, tests meaningful.
 
-### Phase 10 — Finalize docs
+### Finalize docs
 
-- **Mandatory** — invoke [close-workflow](../../close-workflow/SKILL.md).
+- **Mandatory** when in config — invoke [close-workflow](../../close-workflow/SKILL.md).
 - Folder must end with only `01-spec.md` and `02-context.md`.
 
-### Phase 11 — New skill needed?
+### Implementation (minimal preset)
 
-- If a recurring gap appears across tasks, propose a new atomic skill via `write-skill`.
-- Do not create overlapping orchestrators — extend this skill or REFERENCE instead.
+- Deliver the slice's core behavior in one pass; split files per increments section above.
+
+### Custom phase names
+
+- Follow the phase `notes` from config and `project.conventionsFile`.
+- **Ask the user** when the intent of a custom phase is unclear.

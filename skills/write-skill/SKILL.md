@@ -37,15 +37,15 @@ There are two families of prefix:
 | `build-*`    | Implement/compose a product or code artifact           | `build-component`, `build-query-module`, `build-tests`                                                 |
 | `add-*`      | Add a punctual registration, config, or capability     | `add-package`, `add-database-migration`, `add-localization`, `add-analytics-event`, `add-env-variable` |
 | `create-*`   | Generate a specific technical artifact                 | `create-table`, `create-local-data-source`                                                             |
-| `write-*`    | Produce a written document or document-driven workflow | `write-skill` (meta); prefer `design-feature` / `close-workflow` for delivery docs |
+| `write-*`    | Produce a written document or document-driven workflow | `write-skill` (meta); prefer `design-feature` / `close-workflow` for delivery docs                     |
 | `review-*`   | Review/evaluate quality                                | `review-mobile-code`, `review-design`                                                                  |
 | `diagnose-*` | Investigate a problem                                  | `diagnose-issue`                                                                                       |
 
 **2. Category prefixes** — for skills that are not a single artifact-producing action. These name a _kind_ of skill, with the rest of the name identifying the specific one:
 
-| Prefix   | Use for                                                       | Examples                                    |
-| -------- | ------------------------------------------------------------- | ------------------------------------------- |
-| `flow-*` | Closed, multi-step operational pipeline                       | `flow-jira-git-pr`                          |
+| Prefix   | Use for                                                       | Examples                                       |
+| -------- | ------------------------------------------------------------- | ---------------------------------------------- |
+| `flow-*` | Closed, multi-step operational pipeline                       | `flow-jira-git-pr`                             |
 | `mode-*` | Interactive reasoning mode or methodology (no fixed artifact) | Grill mode inside `design-feature`, `mode-tdd` |
 
 **Principles:**
@@ -62,14 +62,14 @@ There are two families of prefix:
 
 Before drafting, check the new skill does not overlap an existing one.
 
-| Layer            | Examples                                                             | Role                                                   |
-| ---------------- | -------------------------------------------------------------------- | ------------------------------------------------------ |
-| Config           | [workflow](../workflow/SKILL.md), `skills.config.json`               | Per-user tracker, docs paths, branch prefix            |
-| Repo rules       | `project.conventionsFile` from config                                | Stack, commands, project conventions                   |
-| Design           | `design-feature`                                                     | Brainstorm, grill, spec before planning                |
-| Plan + implement | `build-feature`                                                      | Phased implementation; ends with `close-workflow`      |
-| Docs (delivery)  | `close-workflow`                                                     | Folder → only `01-spec.md` + `02-context.md`           |
-| Review           | agent `code-reviewer`                                                | Quality gate before merge                              |
+| Layer            | Examples                                               | Role                                              |
+| ---------------- | ------------------------------------------------------ | ------------------------------------------------- |
+| Config           | [workflow](../workflow/SKILL.md), `skills.config.json` | Per-user tracker, docs paths, branch prefix       |
+| Repo rules       | `project.conventionsFile` from config                  | Stack, commands, project conventions              |
+| Design           | `design-feature`                                       | Brainstorm, grill, spec before planning           |
+| Plan + implement | `build-feature`                                        | Phased implementation; ends with `close-workflow` |
+| Docs (delivery)  | `close-workflow`                                       | Folder → only `01-spec.md` + `02-context.md`      |
+| Review           | agent `code-reviewer`                                  | Quality gate before merge                         |
 
 **Orchestration vs atomic:** `build-feature` is the main implementation orchestrator. New skills should be **atomic** (one clear job). If the gap is a new phase or step in the plan-and-implement flow, extend `build-feature` instead of creating a parallel orchestrator.
 
@@ -173,13 +173,13 @@ Split into separate files when:
 
 ### Size guide
 
-| Lines   | Status         | Typical fit                                                                        |
-| ------- | -------------- | ---------------------------------------------------------------------------------- |
-| < 100   | Ideal          | Atomic operations (`add-package`, `add-localization`)                              |
-| 100–200 | Sweet spot     | Workflows with checklist + tables (`build-feature`, `workflow`)                  |
-| 200–300 | Acceptable     | Skills with several essential sections; consider moving examples to `EXAMPLES.md`  |
+| Lines   | Status         | Typical fit                                                                                |
+| ------- | -------------- | ------------------------------------------------------------------------------------------ |
+| < 100   | Ideal          | Atomic operations (`add-package`, `add-localization`)                                      |
+| 100–200 | Sweet spot     | Workflows with checklist + tables (`build-feature`, `workflow`)                            |
+| 200–300 | Acceptable     | Skills with several essential sections; consider moving examples to `EXAMPLES.md`          |
 | 300–500 | Reconsider     | Likely has material that belongs in `references/` (see `build-feature/references/plan.md`) |
-| > 500   | Split required | Always extract reference content                                                   |
+| > 500   | Split required | Always extract reference content                                                           |
 
 200 lines is the practical soft cap. Above it, ask: "does this all need to be in SKILL.md, or can part go to REFERENCE.md?"
 

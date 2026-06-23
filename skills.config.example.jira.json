@@ -32,6 +32,30 @@
       }
     }
   },
+  "implementation": {
+    "preset": "frontend-ui-first",
+    "phases": [
+      { "name": "UI", "notes": "Match existing domain patterns" },
+      { "name": "Orchestration", "notes": "Loading, errors, mutations" },
+      {
+        "name": "UI ↔ Orchestration",
+        "notes": "Wire presentation to orchestration"
+      },
+      { "name": "Data layer", "notes": "Repositories, queries, migrations" },
+      { "name": "Routes / navigation", "notes": "Every entry point from spec" },
+      {
+        "name": "Tests",
+        "notes": "Purposeful coverage only",
+        "optional": true
+      },
+      { "name": "Code review", "notes": "Inline or code-reviewer subagent" },
+      {
+        "name": "Finalize docs",
+        "notes": "Mandatory — close-workflow",
+        "alwaysLast": true
+      }
+    ]
+  },
   "code": {
     "appRoot": "apps/my-app",
     "lintCommand": "cd apps/my-app && npm run lint",
