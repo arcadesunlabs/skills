@@ -1,62 +1,36 @@
 ---
 name: design-feature
-description: Brainstorm, grill, and write feature specs before coding — explore intent, decompose epics, stress-test designs, and produce PRDs with acceptance criteria. Use before any creative work, new features, components, product requirements, user stories, or when the user wants a spec, brainstorm, or grill me.
+description: Brainstorm and write feature specs before coding. Use for new features, PRDs, or product design — not for stress-testing alone (use mode-grill).
 ---
 
 # Design Feature
 
 **Announce at start:** "I'm using the design-feature skill."
 
-Turn ideas into approved designs and specs through collaborative dialogue. Two entry paths — pick by user intent:
+Turn ideas into approved designs and specs through collaborative dialogue.
 
-| Path           | When                                                      | How                                      |
-| -------------- | --------------------------------------------------------- | ---------------------------------------- |
-| **Brainstorm** | New feature, component, or behavior before implementation | Checklist below (grill is step 2)        |
-| **Spec only**  | Write or refine a spec — context already clear            | [references/spec.md](references/spec.md) |
+| Path           | When                                           | Start at |
+| -------------- | ---------------------------------------------- | -------- |
+| **Brainstorm** | New feature or behavior before implementation  | Phase 0  |
+| **Spec only**  | Write or refine a spec — context already clear | Phase 4  |
 
-**Grill-only:** user has a plan and wants it stress-tested → run [references/grill.md](references/grill.md) alone, then continue brainstorm from step 3 or stop.
+**Grill-only:** invoke [mode-grill](../mode-grill/SKILL.md); stop or continue from Phase 3.
 
-**Step 0:** Invoke [workflow](../workflow/SKILL.md) and load `skills.config.json`.
+Load each `references/` file **only when entering that phase**. Never pre-read all references at skill start.
 
-<HARD-GATE>
-Do NOT invoke build-feature, write code, scaffold, or implement until design is presented and the user has approved it (brainstorm path). Spec-only skips grill when context is already settled.
-</HARD-GATE>
+**Hard gate:** Do NOT invoke build-feature, write code, scaffold, or implement until design is presented and the user has approved it (brainstorm path).
 
 ---
 
-## Brainstorm checklist
+## Phases
 
-Complete in order:
+Complete in order (spec-only skips 1–3):
 
-1. **Explore project context** — files, docs, recent commits
-2. **Grill** — follow [references/grill.md](references/grill.md): clarify purpose, constraints, success criteria, and domain alignment; one question at a time until shared understanding
-3. **Scope sizing** — [decomposition heuristics](references/decomposition.md); if epic-sized, propose slice table and get approval
-4. **Propose 2-3 approaches** — trade-offs and recommendation
-5. **Present design** — scaled sections; user approval after each
-6. **Write spec** — follow [references/spec.md](references/spec.md); save to `{docs.root}/<domain>/<feature>/01-spec.md`
-7. **Epic tracker items** — only if epic-sized **and** `taskTracker.enabled`: create child work items (with approval) via [tracker steps](../build-feature/references/tracker.md)
-8. **Spec self-review** — placeholders, contradictions, ambiguity, scope
-9. **User reviews spec** — wait for approval
-10. **Transition** — single slice → `build-feature` | epic → **STOP**, ask which slice first
+0. **Config** — invoke [workflow](../workflow/SKILL.md); load `skills.config.json`
+1. **Context** — explore files, docs, recent commits
+2. **Understand** — invoke [mode-grill](../mode-grill/SKILL.md); continue to Shape when you can state what we're building, what we're not, and domain mapping — user agrees
+3. **Shape** — If ≥2 epic signals apply (>8 files, ≥2 shippable slices, UI plus migration, >8 acceptance scenarios, or >1 focused session), propose a vertical-slice table for approval before the spec and never create tracker items without consent; then propose 2–3 approaches with trade-offs, present design, get approval
+4. **Spec** — follow [references/spec.md](references/spec.md); save to `{docs.root}/<domain>/<feature>/01-spec.md`; self-review; wait for user approval
+5. **Hand off** — if epic-sized and `taskTracker.enabled`: create child work items (with approval) via [tracker steps](../build-feature/references/tracker.md); then single slice → [build-feature](../build-feature/SKILL.md) path A | epic → **STOP**, ask which slice first
 
-## Epic flow
-
-See [references/decomposition.md](references/decomposition.md) for templates. Tracker-specific steps apply only when `taskTracker.enabled`.
-
-## After approval
-
-| Scope        | Next step                                                       |
-| ------------ | --------------------------------------------------------------- |
-| Single slice | [build-feature](../build-feature/SKILL.md) path A               |
-| Epic         | **STOP** — user picks a slice → build-feature path A′ per slice |
-
-## Key principles
-
-- One question at a time; multiple choice when possible
-- YAGNI — remove unnecessary features
-- Always propose 2-3 approaches before settling
-- Right-size delivery — one reviewable slice per branch/PR when possible
-
-## Examples
-
-Filled-in product spec: [EXAMPLES.md](EXAMPLES.md).
+Filled-in product spec example: [references/spec-example.md](references/spec-example.md).

@@ -1,6 +1,6 @@
-# Write Feature Spec — Examples
+# Feature spec — filled-in example
 
-A complete, filled-in product spec following the structure in [SKILL.md](SKILL.md).
+A complete product spec following the structure in [spec.md](spec.md).
 
 ## Example — Password Reset
 

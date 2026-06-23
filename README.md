@@ -116,6 +116,7 @@ Peça ao agente em linguagem natural. Exemplos:
 | ---------------------------- | -------------------------------------------- | ---------------- |
 | Mapear fluxo de entrega      | _"Configurar meu workflow de implementação"_ | `workflow`       |
 | Brainstorm de épico          | _"Brainstorm da feature X"_                  | `design-feature` |
+| Stress-test de plano         | _"Grill me on this design"_                  | `mode-grill`     |
 | Escrever spec de produto     | _"Spec da feature login social"_             | `design-feature` |
 | Plano técnico antes de codar | _"Plano técnico para esta feature"_          | `build-feature`  |
 | Implementar com fases        | _"Implementar seguindo o plano"_             | `build-feature`  |
@@ -142,7 +143,8 @@ npx github:arcadesunlabs/skills skills-configure . --preset minimal
 | Skill            | Função                                         |
 | ---------------- | ---------------------------------------------- |
 | `workflow`       | Carrega config e mapeia fases de implementação |
-| `design-feature` | Brainstorm, grill, spec de produto             |
+| `mode-grill`     | Entrevista e stress-test de plano/design       |
+| `design-feature` | Brainstorm e spec de produto                   |
 | `build-feature`  | Plano e implementação por fases (do config)    |
 | `close-workflow` | Handoff e finalização de docs                  |
 | `write-skill`    | Criar ou melhorar skills                       |

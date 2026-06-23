@@ -73,7 +73,8 @@ When enabled, provider setup and MCP tools: [build-feature references/tracker.md
 
 | User intent                         | Skill                                        |
 | ----------------------------------- | -------------------------------------------- |
-| Brainstorm, spec, PRD, grill design | [design-feature](../design-feature/SKILL.md) |
+| Stress-test plan, grill design      | [mode-grill](../mode-grill/SKILL.md)         |
+| Brainstorm, spec, PRD               | [design-feature](../design-feature/SKILL.md) |
 | Plan and implement feature work     | [build-feature](../build-feature/SKILL.md)   |
 | Handoff or finalize docs after ship | [close-workflow](../close-workflow/SKILL.md) |
 | Create or improve agent skills      | [write-skill](../write-skill/SKILL.md)       |

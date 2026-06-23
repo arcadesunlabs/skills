@@ -270,4 +270,4 @@ Use this shorter version when the user wants something lightweight:
 
 ## Example
 
-For a complete, filled-in product spec (password reset), see [EXAMPLES.md](../EXAMPLES.md).
+For a complete, filled-in product spec (password reset), see [spec-example.md](spec-example.md).

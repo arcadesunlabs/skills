@@ -47,7 +47,70 @@ Read each tool schema in the MCP folder before calling.
 - **Child implementation card** → `todo` list
 - **Parent epic while active** → `inProgress` list
 
-Use templates from [design-feature references/decomposition.md](../../design-feature/references/decomposition.md).
+Create via tracker MCP on the **todo** list ID from config. After creation, search the new card for real key, `url`, and `id` — never invent numbers.
+
+#### Parent card description (after children exist)
+
+```markdown
+## Epic
+
+{one-paragraph summary}
+
+## Spec
+
+`{docs.root}/<domain>/<feature>/01-spec.md`
+
+## Child cards
+
+| Key       | Title   | Status  |
+| --------- | ------- | ------- |
+| {cardKey} | {title} | backlog |
+
+## Implementation order
+
+1. {cardKey} — {why first}
+```
+
+Update via tracker MCP (e.g. `trello_update_card` for Trello, or the Jira issue-update tool for Jira) using the parent `cardId` / issue key from search.
+
+#### Child card description template
+
+```markdown
+## Parent epic
+
+{parentCardKey} — {parent title}
+{parent.url from API}
+
+## Spec section
+
+See `{docs.root}/<domain>/<feature>/01-spec.md` — slice "{slice name}"
+
+## Scope
+
+{objective}
+
+## Acceptance criteria
+
+- …
+- …
+
+## Out of scope
+
+- …
+
+## Depends on
+
+{otherCardKey} or none
+```
+
+### Starting implementation on a child slice
+
+When the user picks a slice:
+
+1. Run tracker steps for the **child slice** (branch + confirm work item).
+2. Read the child card description (scope + acceptance criteria) and epic `01-spec.md` for shared context.
+3. Invoke [build-feature](../../build-feature/SKILL.md) path A′ — scope is **that slice only**; do not re-spec the whole epic.
+4. Parent branch may hold only spec/skills/docs commits; application code commits belong on child branches.
 
 ## Jira (`provider: jira`)
 

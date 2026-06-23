@@ -43,10 +43,10 @@ There are two families of prefix:
 
 **2. Category prefixes** — for skills that are not a single artifact-producing action. These name a _kind_ of skill, with the rest of the name identifying the specific one:
 
-| Prefix   | Use for                                                       | Examples                                       |
-| -------- | ------------------------------------------------------------- | ---------------------------------------------- |
-| `flow-*` | Closed, multi-step operational pipeline                       | `flow-jira-git-pr`                             |
-| `mode-*` | Interactive reasoning mode or methodology (no fixed artifact) | Grill mode inside `design-feature`, `mode-tdd` |
+| Prefix   | Use for                                                       | Examples                 |
+| -------- | ------------------------------------------------------------- | ------------------------ |
+| `flow-*` | Closed, multi-step operational pipeline                       | `flow-jira-git-pr`       |
+| `mode-*` | Interactive reasoning mode or methodology (no fixed artifact) | `mode-grill`, `mode-tdd` |
 
 **Principles:**
 
@@ -66,7 +66,7 @@ Before drafting, check the new skill does not overlap an existing one.
 | ---------------- | ------------------------------------------------------ | ------------------------------------------------- |
 | Config           | [workflow](../workflow/SKILL.md), `skills.config.json` | Per-user tracker, docs paths, branch prefix       |
 | Repo rules       | `project.conventionsFile` from config                  | Stack, commands, project conventions              |
-| Design           | `design-feature`                                       | Brainstorm, grill, spec before planning           |
+| Design           | `mode-grill`, `design-feature`                         | Grill intent; brainstorm and spec before planning |
 | Plan + implement | `build-feature`                                        | Phased implementation; ends with `close-workflow` |
 | Docs (delivery)  | `close-workflow`                                       | Folder → only `01-spec.md` + `02-context.md`      |
 | Review           | agent `code-reviewer`                                  | Quality gate before merge                         |
