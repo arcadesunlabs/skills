@@ -63,6 +63,8 @@ Analyze the actual case and recommend one of:
 
 Explain the trade-off, recommend a breakdown, then ask the user to confirm or adjust it. Do not leave this step until the tasks are agreed.
 
+Write `{docs.root}/<domain>/<feature>/04-tasks.md` only when the agreed breakdown needs a durable task artifact, such as epic slices, multiple micro-tasks, layer-owned tasks, tracker/card creation, or a user request to record the breakdown. For a single task or a breakdown that will immediately become a `write-plan`, keep the task agreement in the conversation/spec context and skip `04-tasks.md`.
+
 ### 4. Transition to plan
 
 If the user decides to implement a task now, invoke [write-plan](../write-plan/SKILL.md) for the selected task/slice.
