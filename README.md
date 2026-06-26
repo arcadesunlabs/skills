@@ -69,7 +69,6 @@ Peça ao agente em linguagem natural. Ele escolhe a skill pelo `description` do 
 | Escrever spec de produto     | _"Spec da feature login social"_ → `write-feature-spec`       |
 | Plano técnico antes de codar | _"Plano técnico para login social"_ → `write-plan`            |
 | Handoff entre sessões        | _"Handoff do que fizemos"_ → `write-handoff`                  |
-| Fechar docs após entrega     | _"Finalizar documentação da feature"_ → `write-finalize-docs` |
 
 A skill `workflow-config` é o ponto de entrada: o agente deve carregar `skills.config.json` antes das demais skills de workflow.
 
@@ -80,11 +79,10 @@ A skill `workflow-config` é o ponto de entrada: o agente deve carregar `skills.
 | Skill                 | Função                                     |
 | --------------------- | ------------------------------------------ |
 | `workflow-config`     | Carrega ou cria `skills.config.json`       |
-| `mode-brainstorm`     | Decomposição de épico e artefatos iniciais |
+| `mode-brainstorm`     | Brainstorm, spec e breakdown de tarefas (04-tasks opcional) |
 | `mode-grill`          | Modo de revisão crítica                    |
 | `write-feature-spec`  | Spec de produto (01-spec)                  |
-| `write-plan`          | Plano técnico (03-plan)                    |
-| `write-finalize-docs` | Validação e fechamento de docs             |
+| `write-plan`          | Plano técnico e implementação (03-plan)    |
 | `write-handoff`       | Handoff entre sessões                      |
 | `write-skill`         | Criar ou melhorar skills                   |
 

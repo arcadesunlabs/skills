@@ -27,10 +27,10 @@ Plan **and** implement non-trivial feature work. Two modes:
 | Path   | When                                                                                 | Input                                                      |
 | ------ | ------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
 | **A**  | After `mode-brainstorm` → `write-feature-spec`                                       | `01-spec.md`                                               |
-| **A′** | Epic child slice — after user picks a slice from `04-tasks.md`                        | `01-spec.md` + slice scope from `04-tasks.md`              |
+| **A′** | Epic child slice — after user picks a slice from `04-tasks.md` (when present)         | `01-spec.md` + slice scope from `04-tasks.md` or conversation |
 | **B**  | No spec — direct implementation task                                                 | Conversation                                               |
 
-**Epic scoping (path A′):** Plan and implement **only** the selected slice from `04-tasks.md`, using its scope and acceptance criteria. Reference the epic `01-spec.md` for shared context; do not plan phases for other slices.
+**Epic scoping (path A′):** Plan and implement **only** the selected slice — from `04-tasks.md` when it exists, otherwise from the agreed brainstorm breakdown. Reference the epic `01-spec.md` for shared context; do not plan phases for other slices.
 
 Skip this skill for trivial tasks (typo, single-line fix) — implement per `project.conventionsFile` in config.
 
@@ -112,7 +112,7 @@ Note parallel work or subagent use in `03-plan.md` when it helps traceability. D
 | 7   | Internationalization | All required locales; reuse existing keys when possible                       |
 | 8   | Analytics            | Skip unless product asks — document in Skipped phases                         |
 | 9   | Code review          | Agent `code-reviewer` or inline review                                        |
-| 10  | Finalize docs        | **Mandatory** — invoke [write-finalize-docs](../write-finalize-docs/SKILL.md) |
+| 10  | Finalize docs        | **Mandatory** — update `01-spec.md` and `02-context.md`; merge then delete transient files |
 | 11  | New skill needed?    | `write-skill` if approved                                                     |
 
 Per-phase rules: [REFERENCE.md — Implementation phases](REFERENCE.md#implementation-phases-detailed).
@@ -125,7 +125,7 @@ Per-phase rules: [REFERENCE.md — Implementation phases](REFERENCE.md#implement
 - Phase 5: map **every** navigation entry point — **ask** if unclear.
 - Phase 6: purposeful tests only — test behavior that matters.
 - Phase 9: use `code-reviewer` for large or cross-layer changes; run before Phase 10.
-- Phase 10: **mandatory** — invoke `write-finalize-docs`; folder must end with only `01-spec.md` + `02-context.md`.
+- Phase 10: **mandatory** — reflect shipped behavior in `01-spec.md` (no code), update `02-context.md` to match implementation; merge useful content from `03-plan.md`, `04-tasks.md`, `handoff.md`; delete those transient files. Folder must end with only `01-spec.md` + `02-context.md`. See [REFERENCE.md — Phase 10](REFERENCE.md#phase-10--finalize-docs).
 - Phase 7: reuse existing i18n/l10n keys when possible.
 
 For each phase: update `03-plan.md` checkboxes, invoke listed project skills when applicable, stop when blocked.
@@ -146,7 +146,7 @@ For each phase: update `03-plan.md` checkboxes, invoke listed project skills whe
 ## Completion
 
 1. Update `03-plan.md` checkboxes and `02-context.md` (Known Behavior, validation checklist).
-2. **Mandatory:** Invoke [write-finalize-docs](../write-finalize-docs/SKILL.md) — merge transient docs, delete `03-plan.md`, `04-tasks.md`, `handoff.md`; folder must contain only `01-spec.md` and `02-context.md`.
+2. **Mandatory (Phase 10):** Finalize docs — update `01-spec.md` to shipped product truth; merge transient content into `02-context.md`; delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other stray files. Folder must contain only `01-spec.md` and `02-context.md`. See [REFERENCE.md — Phase 10](REFERENCE.md#phase-10--finalize-docs).
 3. Tell the user:
 
 > Implementation complete. Docs finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-context.md` remain.
@@ -166,4 +166,4 @@ For each phase: update `03-plan.md` checkboxes, invoke listed project skills whe
 
 - [ ] All applicable phases completed
 - [ ] Code review passed (Phase 9)
-- [ ] `write-finalize-docs` completed (Phase 10) — only `01-spec.md` + `02-context.md` in feature folder
+- [ ] Docs finalized (Phase 10) — only `01-spec.md` + `02-context.md` in feature folder

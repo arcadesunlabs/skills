@@ -32,9 +32,6 @@ Load [workflow-config](../workflow-config/SKILL.md) first. This skill is the **s
   - **Product spec** (default) — a new feature / user-facing behavior being designed. Use the structure in _Draft the specification_ below.
   - **Flow/architecture spec** — documenting how an existing feature already works. Replace the design-oriented sections with: `## Overview`, `## Flow` (mermaid), `## Special cases / Important rules`, `## Key components` (table), `## Key files` (table).
 - **`02-context.md`** (same folder) — brownfield context for devs/agents. Create or update when implementation is defined; code snippets and class names go here, never in `01-spec.md`.
-- **`04-tasks.md`** — epic decomposition into slices (order, dependencies, scope, out of scope per slice). Create at brainstorm time for epic-sized work. **Transient** — removed by [`write-finalize-docs`](../write-finalize-docs/SKILL.md) after delivery.
-- **`03-plan.md`** — phased implementation checklist from [`write-plan`](../write-plan/SKILL.md), scoped to the active slice/branch. **Transient** — removed by `write-finalize-docs` after delivery.
-- Infra/process docs (CI/CD, logging, internal sync) are not feature specs — they live under `docs/archived/`, or top-level files like `docs/web-backlog.md`.
 
 ## Process
 

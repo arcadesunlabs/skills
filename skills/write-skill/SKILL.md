@@ -37,7 +37,7 @@ There are two families of prefix:
 | `build-*`    | Implement/compose a product or code artifact           | `build-component`, `build-query-module`, `build-tests`                                                 |
 | `add-*`      | Add a punctual registration, config, or capability     | `add-package`, `add-database-migration`, `add-localization`, `add-analytics-event`, `add-env-variable` |
 | `create-*`   | Generate a specific technical artifact                 | `create-table`, `create-local-data-source`                                                             |
-| `write-*`    | Produce a written document or document-driven workflow | `write-plan`, `write-feature-spec`, `write-finalize-docs`, `write-skill`, `write-handoff`              |
+| `write-*`    | Produce a written document or document-driven workflow | `write-plan`, `write-feature-spec`, `write-skill`, `write-handoff`              |
 | `review-*`   | Review/evaluate quality                                | `review-mobile-code`, `review-design`                                                                  |
 | `diagnose-*` | Investigate a problem                                  | `diagnose-issue`                                                                                       |
 
@@ -67,8 +67,7 @@ Before drafting, check the new skill does not overlap an existing one.
 | Config           | [workflow-config](../workflow-config/SKILL.md), `skills.config.json` | Per-user docs paths and project settings               |
 | Repo rules       | `project.conventionsFile` from config                                | Stack, commands, project conventions                   |
 | Design           | `mode-brainstorm`, `mode-grill`, `write-feature-spec`                | Spec and alignment before planning                     |
-| Plan + implement | `write-plan`                                                         | Phased implementation; ends with `write-finalize-docs` |
-| Docs (delivery)  | `write-finalize-docs`                                                | Folder → only `01-spec.md` + `02-context.md`           |
+| Plan + implement | `write-plan`                                                         | Phased implementation; ends with doc finalization (Phase 10) |
 | Review           | agent `code-reviewer`                                                | Quality gate before merge                              |
 
 **Orchestration vs atomic:** `write-plan` is the orchestrator — it runs phased implementation with inline guidance in REFERENCE.md. New skills should be **atomic** (one clear job). If the gap is a new phase or step in the plan-and-implement flow, extend `write-plan` instead of creating a parallel orchestrator.
@@ -78,10 +77,9 @@ Before drafting, check the new skill does not overlap an existing one.
 ```
 workflow-config (load skills.config.json)
 write-plan (path B, direct task)
-mode-brainstorm → write-feature-spec → write-plan (path A, single slice)
-mode-brainstorm → write-feature-spec → 04-tasks.md → STOP (epic)
-  → user picks slice → confirm branch → write-plan (slice only)
-write-plan → write-finalize-docs (mandatory last — only 01-spec + 02-context remain)
+mode-brainstorm → write-feature-spec → write-plan (path A, single task)
+mode-brainstorm → write-feature-spec → 04-tasks.md (optional — epic or when tracking needed) → STOP or write-plan
+  → user picks slice → confirm branch → write-plan (slice only; Phase 10 finalizes docs)
 write-plan phase 11 → write-skill (if a recurring gap justifies a new skill)
 ```
 

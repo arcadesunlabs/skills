@@ -119,7 +119,7 @@ Waiting for confirmation to start implementation.
 
 ## 03-plan.md template
 
-Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed by `write-finalize-docs` after delivery.
+Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed after delivery (Phase 10).
 
 ```markdown
 # [Feature Name] Implementation Plan
@@ -181,7 +181,6 @@ MODIFY ...
 
 ### Phase 10 — Finalize docs
 
-- [ ] Invoked `write-finalize-docs`
 - [ ] `01-spec.md` updated to shipped product truth (no code)
 - [ ] `02-context.md` updated to match implementation
 - [ ] Deleted `03-plan.md`, `04-tasks.md`, `handoff.md` (and any other stray files)
@@ -318,8 +317,34 @@ Default order is **UI-first**. Omit phases that do not apply; record them in `##
 
 ### Phase 10 — Finalize docs
 
-- **Mandatory** — invoke [write-finalize-docs](../write-finalize-docs/SKILL.md).
+- **Mandatory** — last step before optional Phase 11.
+- Update `01-spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
+- Update `02-context.md`: merge final file list, architecture decisions, and validation checks from `03-plan.md`; merge status/PR from `handoff.md` if present; discard handoff next steps.
+- Delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other file in the feature folder except `01-spec.md` and `02-context.md`.
 - Folder must end with only `01-spec.md` and `02-context.md`.
+
+**`01-spec.md` checklist:**
+
+- [ ] Context describes current product state, not pre-implementation pain only
+- [ ] Scope = what shipped; out of scope = what was explicitly not built
+- [ ] Acceptance criteria: `[x]` for delivered items; remove cancelled items
+- [ ] Open questions: empty or only genuine follow-ups
+
+**Merge map from transient files:**
+
+| `03-plan.md` section | Destination in `02-context.md`    |
+| -------------------- | --------------------------------- |
+| Files CREATE/MODIFY  | `## Key files` table              |
+| Skipped phases       | `## Behavior notes` (if relevant) |
+| Phase checkboxes     | **Delete** — do not copy verbatim |
+| Validation commands  | `## Validation`                   |
+
+| `handoff.md` section | Destination                                |
+| -------------------- | ------------------------------------------ |
+| Key files            | `## Key files` if missing                  |
+| PR / branch          | `## Status`                                |
+| Next steps           | **Discard**                                |
+| Decisions vigentes   | `## Behavior notes` or update `01-spec.md` |
 
 ### Phase 11 — New skill needed?
 

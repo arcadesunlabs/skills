@@ -69,7 +69,6 @@ Write `skills.config.json` to the workspace root, then continue.
 
 - [write-plan](../write-plan/SKILL.md) — docs paths
 - [write-feature-spec](../write-feature-spec/SKILL.md) — spec location
-- [write-finalize-docs](../write-finalize-docs/SKILL.md) — docs paths
 - [write-handoff](../write-handoff/SKILL.md) — handoff paths
 - [mode-brainstorm](../mode-brainstorm/SKILL.md) — brainstorm and spec alignment
 
