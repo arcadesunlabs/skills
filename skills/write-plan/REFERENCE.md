@@ -1,79 +1,81 @@
 # Write Plan — Reference
 
-Detailed tables, templates, and per-phase rules. Load when drafting artifacts or executing a specific phase.
+Templates and optional workflow examples. Load when drafting `03-plan.md`, updating `02-context.md`, or finalizing docs.
 
 Load [workflow-config](../workflow-config/SKILL.md) first. Paths use `{docs.root}` from config.
 
-Before planning file paths or architecture, read `project.conventionsFile`, `{docs.root}/codebase/architecture.md` when present, and inspect the code under `docs.domainMirror` and `code.appRoot`. **Match what the touched area already uses** — do not import patterns from another stack.
+Before planning file paths, architecture, or workflow order, read `project.conventionsFile`, `{docs.root}/codebase/architecture.md` when present, and inspect the code under `docs.domainMirror` and `code.appRoot`. **Match what the project actually uses.**
+
+---
+
+## Configuration quality
+
+A strong plan depends on a strong project configuration.
+
+The user/team should describe their real workflow in one of:
+
+- `project.conventionsFile`
+- `{docs.root}/codebase/architecture.md`
+- nearby project docs referenced by those files
+
+Good configuration explains:
+
+- architecture boundaries and naming conventions
+- where new code, tests, routes, copy, schemas, and generated files belong
+- preferred implementation order for common task types
+- review, validation, and documentation expectations
+- project-specific skills or agents to invoke
+
+If this configuration is missing or too generic, inspect the codebase and ask the user before freezing the workflow. Do not pretend this reference file defines the user's process.
 
 ---
 
 ## Architecture patterns
 
-> Choose by the architecture the **touched files already use**, not by task type alone. See [SKILL.md Step 2](SKILL.md).
+Choose by the architecture the **touched files already use**, not by task type alone.
 
 | Situation                             | Approach                                                            |
 | ------------------------------------- | ------------------------------------------------------------------- |
-| New feature (greenfield in this area) | Follow the dominant pattern in `docs.domainMirror` / `code.appRoot` |
+| New feature in an existing area       | Follow sibling features under `docs.domainMirror` / `code.appRoot`  |
 | Improvement or bug fix                | Match the files you modify — same layers, naming, and data flow     |
 | Ambiguous                             | Inspect neighbors in the same domain folder; **ask the user**       |
 
-Common layer shapes (labels vary by project — map them from conventions, do not assume):
+Common layer labels vary by project. Map them from conventions instead of assuming:
 
 | Layer                      | Typical responsibility                                           |
 | -------------------------- | ---------------------------------------------------------------- |
-| **Presentation**           | Screens, widgets, components — user-visible UI                   |
-| **Orchestration**          | Hooks, controllers, blocs, view models — loading, errors, wiring |
+| **Presentation**           | Screens, widgets, components, pages, CLI/API surface             |
+| **Orchestration**          | Hooks, controllers, blocs, services — loading, errors, wiring    |
 | **Data access**            | Repositories, queries, API clients — persistence and network     |
-| **Routing / navigation**   | Route tables, deep links, guards                                 |
-| **Shared / cross-cutting** | Auth, layout, design system, utilities                           |
-| **Schema / migrations**    | DB migrations, generated types, RPC definitions                  |
-
----
-
-## Layer and location selection
-
-Derive concrete paths from the project — never copy paths from another repo.
-
-| Situation                    | How to decide                                                                           |
-| ---------------------------- | --------------------------------------------------------------------------------------- |
-| New UI in an existing domain | Same folder pattern as sibling features under `docs.domainMirror`                       |
-| New data/API surface         | Same module as related features (client package, `lib/queries/`, `repositories/`, etc.) |
-| Shared UI or infra           | Project's shared component or core package                                              |
-| Routes / entry points        | Project router config (grep navigation targets from the spec)                           |
-| User-facing copy             | Project i18n / l10n location from conventions                                           |
-| Tests                        | Co-located or `test/` tree per project norm                                             |
-
-If conventions are missing, explore the codebase and document assumptions in `02-context.md`.
-
----
-
-## Cross-cutting patterns
-
-| Pattern            | Rule                                                                                                    |
-| ------------------ | ------------------------------------------------------------------------------------------------------- |
-| **Separation**     | UI does not call databases or HTTP clients directly when the project already uses an intermediate layer |
-| **Errors**         | Handle and surface errors at the orchestration layer; keep components/widgets thin                      |
-| **Pending state**  | Use the project's existing loading/mutation pattern (`pendingKeys`, `AsyncValue`, etc.)                 |
-| **Types**          | Reuse generated or shared types; avoid duplicate domain models                                          |
-| **Schema changes** | Migrations in the project's canonical migrations folder; update types after apply                       |
-| **Navigation**     | Map every entry point from the spec — links, redirects, post-action navigation                          |
-| **i18n**           | All required locales for new user-facing strings                                                        |
+| **Routing / entry points** | Routes, commands, jobs, deep links, guards                       |
+| **Shared / cross-cutting** | Auth, layout, design system, utilities, observability            |
+| **Contracts / schema**     | Migrations, generated types, RPC/API definitions                 |
 
 ---
 
 ## Files example
 
-Use CREATE/MODIFY lines with **real paths** from the target project:
+Use CREATE/MODIFY lines with **real paths** from the target project. These are placeholders, not a prescribed structure:
 
+```text
+CREATE  {code.appRoot}/<domain>/<feature>/<new-file>
+MODIFY  {code.appRoot}/<domain>/<existing-file>
+MODIFY  {code.appRoot}/<entry-point-or-router>
+CREATE  {code.appRoot}/<domain>/<feature>/<test-file>
 ```
-CREATE  {code.appRoot}/<domain>/<feature>_screen.dart
-CREATE  {code.appRoot}/<domain>/<feature>_controller.dart
-MODIFY  {code.appRoot}/<domain>/index.dart
-MODIFY  {code.appRoot}/router/app_router.dart
-CREATE  backend/migrations/20260619120000_add_feature.sql   # if schema change
-CREATE  {code.appRoot}/<domain>/<feature>_test.dart
-```
+
+Derive concrete paths from the repo:
+
+| Need                         | How to decide                                             |
+| ---------------------------- | --------------------------------------------------------- |
+| New feature file             | Same folder pattern as sibling features                   |
+| Shared code                  | Project's shared/core package or module                   |
+| Entry point                  | Existing router, command registry, job scheduler, etc.    |
+| User-facing copy             | Project i18n/l10n/copy convention, if one exists          |
+| Tests                        | Co-located or separate test tree per project norm         |
+| Contracts / schema           | Canonical migrations, generated types, or API schema path |
+
+If conventions are missing, document assumptions in `02-context.md`.
 
 ---
 
@@ -82,7 +84,7 @@ CREATE  {code.appRoot}/<domain>/<feature>_test.dart
 Group files into the **smallest independently deliverable increments**:
 
 - Each increment must be a coherent, reviewable unit.
-- Identify which increments can be built **in parallel**.
+- Identify which increments can be built in parallel.
 - Smaller increments reduce review friction and make bugs easier to isolate.
 
 ---
@@ -91,12 +93,13 @@ Group files into the **smallest independently deliverable increments**:
 
 Present to the user before implementation:
 
-```
+```text
 Implementation plan
 
 Type:     New feature | Improvement | Bug fix
 Pattern:  {from touched files / conventions}
-Domain:   e.g. expense-list, auth
+Workflow: {from project config | inferred and confirmed | custom for this task}
+Domain:   {feature area}
 Slice:    {slice title if path A′}
 Branch:   {branch name if known}
 Entry:    A (with spec) | A′ (epic slice) | B (direct)
@@ -105,12 +108,12 @@ Files:
   CREATE ...
   MODIFY ...
 
-Implementation phases:
-  1. …
-  2. …
+Workflow steps:
+  1. ...
+  2. ...
 
-Skipped phases:
-  N. {phase} — {reason}
+Skipped / intentionally omitted:
+  - {step} — {reason}
 
 Waiting for confirmation to start implementation.
 ```
@@ -119,7 +122,7 @@ Waiting for confirmation to start implementation.
 
 ## 03-plan.md template
 
-Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed after delivery (Phase 10).
+Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed after delivery by finalization.
 
 ```markdown
 # [Feature Name] Implementation Plan
@@ -127,9 +130,10 @@ Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed after delivery (Pha
 **Goal:** [One sentence]
 **Type:** New feature | Improvement | Bug fix
 **Pattern:** {architecture chosen from inspection}
-**Domain:** e.g. expense-list, auth
+**Workflow source:** project config | inferred from repo | custom for this task
+**Domain:** {feature area}
 **Entry path:** A | A′ | B
-**Slice:** {slice title if path A′}
+**Slice:** {slice title if A′}
 **Branch:** {branch name if known}
 
 ## Files
@@ -137,64 +141,30 @@ Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed after delivery (Pha
 CREATE ...
 MODIFY ...
 
-## Skipped phases
+## Skipped / intentionally omitted
 
-- Phase N — [reason]
+- [Step] — [reason]
 
-## Implementation phases
+## Workflow steps
 
-### Phase 1 — Components / UI
-
-- [ ] ...
-
-### Phase 2 — Orchestration (hooks, controllers, etc.)
+### Step 1 — [Project-specific step name]
 
 - [ ] ...
 
-### Phase 3 — UI ↔ orchestration
+### Step 2 — [Project-specific step name]
 
 - [ ] ...
 
-### Phase 4 — Data layer
-
-- [ ] ...
-
-### Phase 5 — Routes / navigation
-
-- [ ] ...
-
-### Phase 6 — Tests
-
-- [ ] ...
-
-### Phase 7 — Internationalization
-
-- [ ] ...
-
-### Phase 8 — Analytics
-
-- [ ] ...
-
-### Phase 9 — Code review
-
-- [ ] ...
-
-### Phase 10 — Finalize docs
+### Final step — Finalize docs
 
 - [ ] `01-spec.md` updated to shipped product truth (no code)
 - [ ] `02-context.md` updated to match implementation
-- [ ] Deleted `03-plan.md`, `04-tasks.md`, `handoff.md` (and any other stray files)
-
-### Phase 11 — New skill needed?
-
-- [ ] Evaluated — no new skill required | new skill proposed
+- [ ] Deleted `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other transient files
 ```
-
-Adapt phase names to the stack (e.g. skip i18n if the app is single-locale). Document omissions under `## Skipped phases`.
 
 ---
 
-## 02-context.md sections (during implementation)
+## 02-context.md sections
 
 Update `{docs.root}/<domain>/<feature>/02-context.md` with technical detail. Append or revise these sections as implementation progresses:
 
@@ -205,15 +175,14 @@ Update `{docs.root}/<domain>/<feature>/02-context.md` with technical detail. App
 
 - Feature: {short description}
 - Status: In progress ({slice title or branch if known})
-- Entry point: {screen, page, or trigger}
-- Route / deep link: {path if applicable}
-- Domain: {e.g. expense-list, auth}
+- Entry point: {screen, route, command, job, API, or trigger}
+- Domain: {feature area}
 
 ## API / data contracts
 
 {From spec if path A; otherwise from exploration.}
 
-## Main implementation files
+## Key files
 
 {From 03-plan.md Files section.}
 
@@ -221,12 +190,9 @@ Update `{docs.root}/<domain>/<feature>/02-context.md` with technical detail. App
 
 TBD — fill as implementation progresses.
 
-## Manual validation checklist
+## Validation
 
-{Convert each acceptance criterion from spec into a checklist item.}
-
-- [ ] {AC 1}
-- [ ] {AC 2}
+{Commands, manual checks, and acceptance-criteria checks.}
 ```
 
 Code snippets and file paths **belong here**, never in `01-spec.md`.
@@ -235,91 +201,61 @@ Code snippets and file paths **belong here**, never in `01-spec.md`.
 
 ## Execution strategy
 
-The default phase order in [SKILL.md](SKILL.md) is a **guide**, not a rigid script.
+Use the confirmed workflow from `03-plan.md`.
 
 ### When to parallelize
 
-| Example                               | Phases | Why                                      |
-| ------------------------------------- | ------ | ---------------------------------------- |
-| Tests while scaffolding orchestration | 6 ∥ 2  | Different files, no shared mutable state |
-| i18n keys while data layer            | 7 ∥ 4  | Independent files                        |
-| Route wiring while UI scaffold        | 5 ∥ 1  | Only if page API is already stable       |
+- Different files and no shared mutable state.
+- Independent validation while implementation continues.
+- Independent copy/i18n/config work when interfaces are stable.
 
 ### When to stay sequential
 
-- **UI ↔ orchestration** — props/callbacks depend on both sides existing.
-- **Data layer before orchestration** — hooks/controllers need query/repository functions.
-- **Stable code before broad tests** — unless doing deliberate TDD on an isolated unit.
-- **9 → 10** — code review, then finalize docs.
-- **10 → 11** — docs finalized, then evaluate new skill.
+- One step depends on APIs, props, contracts, migrations, or generated files from another.
+- Two steps touch the same files heavily.
+- The implementation is unstable and broad tests would create noisy failures.
+- Finalize docs must run after implementation and review are stable.
 
 ### Subagents
 
-| Agent                   | Typical use                                  |
-| ----------------------- | -------------------------------------------- |
-| `code-reviewer`         | Phase 9 on large or cross-layer diffs        |
-| `explore`               | Find patterns and navigation before Phase 5  |
-| `Task` (generalPurpose) | Isolated research while UI work stays inline |
+Use subagents only when they reduce risk or speed up isolated work:
+
+| Agent / role      | Typical use                                       |
+| ----------------- | ------------------------------------------------- |
+| `code-reviewer`   | Large or cross-layer diffs before finalizing docs |
+| explore/research  | Find patterns, call sites, routes, or conventions |
+| specialized skill | Project-defined atomic work from config/docs      |
 
 ---
 
-## Implementation phases (detailed)
+## Frontend workflow example
 
-Default order is **UI-first**. Omit phases that do not apply; record them in `## Skipped phases`.
+This is an optional example from a frontend workflow. Use it only if it matches the user's project or the user chooses it. Rename, remove, split, or reorder steps freely.
 
-### Phase 1 — Components / UI
+| Step | Example workflow step       | Notes                                                                  |
+| ---- | --------------------------- | ---------------------------------------------------------------------- |
+| 1    | UI                          | Screens, pages, components, widgets; match existing domain patterns    |
+| 2    | Orchestration               | Controllers, hooks, view models, blocs; loading, errors, mutations     |
+| 3    | UI ↔ orchestration          | Wire presentation to orchestration; keep presentation thin             |
+| 4    | Data access                 | Repositories, queries, API clients; generated types if applicable      |
+| 5    | Routes / navigation         | Register routes and map every entry point from the spec                |
+| 6    | Tests                       | Project test stack; purposeful behavior coverage                       |
+| 7    | Internationalization        | Required locales only; reuse existing keys when possible               |
+| 8    | Analytics                   | Include only when product/project asks for tracking                    |
+| 9    | Code review                 | Inline review or `code-reviewer` for large/cross-layer changes         |
+| 10   | Finalize docs               | Mandatory final step; see [Finalize docs](#finalize-docs)              |
+| 11   | New skill needed?           | Optional; propose only for recurring gaps                              |
 
-- Follow existing patterns in the touched domain folder.
-- Keep presentation thin — no direct DB/HTTP calls if the project uses an intermediate layer.
-- If the correct pattern is unclear, **ask the user** and wait.
+Do not force this on backend, CLI, data, infrastructure, content, or small maintenance work.
 
-### Phase 2 — Orchestration
+---
 
-- Match sibling features: loading state, reload, mutation helpers.
-- Call data-access functions — not raw clients when a module already exists.
+## Finalize docs
 
-### Phase 3 — UI ↔ orchestration
+Mandatory final step for non-trivial planned work.
 
-- Wire props/callbacks; show pending/disabled state from the project's mutation pattern.
-
-### Phase 4 — Data layer
-
-- Reads/writes in the project's query/repository/API module.
-- Schema changes: migrations in the canonical folder; update generated types if applicable.
-
-### Phase 5 — Routes / navigation
-
-- Register routes per project router.
-- Map **every** navigation entry point from the spec.
-- If entry points are unclear, **ask the user**.
-
-### Phase 6 — Tests
-
-- Co-locate or place tests per project convention.
-- Use the project's test stack (unit, widget, integration).
-- Tests must have a **clear purpose** — not coverage for its own sake.
-- Mock at the repository/query boundary when testing UI behavior.
-
-### Phase 7 — Internationalization
-
-- Add keys to all required locales.
-- Reuse existing keys when the string already exists.
-- Skip if the project is single-locale — document in Skipped phases.
-
-### Phase 8 — Analytics
-
-- Skip unless product explicitly requests tracking.
-
-### Phase 9 — Code review
-
-- Run inline review or delegate to `code-reviewer` for large diffs.
-- Check: layer boundaries respected, locales updated, migrations safe, tests meaningful.
-
-### Phase 10 — Finalize docs
-
-- **Mandatory** — last step before optional Phase 11.
 - Update `01-spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
-- Update `02-context.md`: merge final file list, architecture decisions, and validation checks from `03-plan.md`; merge status/PR from `handoff.md` if present; discard handoff next steps.
+- Update `02-context.md`: merge final file list, architecture decisions, validation checks, and useful notes from `03-plan.md`; merge status/PR from `handoff.md` if present; discard handoff next steps.
 - Delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other file in the feature folder except `01-spec.md` and `02-context.md`.
 - Folder must end with only `01-spec.md` and `02-context.md`.
 
@@ -334,19 +270,14 @@ Default order is **UI-first**. Omit phases that do not apply; record them in `##
 
 | `03-plan.md` section | Destination in `02-context.md`    |
 | -------------------- | --------------------------------- |
-| Files CREATE/MODIFY  | `## Key files` table              |
-| Skipped phases       | `## Behavior notes` (if relevant) |
-| Phase checkboxes     | **Delete** — do not copy verbatim |
+| Files CREATE/MODIFY  | `## Key files`                    |
+| Skipped steps        | `## Behavior notes` if relevant   |
+| Checkboxes           | Delete — do not copy verbatim     |
 | Validation commands  | `## Validation`                   |
 
 | `handoff.md` section | Destination                                |
 | -------------------- | ------------------------------------------ |
 | Key files            | `## Key files` if missing                  |
 | PR / branch          | `## Status`                                |
-| Next steps           | **Discard**                                |
-| Decisions vigentes   | `## Behavior notes` or update `01-spec.md` |
-
-### Phase 11 — New skill needed?
-
-- If a recurring gap appears across tasks, propose a new atomic skill via `write-skill`.
-- Do not create overlapping orchestrators — extend this skill or REFERENCE instead.
+| Next steps           | Discard                                    |
+| Current decisions    | `## Behavior notes` or update `01-spec.md` |

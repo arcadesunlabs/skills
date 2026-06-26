@@ -1,24 +1,26 @@
 ---
 name: write-plan
-description: Plan and implement non-trivial feature work — map flow, architecture, files, execute in phased order, and review. Use after brainstorm/spec or for direct implementation tasks.
+description: Plan and implement non-trivial feature work using the project's configured workflow — map scope, architecture, files, execution steps, validation, and review. Use after brainstorm/spec or for direct implementation tasks.
 ---
 
 # Write Plan
 
 **Announce at start:** "I'm using the write-plan skill."
 
-Plan **and** implement non-trivial feature work. Two modes:
+Plan **and** implement non-trivial feature work. The result is only as good as the project's configuration: the user must describe how their project/team works in `project.conventionsFile`, `{docs.root}/codebase/architecture.md`, or nearby project docs. Do not treat this skill's examples as the user's workflow.
+
+Two modes:
 
 | Mode             | What it does                                                                  |
 | ---------------- | ----------------------------------------------------------------------------- |
-| **Write**        | Map scope, architecture, files, phases; save artifacts; get user confirmation |
-| **Read/Execute** | Implement phase by phase from the saved plan                                  |
+| **Write**        | Map scope, architecture, files, workflow steps; save artifacts; get user confirmation |
+| **Read/Execute** | Implement step by step from the confirmed plan                                     |
 
 **Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Read `project.conventionsFile` and, when present, `{docs.root}/codebase/architecture.md` before choosing patterns or file paths.
 
 **Artifacts:** `{docs.root}/<domain>/<feature>/03-plan.md` + updates to `02-context.md` (see `project.conventionsFile` in config)
 
-**Reference:** templates, tables, and per-phase details → [REFERENCE.md](REFERENCE.md)
+**Reference:** templates and optional workflow examples → [REFERENCE.md](REFERENCE.md)
 
 ---
 
@@ -36,7 +38,7 @@ Skip this skill for trivial tasks (typo, single-line fix) — implement per `pro
 
 ---
 
-## Phase Write — Plan before code
+## Mode Write — Plan before code
 
 ### Step 0 — Flow boundaries
 
@@ -69,12 +71,13 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 - **Module / package** — single app, monorepo package, or client + server? Confirm with user if unclear.
 - **Layers** — see [layer table](REFERENCE.md#layer-and-location-selection).
 
-### Step 4 — Files, phases
+### Step 4 — Files, workflow
 
 1. List every **CREATE** / **MODIFY** file (see [files example](REFERENCE.md#files-example)).
 2. Note project-specific atomic skills to invoke during execution, if the repo defines them.
 3. Group into [increments](REFERENCE.md#increments).
-4. Add checklist items per applicable implementation phase to `03-plan.md`. Document omitted phases under `## Skipped phases`.
+4. Derive the implementation workflow from project configuration and the touched code. If no explicit workflow exists, propose a short workflow that fits the task and ask the user to confirm.
+5. Add checklist items per agreed workflow step to `03-plan.md`. Document intentionally skipped or irrelevant steps only when that helps review.
 
 ### Step 5 — Confirm
 
@@ -85,50 +88,33 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 
 ---
 
-## Phase Read/Execute — Implement after confirmation
+## Mode Read/Execute — Implement after confirmation
 
-Default order: **UI-first**. Omit irrelevant phases; document skips in `03-plan.md`.
+Use the confirmed project workflow. There is no built-in default order.
 
 ### Execution flexibility
 
-The phase table is a **guide**, not a rigid script. During implementation the agent may:
+During implementation the agent may:
 
-- **Run phases in parallel** when they have no dependency on each other (e.g. tests while i18n keys are drafted).
-- **Delegate to subagents** when it speeds up isolated work — e.g. `code-reviewer` for Phase 9, explore agents for navigation call sites.
-- **Stay inline** when phases are tightly coupled, touch the same files, or need sequential validation.
+- **Run steps in parallel** when they have no dependency on each other.
+- **Delegate to subagents** when it speeds up isolated work, such as exploration or code review.
+- **Stay inline** when steps are tightly coupled, touch the same files, or need sequential validation.
 
-Respect **hard dependencies**: do not wire UI ↔ orchestration (Phase 3) before both exist; do not run Phase 9 before implementation is stable; **Phase 10 (finalize docs) always last** before optional Phase 11.
+Respect **hard dependencies** from the project workflow and code. Finalize docs is always the last required step before any optional follow-up skill creation.
 
 Note parallel work or subagent use in `03-plan.md` when it helps traceability. Details: [REFERENCE.md — Execution strategy](REFERENCE.md#execution-strategy).
 
-| #   | Phase                | Notes                                                                         |
-| --- | -------------------- | ----------------------------------------------------------------------------- |
-| 1   | UI                   | Screens, pages, components, widgets — match existing domain patterns          |
-| 2   | Orchestration        | Controllers, hooks, view models, blocs — loading, errors, mutations           |
-| 3   | UI ↔ Orchestration   | Wire presentation to orchestration; keep UI thin                              |
-| 4   | Data layer           | Repositories, queries, API clients; migrations if schema changes              |
-| 5   | Routes / navigation  | Register routes; map **every** entry point from the spec                      |
-| 6   | Tests                | Project test stack; co-locate per convention; purposeful coverage only        |
-| 7   | Internationalization | All required locales; reuse existing keys when possible                       |
-| 8   | Analytics            | Skip unless product asks — document in Skipped phases                         |
-| 9   | Code review          | Agent `code-reviewer` or inline review                                        |
-| 10  | Finalize docs        | **Mandatory** — update `01-spec.md` and `02-context.md`; merge then delete transient files |
-| 11  | New skill needed?    | `write-skill` if approved                                                     |
-
-Per-phase rules: [REFERENCE.md — Implementation phases](REFERENCE.md#implementation-phases-detailed).
+If useful, use [REFERENCE.md — Frontend workflow example](REFERENCE.md#frontend-workflow-example) as a starting point. It is only an example from one frontend/Flutter-style project; do not apply it when the user's project, team, or task suggests a different flow.
 
 **Key rules:**
 
-- Phase 1: match existing UI patterns in the touched domain — **ask** if unclear.
-- Phases 2–3: orchestration calls data-access functions; UI receives data and callbacks.
-- Phase 4: persistence/network in the project's data module; schema changes in the canonical migrations folder.
-- Phase 5: map **every** navigation entry point — **ask** if unclear.
-- Phase 6: purposeful tests only — test behavior that matters.
-- Phase 9: use `code-reviewer` for large or cross-layer changes; run before Phase 10.
-- Phase 10: **mandatory** — reflect shipped behavior in `01-spec.md` (no code), update `02-context.md` to match implementation; merge useful content from `03-plan.md`, `04-tasks.md`, `handoff.md`; delete those transient files. Folder must end with only `01-spec.md` + `02-context.md`. See [REFERENCE.md — Phase 10](REFERENCE.md#phase-10--finalize-docs).
-- Phase 7: reuse existing i18n/l10n keys when possible.
+- Match existing patterns in the touched domain — **ask** if unclear.
+- Use the project's configured workflow when it exists; otherwise derive one from the code and confirm it.
+- Purposeful tests only — test behavior that matters.
+- Use `code-reviewer` or inline review for large or cross-layer changes before finalizing docs.
+- Finalize docs is **mandatory** — reflect shipped behavior in `01-spec.md` (no code), update `02-context.md` to match implementation; merge useful content from `03-plan.md`, `04-tasks.md`, `handoff.md`; delete those transient files. Folder must end with only `01-spec.md` + `02-context.md`. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
 
-For each phase: update `03-plan.md` checkboxes, invoke listed project skills when applicable, stop when blocked.
+For each workflow step: update `03-plan.md` checkboxes, invoke listed project skills when applicable, stop when blocked.
 
 ---
 
@@ -146,7 +132,7 @@ For each phase: update `03-plan.md` checkboxes, invoke listed project skills whe
 ## Completion
 
 1. Update `03-plan.md` checkboxes and `02-context.md` (Known Behavior, validation checklist).
-2. **Mandatory (Phase 10):** Finalize docs — update `01-spec.md` to shipped product truth; merge transient content into `02-context.md`; delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other stray files. Folder must contain only `01-spec.md` and `02-context.md`. See [REFERENCE.md — Phase 10](REFERENCE.md#phase-10--finalize-docs).
+2. **Mandatory:** Finalize docs — update `01-spec.md` to shipped product truth; merge transient content into `02-context.md`; delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other stray files. Folder must contain only `01-spec.md` and `02-context.md`. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
 3. Tell the user:
 
 > Implementation complete. Docs finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-context.md` remain.
@@ -164,6 +150,6 @@ For each phase: update `03-plan.md` checkboxes, invoke listed project skills whe
 
 **After Read/Execute:**
 
-- [ ] All applicable phases completed
-- [ ] Code review passed (Phase 9)
-- [ ] Docs finalized (Phase 10) — only `01-spec.md` + `02-context.md` in feature folder
+- [ ] All agreed workflow steps completed
+- [ ] Code review passed when appropriate
+- [ ] Docs finalized — only `01-spec.md` + `02-context.md` in feature folder
