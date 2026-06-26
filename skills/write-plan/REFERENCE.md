@@ -2,9 +2,9 @@
 
 Detailed tables, templates, and per-phase rules. Load when drafting artifacts or executing a specific phase.
 
-Load [workflow-config](../workflow-config/SKILL.md) first. Paths use `{docs.root}`; ticket keys use `{cardKey}` from config.
+Load [workflow-config](../workflow-config/SKILL.md) first. Paths use `{docs.root}` from config.
 
-Before planning file paths or architecture, read `project.conventionsFile` and inspect the code under `docs.domainMirror` and `code.appRoot`. **Match what the touched area already uses** — do not import patterns from another stack.
+Before planning file paths or architecture, read `project.conventionsFile`, `{docs.root}/codebase/architecture.md` when present, and inspect the code under `docs.domainMirror` and `code.appRoot`. **Match what the touched area already uses** — do not import patterns from another stack.
 
 ---
 
@@ -97,7 +97,8 @@ Implementation plan
 Type:     New feature | Improvement | Bug fix
 Pattern:  {from touched files / conventions}
 Domain:   e.g. expense-list, auth
-Ticket:   {cardKey}
+Slice:    {slice title if path A′}
+Branch:   {branch name if known}
 Entry:    A (with spec) | A′ (epic slice) | B (direct)
 
 Files:
@@ -128,7 +129,8 @@ Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed by `write-finalize-
 **Pattern:** {architecture chosen from inspection}
 **Domain:** e.g. expense-list, auth
 **Entry path:** A | A′ | B
-**Ticket:** {cardKey}
+**Slice:** {slice title if path A′}
+**Branch:** {branch name if known}
 
 ## Files
 
@@ -203,7 +205,7 @@ Update `{docs.root}/<domain>/<feature>/02-context.md` with technical detail. App
 ## Feature Snapshot
 
 - Feature: {short description}
-- Status: In progress ({cardKey})
+- Status: In progress ({slice title or branch if known})
 - Entry point: {screen, page, or trigger}
 - Route / deep link: {path if applicable}
 - Domain: {e.g. expense-list, auth}

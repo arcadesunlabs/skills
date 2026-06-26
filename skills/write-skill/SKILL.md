@@ -64,13 +64,12 @@ Before drafting, check the new skill does not overlap an existing one.
 
 | Layer            | Examples                                                             | Role                                                   |
 | ---------------- | -------------------------------------------------------------------- | ------------------------------------------------------ |
-| Config           | [workflow-config](../workflow-config/SKILL.md), `skills.config.json` | Per-user tracker, docs paths, branch prefix            |
+| Config           | [workflow-config](../workflow-config/SKILL.md), `skills.config.json` | Per-user docs paths and project settings               |
 | Repo rules       | `project.conventionsFile` from config                                | Stack, commands, project conventions                   |
 | Design           | `mode-brainstorm`, `mode-grill`, `write-feature-spec`                | Spec and alignment before planning                     |
 | Plan + implement | `write-plan`                                                         | Phased implementation; ends with `write-finalize-docs` |
 | Docs (delivery)  | `write-finalize-docs`                                                | Folder → only `01-spec.md` + `02-context.md`           |
 | Review           | agent `code-reviewer`                                                | Quality gate before merge                              |
-| Delivery         | `task-workflow`                                                      | Card lookup, `{cardKey}` branch                        |
 
 **Orchestration vs atomic:** `write-plan` is the orchestrator — it runs phased implementation with inline guidance in REFERENCE.md. New skills should be **atomic** (one clear job). If the gap is a new phase or step in the plan-and-implement flow, extend `write-plan` instead of creating a parallel orchestrator.
 
@@ -78,10 +77,10 @@ Before drafting, check the new skill does not overlap an existing one.
 
 ```
 workflow-config (load skills.config.json)
-task-workflow → write-plan (path B, when tracked)
+write-plan (path B, direct task)
 mode-brainstorm → write-feature-spec → write-plan (path A, single slice)
-mode-brainstorm → write-feature-spec → tracker children + parent links → STOP (epic)
-  → user picks child {cardKey} → task-workflow → write-plan (slice only)
+mode-brainstorm → write-feature-spec → 04-tasks.md → STOP (epic)
+  → user picks slice → confirm branch → write-plan (slice only)
 write-plan → write-finalize-docs (mandatory last — only 01-spec + 02-context remain)
 write-plan phase 11 → write-skill (if a recurring gap justifies a new skill)
 ```
@@ -177,7 +176,7 @@ Split into separate files when:
 | Lines   | Status         | Typical fit                                                                        |
 | ------- | -------------- | ---------------------------------------------------------------------------------- |
 | < 100   | Ideal          | Atomic operations (`add-package`, `add-localization`)                              |
-| 100–200 | Sweet spot     | Workflows with checklist + tables (`write-plan`, `task-workflow`)                  |
+| 100–200 | Sweet spot     | Workflows with checklist + tables (`write-plan`, `mode-brainstorm`)                |
 | 200–300 | Acceptable     | Skills with several essential sections; consider moving examples to `EXAMPLES.md`  |
 | 300–500 | Reconsider     | Likely has material that belongs in `REFERENCE.md` (see `write-plan/REFERENCE.md`) |
 | > 500   | Split required | Always extract reference content                                                   |

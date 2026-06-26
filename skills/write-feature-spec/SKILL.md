@@ -27,13 +27,12 @@ A good feature specification should answer:
 Load [workflow-config](../workflow-config/SKILL.md) first. This skill is the **single source of truth** for spec structure. Settings below use config placeholders.
 
 - **Location:** save specs to `{docs.root}/<domain>/<feature>/01-spec.md` (`<domain>` and `<feature>` in kebab-case, mirroring `docs.domainMirror` or functional area). User preferences for spec location override this default.
-- **Tracker link:** include the card key (e.g. `{cardKey}`) when `taskTracker.enabled`. Branch name follows `taskTracker.branchMatchesCardKey` in config.
 - **No YAML frontmatter** in `docs/` feature files — start each file with a single `# Title`.
 - **Two spec flavors:**
   - **Product spec** (default) — a new feature / user-facing behavior being designed. Use the structure in _Draft the specification_ below.
   - **Flow/architecture spec** — documenting how an existing feature already works. Replace the design-oriented sections with: `## Overview`, `## Flow` (mermaid), `## Special cases / Important rules`, `## Key components` (table), `## Key files` (table).
 - **`02-context.md`** (same folder) — brownfield context for devs/agents. Create or update when implementation is defined; code snippets and class names go here, never in `01-spec.md`.
-- **`04-tasks.md`** — epic decomposition into slices (order, dependencies, scope, out of scope per slice). Create at brainstorm time for epic-sized work; each slice should map to a child tracker card when applicable. **Transient** — removed by [`write-finalize-docs`](../write-finalize-docs/SKILL.md) after delivery.
+- **`04-tasks.md`** — epic decomposition into slices (order, dependencies, scope, out of scope per slice). Create at brainstorm time for epic-sized work. **Transient** — removed by [`write-finalize-docs`](../write-finalize-docs/SKILL.md) after delivery.
 - **`03-plan.md`** — phased implementation checklist from [`write-plan`](../write-plan/SKILL.md), scoped to the active slice/branch. **Transient** — removed by `write-finalize-docs` after delivery.
 - Infra/process docs (CI/CD, logging, internal sync) are not feature specs — they live under `docs/archived/`, or top-level files like `docs/web-backlog.md`.
 

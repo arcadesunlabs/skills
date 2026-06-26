@@ -7,7 +7,7 @@ description: Finalize feature documentation after implementation — consolidate
 
 **Announce at start:** "I'm using the write-finalize-docs skill."
 
-**When:** Always the **last documentation step** after implementation is complete (tests pass, code review done if applicable). Run before merge or when closing a `{cardKey}` slice.
+**When:** Always the **last documentation step** after implementation is complete (tests pass, code review done if applicable). Run before merge or when closing an epic slice.
 
 **Goal:** `{docs.root}/<domain>/<feature>/` contains **only**:
 
@@ -25,10 +25,9 @@ All other files in that folder (`03-plan.md`, `04-tasks.md`, `handoff.md`, draft
 
 - Load [workflow-config](../workflow-config/SKILL.md)
 - Implementation matches (or intentionally updates) the spec
-- `code.lintCommand` and relevant tests pass (from config)
 - You know the feature folder path (`{docs.root}/<domain>/<feature>/`)
 
-If the folder does not exist but the work was tracked, create the folder and both files from scratch using git diff + [write-feature-spec](../write-feature-spec/SKILL.md) / [write-plan REFERENCE](../write-plan/REFERENCE.md#02-contextmd-sections-during-implementation).
+If the folder does not exist, create the folder and both files from scratch using git diff + [write-feature-spec](../write-feature-spec/SKILL.md) / [write-plan REFERENCE](../write-plan/REFERENCE.md#02-contextmd-sections-during-implementation).
 
 ---
 
@@ -81,7 +80,7 @@ Use this skeleton (adapt sections; omit empty):
 
 ## Status
 
-- Shipped in {cardKey} / merged {PR link if known}
+- Shipped on branch {branch name} / merged {PR link if known}
 - Entry point: {page or trigger}
 - Route: {path if applicable}
 
@@ -101,15 +100,8 @@ Use this skeleton (adapt sections; omit empty):
 
 ## Validation
 
-```bash
-{code.lintCommand from config}
-{code.testCommand from config}
-```
+- [ ] {AC-derived manual checks from `project.conventionsFile`}
 ````
-
-- [ ] {AC-derived manual checks}
-
-```
 
 Code snippets and paths **belong here**, never in `01-spec.md`.
 
@@ -153,7 +145,7 @@ Tell the user:
 
 When multiple slices share one epic folder:
 
-- **Parent epic folder** (`{docs.root}/<domain>/<epic>/`): keep epic-level `01-spec.md`; `02-context.md` covers shared architecture; add `## Epic slices` with delivered slices and `{cardKey}` entries.
+- **Parent epic folder** (`{docs.root}/<domain>/<epic>/`): keep epic-level `01-spec.md`; `02-context.md` covers shared architecture; add `## Epic slices` with delivered slice titles and status.
 - **Child slice folder** (if separate, e.g. `history-collapsible/`): finalize **that** folder independently when the slice merges.
 - Remove `04-tasks.md` from the epic folder once all slices are delivered or the table is captured in `02-context.md`.
 

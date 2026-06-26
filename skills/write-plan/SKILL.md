@@ -1,6 +1,6 @@
 ---
 name: write-plan
-description: Plan and implement non-trivial feature work — map flow, architecture, files, execute in phased order, and review. Use after task inception or after brainstorm/spec.
+description: Plan and implement non-trivial feature work — map flow, architecture, files, execute in phased order, and review. Use after brainstorm/spec or for direct implementation tasks.
 ---
 
 # Write Plan
@@ -14,7 +14,7 @@ Plan **and** implement non-trivial feature work. Two modes:
 | **Write**        | Map scope, architecture, files, phases; save artifacts; get user confirmation |
 | **Read/Execute** | Implement phase by phase from the saved plan                                  |
 
-**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). When `taskTracker.enabled`, use tracked card `{cardKeyPattern}` and branch per config — run [task-workflow](../task-workflow/SKILL.md) first.
+**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Read `project.conventionsFile` and, when present, `{docs.root}/codebase/architecture.md` before choosing patterns or file paths.
 
 **Artifacts:** `{docs.root}/<domain>/<feature>/03-plan.md` + updates to `02-context.md` (see `project.conventionsFile` in config)
 
@@ -27,10 +27,10 @@ Plan **and** implement non-trivial feature work. Two modes:
 | Path   | When                                                                                 | Input                                                      |
 | ------ | ------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
 | **A**  | After `mode-brainstorm` → `write-feature-spec`                                       | `01-spec.md`                                               |
-| **A′** | Epic child slice — after user picks a child `{cardKey}` from the parent tracker card | `01-spec.md` + child card description (current slice only) |
+| **A′** | Epic child slice — after user picks a slice from `04-tasks.md`                        | `01-spec.md` + slice scope from `04-tasks.md`              |
 | **B**  | No spec — direct implementation task                                                 | Conversation                                               |
 
-**Epic scoping (path A′):** Fetch the child card via task tracker MCP/CLI. Plan and implement **only** the slice matching the current branch's `{cardKey}`, using the child card description for scope and acceptance criteria. Reference the epic `01-spec.md` for shared context; do not plan phases for other slices.
+**Epic scoping (path A′):** Plan and implement **only** the selected slice from `04-tasks.md`, using its scope and acceptance criteria. Reference the epic `01-spec.md` for shared context; do not plan phases for other slices.
 
 Skip this skill for trivial tasks (typo, single-line fix) — implement per `project.conventionsFile` in config.
 
@@ -54,7 +54,7 @@ Informs — but does not by itself decide — the architecture pattern (see Step
 
 ### Step 2 — Architecture pattern
 
-Task type is only the starting hint. The pattern is decided by the **architecture the touched code already uses** — inspect the files you will modify before choosing:
+Task type is only the starting hint. The pattern is decided by the **architecture the touched code already uses** — read `{docs.root}/codebase/architecture.md` when present, then inspect the files you will modify before choosing:
 
 | Situation                                      | Pattern              | Reference                                                                     |
 | ---------------------------------------------- | -------------------- | ----------------------------------------------------------------------------- |

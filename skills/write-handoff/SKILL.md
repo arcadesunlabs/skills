@@ -28,7 +28,7 @@ Folder names mirror `docs.domainMirror` in kebab-case (`expense_list` → `expen
 
 ## What to include
 
-- Current objective and tracker card (`{cardKey}`) if `taskTracker.enabled`
+- Current objective and active branch (if known)
 - What was done (commits, branches, key files)
 - What is in progress or blocked
 - Explicit next steps for the receiving agent

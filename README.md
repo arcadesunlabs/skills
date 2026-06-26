@@ -1,6 +1,6 @@
 # Personal Agent Skills
 
-Skills de agente para workflow de desenvolvimento — rastreamento de tarefas, specs, planos, handoff e documentação. Compatível com o ecossistema [skills.sh](https://www.skills.sh/) e o CLI [`npx skills`](https://github.com/vercel-labs/skills).
+Skills de agente para workflow de desenvolvimento — specs, planos, handoff e documentação. Compatível com o ecossistema [skills.sh](https://www.skills.sh/) e o CLI [`npx skills`](https://github.com/vercel-labs/skills).
 
 ## Pré-requisitos
 
@@ -26,7 +26,7 @@ cd /caminho/do/seu-projeto
 npx skills add reveliotec/skills --skill '*' -a cursor -y
 
 # Ou uma skill específica
-npx skills add reveliotec/skills --skill task-workflow -a cursor -y
+npx skills add reveliotec/skills --skill write-plan -a cursor -y
 ```
 
 Troque `cursor` pelo seu agente (`codex`, `claude-code`, etc.). Para instalar globalmente em vez de no projeto, adicione `-g`.
@@ -55,7 +55,9 @@ Se você já clonou este repo:
 npm --prefix skills run configure -- /caminho/do/seu-projeto
 ```
 
-Campos principais: `project`, `docs`, `taskTracker`, `code`. Referência: [skills.config.example.json](./skills.config.example.json).
+Campos principais: `project`, `docs`, `code`. Referência: [skills.config.example.json](./skills.config.example.json).
+
+Recomendado: criar `{docs.root}/codebase/architecture.md` com visão de stack, camadas e decisões arquiteturais — as skills `mode-brainstorm` e `write-plan` leem esse arquivo quando existir.
 
 ### 3. Use no dia a dia
 
@@ -63,10 +65,9 @@ Peça ao agente em linguagem natural. Ele escolhe a skill pelo `description` do 
 
 | Situação                     | O que pedir                                                   |
 | ---------------------------- | ------------------------------------------------------------- |
-| Pegar um card e abrir branch | _"Iniciar tarefa REV-42"_ → `task-workflow`                   |
 | Brainstorm de épico          | _"Brainstorm da feature X"_ → `mode-brainstorm`               |
 | Escrever spec de produto     | _"Spec da feature login social"_ → `write-feature-spec`       |
-| Plano técnico antes de codar | _"Plano técnico para REV-42"_ → `write-plan`                  |
+| Plano técnico antes de codar | _"Plano técnico para login social"_ → `write-plan`            |
 | Handoff entre sessões        | _"Handoff do que fizemos"_ → `write-handoff`                  |
 | Fechar docs após entrega     | _"Finalizar documentação da feature"_ → `write-finalize-docs` |
 
@@ -79,7 +80,6 @@ A skill `workflow-config` é o ponto de entrada: o agente deve carregar `skills.
 | Skill                 | Função                                     |
 | --------------------- | ------------------------------------------ |
 | `workflow-config`     | Carrega ou cria `skills.config.json`       |
-| `task-workflow`       | Card/issue + branch a partir do tracker    |
 | `mode-brainstorm`     | Decomposição de épico e artefatos iniciais |
 | `mode-grill`          | Modo de revisão crítica                    |
 | `write-feature-spec`  | Spec de produto (01-spec)                  |

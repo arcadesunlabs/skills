@@ -4,10 +4,9 @@
   "groupings": [
     {
       "title": "Workflow",
-      "description": "Config, task tracking, planning, specs, and delivery.",
+      "description": "Config, planning, specs, and delivery.",
       "skills": [
         "workflow-config",
-        "task-workflow",
         "mode-brainstorm",
         "mode-grill",
         "write-feature-spec",
