@@ -23,10 +23,10 @@ Always work from the **root of the project where you code** (for example, your m
 cd /path/to/your-project
 
 # All skills (recommended)
-npx skills add reveliotec/skills --skill '*' -a cursor -y
+npx skills add arcadesunlabs/skills --skill '*' -a cursor -y
 
 # Or one specific skill
-npx skills add reveliotec/skills --skill write-plan -a cursor -y
+npx skills add arcadesunlabs/skills --skill write-plan -a cursor -y
 ```
 
 Replace `cursor` with your agent (`codex`, `claude-code`, etc.). To install globally instead of into the project, add `-g`.
@@ -34,7 +34,7 @@ Replace `cursor` with your agent (`codex`, `claude-code`, etc.). To install glob
 List what is available without installing:
 
 ```bash
-npx skills add reveliotec/skills --list
+npx skills add arcadesunlabs/skills --list
 ```
 
 ### 2. Configure Your Project Workflow
@@ -83,7 +83,7 @@ Do not copy this flow automatically. Use it only as a reference for the level of
 If you only want to generate the base file without that conversation, run the interactive helper via `npx`:
 
 ```bash
-npx github:reveliotec/skills skills-configure /path/to/your-project
+npx github:arcadesunlabs/skills skills-configure /path/to/your-project
 ```
 
 Answer the questions (Enter accepts the default value). The file is created at `/path/to/your-project/skills.config.json`.
@@ -151,7 +151,7 @@ skills.config.example.json
 ### Commands
 
 ```bash
-git clone https://github.com/reveliotec/skills.git
+git clone https://github.com/arcadesunlabs/skills.git
 cd skills
 
 npm run new -- my-skill                         # create skill
@@ -175,13 +175,13 @@ npx skills add . --skill my-skill -a cursor -y
 
 ```bash
 # From GitHub (normal usage)
-npx skills add reveliotec/skills --skill '*' -a cursor -y
+npx skills add arcadesunlabs/skills --skill '*' -a cursor -y
 
 # From this local clone
 npx skills add . --skill my-skill -a cursor -y
 
 # Global (all folders)
-npx skills add reveliotec/skills --skill '*' -a cursor -g -y
+npx skills add arcadesunlabs/skills --skill '*' -a cursor -g -y
 ```
 
 More options: [`vercel-labs/skills`](https://github.com/vercel-labs/skills).

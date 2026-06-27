@@ -12,7 +12,7 @@ Every workflow skill in this repo reads settings from **`skills.config.json`** a
 ## First step
 
 1. Look for `skills.config.json` in the workspace root.
-2. If **missing**, ask the user to run `npx github:reveliotec/skills skills-configure <project-path>` **or** collect the values below with `AskQuestion` / conversation and write the file.
+2. If **missing**, ask the user to run `npx github:arcadesunlabs/skills skills-configure <project-path>` **or** collect the values below with `AskQuestion` / conversation and write the file.
 3. If **present**, read it and use its values for the rest of the session.
 
 Example file: [skills.config.example.json](../../../skills.config.example.json) (in the skills repo).
