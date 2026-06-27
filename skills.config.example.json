@@ -11,5 +11,32 @@
   },
   "code": {
     "appRoot": "apps/my-app"
+  },
+  "workflow": {
+    "implementationFlow": [
+      {
+        "phase": "Surface / entry point",
+        "skills": [],
+        "notes": "Screens, pages, commands, routes, jobs, or API entry points."
+      },
+      {
+        "phase": "Orchestration",
+        "skills": [],
+        "notes": "Controllers, hooks, blocs, services, state, loading, errors, and wiring."
+      },
+      {
+        "phase": "Data / contracts",
+        "skills": [],
+        "notes": "Repositories, clients, schemas, migrations, generated types, or external contracts."
+      },
+      {
+        "phase": "Validation and review",
+        "skills": [],
+        "notes": "Tests, lint, typecheck, manual checks, code review, and documentation finalization."
+      }
+    ],
+    "validationCommands": [],
+    "review": "Use the project's normal review path; use a review agent for broad or cross-layer changes.",
+    "docsFinalization": "Update 01-spec.md and 02-context.md, then remove transient plan/task/handoff files."
   }
 }

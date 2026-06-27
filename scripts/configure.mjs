@@ -6,7 +6,10 @@ import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { fileURLToPath } from "node:url";
 
-const skillsRepoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+const skillsRepoRoot = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
 const projectArg = process.argv.slice(2).find((arg) => !arg.startsWith("-"));
 const root = projectArg ? path.resolve(projectArg) : process.cwd();
 const configPath = path.join(root, "skills.config.json");
@@ -61,6 +64,33 @@ try {
     config.code.appRoot || "",
   );
 
+  config.workflow ??= {};
+  const shouldAddWorkflow = await ask(
+    "Add/edit workflow placeholders? (Y/n)",
+    hasWorkflow(config.workflow) ? "n" : "y",
+  );
+  if (!/^n(o)?$/i.test(shouldAddWorkflow)) {
+    if (!Array.isArray(config.workflow.implementationFlow)) {
+      config.workflow.implementationFlow = defaultImplementationFlow();
+    }
+    config.workflow.validationCommands = parseList(
+      await ask(
+        "Validation commands (comma-separated, optional)",
+        (config.workflow.validationCommands || []).join(", "),
+      ),
+    );
+    config.workflow.review = await ask(
+      "Review expectation",
+      config.workflow.review ||
+        "Use the project's normal review path; use a review agent for broad or cross-layer changes.",
+    );
+    config.workflow.docsFinalization = await ask(
+      "Docs finalization rule",
+      config.workflow.docsFinalization ||
+        "Update 01-spec.md and 02-context.md, then remove transient plan/task/handoff files.",
+    );
+  }
+
   await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
   console.log(`\nSaved ${configPath}`);
   const architecturePath = path.join(
@@ -74,6 +104,9 @@ try {
   );
   console.log(
     "  (stack, layers, module boundaries — read by brainstorm and write-plan skills)",
+  );
+  console.log(
+    "Recommended: refine workflow.implementationFlow with your real project phases, dependencies, and skills.",
   );
   if (root !== process.cwd()) {
     console.log(`Project: ${root}`);
@@ -101,7 +134,62 @@ function defaultConfig() {
       domainMirror: "lib/features",
     },
     code: {},
+    workflow: {
+      implementationFlow: defaultImplementationFlow(),
+      validationCommands: [],
+      review:
+        "Use the project's normal review path; use a review agent for broad or cross-layer changes.",
+      docsFinalization:
+        "Update 01-spec.md and 02-context.md, then remove transient plan/task/handoff files.",
+    },
   };
+}
+
+function defaultImplementationFlow() {
+  return [
+    {
+      phase: "Surface / entry point",
+      skills: [],
+      notes: "Screens, pages, commands, routes, jobs, or API entry points.",
+    },
+    {
+      phase: "Orchestration",
+      skills: [],
+      notes:
+        "Controllers, hooks, blocs, services, state, loading, errors, and wiring.",
+    },
+    {
+      phase: "Data / contracts",
+      skills: [],
+      notes:
+        "Repositories, clients, schemas, migrations, generated types, or external contracts.",
+    },
+    {
+      phase: "Validation and review",
+      skills: [],
+      notes:
+        "Tests, lint, typecheck, manual checks, code review, and documentation finalization.",
+    },
+  ];
+}
+
+function hasWorkflow(workflow) {
+  return Boolean(
+    workflow &&
+    ((Array.isArray(workflow.implementationFlow) &&
+      workflow.implementationFlow.length > 0) ||
+      (Array.isArray(workflow.validationCommands) &&
+        workflow.validationCommands.length > 0) ||
+      workflow.review ||
+      workflow.docsFinalization),
+  );
+}
+
+function parseList(value) {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 async function ensureProjectTemplates() {

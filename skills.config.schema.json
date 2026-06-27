@@ -26,6 +26,40 @@
       "properties": {
         "appRoot": { "type": "string" }
       }
+    },
+    "workflow": {
+      "type": "object",
+      "properties": {
+        "implementationFlow": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["phase"],
+            "properties": {
+              "phase": { "type": "string", "minLength": 1 },
+              "skills": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "notes": { "type": "string" },
+              "appliesTo": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "dependsOn": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "validationCommands": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "review": { "type": "string" },
+        "docsFinalization": { "type": "string" }
+      }
     }
   }
 }

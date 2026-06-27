@@ -12,21 +12,25 @@ Every workflow skill in this repo reads settings from **`skills.config.json`** a
 ## First step
 
 1. Look for `skills.config.json` in the workspace root.
-2. If **missing**, ask the user to run `npm run configure` in that project **or** collect the values below with `AskQuestion` / conversation and write the file.
+2. If **missing**, ask the user to run `npx github:reveliotec/skills skills-configure <project-path>` **or** collect the values below with `AskQuestion` / conversation and write the file.
 3. If **present**, read it and use its values for the rest of the session.
 
 Example file: [skills.config.example.json](../../../skills.config.example.json) (in the skills repo).
 
 ## Config fields
 
-| Field                     | Used for                                           |
-| ------------------------- | -------------------------------------------------- |
-| `project.name`            | Human-readable project label in plans and handoffs |
-| `project.conventionsFile` | Repo rules file (e.g. `CLAUDE.md`)                 |
-| `docs.root`               | Feature docs folder (e.g. `.docs` or `docs`)       |
-| `docs.indexFile`          | Docs index path                                    |
-| `docs.domainMirror`       | Code path that doc domains mirror                  |
-| `code.appRoot`            | App root for file paths in plans                   |
+| Field                         | Used for                                           |
+| ----------------------------- | -------------------------------------------------- |
+| `project.name`                | Human-readable project label in plans and handoffs |
+| `project.conventionsFile`     | Repo rules file (e.g. `CLAUDE.md`)                 |
+| `docs.root`                   | Feature docs folder (e.g. `.docs` or `docs`)       |
+| `docs.indexFile`              | Docs index path                                    |
+| `docs.domainMirror`           | Code path that doc domains mirror                  |
+| `code.appRoot`                | App root for file paths in plans                   |
+| `workflow.implementationFlow` | Optional project-specific implementation phases    |
+| `workflow.validationCommands` | Optional validation commands                       |
+| `workflow.review`             | Optional review expectations                       |
+| `workflow.docsFinalization`   | Optional docs finalization rule                    |
 
 ## Derived values
 
@@ -40,7 +44,7 @@ Compute these from config — do not hardcode project-specific paths:
 
 ## Recommended project docs
 
-Advise the user to maintain **`{architecturePath}`** — a living overview of stack, layers, module boundaries, data flow, and architectural decisions. Workflow skills read it during brainstorm and planning when the file exists.
+Advise the user to maintain **`{architecturePath}`** — a living overview of stack, layers, module boundaries, data flow, workflow details, and architectural decisions. Workflow skills read it during brainstorm and planning when the file exists.
 
 Suggested layout under `{docs.root}`:
 
@@ -54,6 +58,8 @@ Suggested layout under `{docs.root}`:
 
 If `{architecturePath}` is missing during setup, remind the user to create it (even a short draft) before large features or refactors.
 
+Use `workflow.implementationFlow` in `skills.config.json` for the short machine-readable flow, and `{architecturePath}` / `project.conventionsFile` for detailed rules, examples, and rationale.
+
 ## Interactive setup (no file yet)
 
 If the user has not run `npm run configure`, gather at minimum:
@@ -61,7 +67,8 @@ If the user has not run `npm run configure`, gather at minimum:
 1. Project name and conventions file
 2. Docs root and domain mirror path
 3. Optional: app root
-4. Remind the user to add `{docs.root}/codebase/architecture.md` when absent
+4. Optional: implementation flow, validation commands, review rule, and docs finalization rule
+5. Remind the user to add `{docs.root}/codebase/architecture.md` when absent
 
 Write `skills.config.json` to the workspace root, then continue.
 

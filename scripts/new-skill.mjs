@@ -156,7 +156,7 @@ async function updateSkillsShConfig(skillName) {
   if (!personalGroup) {
     personalGroup = {
       title: "Personal",
-      description: "Skills pessoais mantidas neste repositorio.",
+      description: "Personal skills maintained in this repository.",
       skills: [],
     };
     config.groupings.unshift(personalGroup);

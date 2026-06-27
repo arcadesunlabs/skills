@@ -9,7 +9,7 @@ description: Plan and implement non-trivial feature work using the project's con
 
 Plan **and** implement non-trivial feature work, but only as an orchestrator over the user's project workflow. This skill does not define architecture, phases, file locations, validation commands, or review rules by itself.
 
-The result is only as good as the project's configuration. The user/team must describe how the project works in `skills.config.json`, `project.conventionsFile`, `{docs.root}/codebase/architecture.md`, or nearby project docs. If those sources are missing or too generic, this skill has no reliable workflow to execute: stop, explain what is missing, and ask the user to configure or confirm the needed decisions.
+The result is only as good as the project's configuration. The user/team must describe how the project works in `skills.config.json` (`workflow.*` when present), `project.conventionsFile`, `{docs.root}/codebase/architecture.md`, or nearby project docs. If those sources are missing or too generic, this skill has no reliable workflow to execute: stop, explain what is missing, and ask the user to configure or confirm the needed decisions.
 
 Two modes:
 
@@ -24,8 +24,8 @@ Two modes:
 
 - Architecture boundaries, naming conventions, and allowed patterns
 - Where code, tests, routes, copy, schemas, generated files, and docs belong
-- Preferred workflow order for the task type, including hard dependencies
-- Validation, review, and documentation expectations
+- Preferred workflow order for the task type, including hard dependencies (`workflow.implementationFlow` when configured)
+- Validation, review, and documentation expectations (`workflow.validationCommands`, `workflow.review`, `workflow.docsFinalization` when configured)
 - Project-specific skills, agents, scripts, or external systems to invoke
 
 **Artifacts:** `{docs.root}/<domain>/<feature>/03-plan.md` + updates to `02-context.md` (see `project.conventionsFile` in config)

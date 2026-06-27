@@ -57,26 +57,25 @@ Read or create `skills.config.json` at the project root. If it does not exist, a
 Then help me document the project's real workflow. Ask focused questions about:
 - architecture, layers, naming conventions, and forbidden patterns;
 - where code, tests, routes, copy/i18n, schemas, migrations, generated files, and docs belong;
-- implementation flow for features, improvements/refactors, and bug fixes;
+- implementation flow for features, improvements/refactors, and bug fixes (`workflow.implementationFlow` in `skills.config.json`);
 - hard dependencies between steps;
 - validation commands, review expectations, and docs finalization;
 - skills, agents, scripts, or external systems that should be called in each step.
 
 Most importantly, help me define an implementation-flow table similar to this example, adapted to my project:
 
-| #   | Phase                | Skills                                                                             |
-| --- | -------------------- | ---------------------------------------------------------------------------------- |
-| 1   | Page/Screen/Layout   | `build-layout`, `review-design`                                                    |
-| 2   | Cubit                | `build-pages-cubits`                                                               |
-| 3   | Page <-> Cubit       | `build-pages-cubits`, `build-layout`                                               |
-| 4   | Data layer           | `add-database-migration`, `create-table` (kernel infra only)                       |
-| 5   | Cubit <-> Data       | N/A (register use cases in `use_cases_dependencies.dart` when cubit calls mutations) |
-| 6   | Routes               | N/A                                                                                |
-| 7   | Tests                | `build-tests`                                                                      |
-| 8   | Internationalization | `add-localization`                                                                 |
-| 9   | Analytics            | `add-analytics-event`                                                              |
-| 10  | Code review          | `review-mobile-code` or agent `code-reviewer`                                      |
-| 11  | New skill needed?    | `write-skill` if approved                                                          |
+| #   | Phase                  | Skills / agents                                      |
+| --- | ---------------------- | ---------------------------------------------------- |
+| 1   | Surface / entry point  | project-specific build or design skills             |
+| 2   | Orchestration          | project-specific controller, state, or service skills |
+| 3   | Data / contracts       | schema, migration, API client, or repository skills  |
+| 4   | Wiring / integration   | routing, dependency injection, jobs, or event wiring |
+| 5   | Tests                  | project-specific test skill or commands             |
+| 6   | Copy / localization    | i18n or content skill, when applicable               |
+| 7   | Analytics / telemetry  | analytics skill, when applicable                     |
+| 8   | Code review            | review skill or review agent                         |
+| 9   | Documentation finalize | update spec/context and remove transient artifacts   |
+| 10  | New skill needed?      | `write-skill` if approved                            |
 
 Do not copy this flow automatically. Use it only as a reference for the level of detail, and help me create the correct equivalent for this project.
 ```
@@ -97,7 +96,7 @@ If you already cloned this repo:
 npm --prefix skills run configure -- /path/to/your-project
 ```
 
-Main fields: `project`, `docs`, `code`. Reference: [skills.config.example.json](./skills.config.example.json).
+Main fields: `project`, `docs`, `code`, and optional `workflow`. Reference: [skills.config.example.json](./skills.config.example.json).
 
 Recommended: create `{docs.root}/codebase/architecture.md` with an overview of the stack, layers, and architectural decisions. The `mode-brainstorm` and `write-plan` skills read that file when it exists.
 

@@ -16,6 +16,7 @@ A strong plan depends on a strong project configuration. Without it, `write-plan
 
 The user/team should describe their real workflow in one of:
 
+- `workflow.*` fields in `skills.config.json` for short machine-readable workflow settings
 - `project.conventionsFile`
 - `{docs.root}/codebase/architecture.md`
 - nearby project docs referenced by those files
