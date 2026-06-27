@@ -37,7 +37,7 @@ There are two families of prefix:
 | `build-*`    | Implement/compose a product or code artifact           | `build-component`, `build-query-module`, `build-tests`                                                 |
 | `add-*`      | Add a punctual registration, config, or capability     | `add-package`, `add-database-migration`, `add-localization`, `add-analytics-event`, `add-env-variable` |
 | `create-*`   | Generate a specific technical artifact                 | `create-table`, `create-local-data-source`                                                             |
-| `write-*`    | Produce a written document or document-driven workflow | `write-plan`, `write-feature-spec`, `write-skill`, `write-handoff`              |
+| `write-*`    | Produce a written document or document-driven workflow | `write-plan`, `write-feature-spec`, `write-skill`, `write-handoff`                                     |
 | `review-*`   | Review/evaluate quality                                | `review-mobile-code`, `review-design`                                                                  |
 | `diagnose-*` | Investigate a problem                                  | `diagnose-issue`                                                                                       |
 
@@ -62,13 +62,13 @@ There are two families of prefix:
 
 Before drafting, check the new skill does not overlap an existing one.
 
-| Layer            | Examples                                                             | Role                                                   |
-| ---------------- | -------------------------------------------------------------------- | ------------------------------------------------------ |
-| Config           | [workflow-config](../workflow-config/SKILL.md), `skills.config.json` | Per-user docs paths and project settings               |
-| Repo rules       | `project.conventionsFile` from config                                | Stack, commands, project conventions                   |
-| Design           | `mode-brainstorm`, `mode-grill`, `write-feature-spec`                | Spec and alignment before planning                     |
+| Layer            | Examples                                                             | Role                                                         |
+| ---------------- | -------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Config           | [workflow-config](../workflow-config/SKILL.md), `skills.config.json` | Per-user docs paths and project settings                     |
+| Repo rules       | `project.conventionsFile` from config                                | Stack, commands, project conventions                         |
+| Design           | `mode-brainstorm`, `mode-grill`, `write-feature-spec`                | Spec and alignment before planning                           |
 | Plan + implement | `write-plan`                                                         | Phased implementation; ends with doc finalization (Phase 10) |
-| Review           | agent `code-reviewer`                                                | Quality gate before merge                              |
+| Review           | agent `code-reviewer`                                                | Quality gate before merge                                    |
 
 **Orchestration vs atomic:** `write-plan` is the orchestrator — it runs phased implementation with inline guidance in REFERENCE.md. New skills should be **atomic** (one clear job). If the gap is a new phase or step in the plan-and-implement flow, extend `write-plan` instead of creating a parallel orchestrator.
 

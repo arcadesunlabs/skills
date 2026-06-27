@@ -6,11 +6,13 @@ Load [workflow-config](../workflow-config/SKILL.md) first. Paths use `{docs.root
 
 Before planning file paths, architecture, or workflow order, read `project.conventionsFile`, `{docs.root}/codebase/architecture.md` when present, and inspect the code under `docs.domainMirror` and `code.appRoot`. **Match what the project actually uses.**
 
+This reference provides structure only. It does not define the user's architecture, phases, file layout, validation commands, or review rules.
+
 ---
 
 ## Configuration quality
 
-A strong plan depends on a strong project configuration.
+A strong plan depends on a strong project configuration. Without it, `write-plan` is useful only for asking the missing questions; it should not invent a workflow from these examples.
 
 The user/team should describe their real workflow in one of:
 
@@ -34,22 +36,22 @@ If this configuration is missing or too generic, inspect the codebase and ask th
 
 Choose by the architecture the **touched files already use**, not by task type alone.
 
-| Situation                             | Approach                                                            |
-| ------------------------------------- | ------------------------------------------------------------------- |
-| New feature in an existing area       | Follow sibling features under `docs.domainMirror` / `code.appRoot`  |
-| Improvement or bug fix                | Match the files you modify — same layers, naming, and data flow     |
-| Ambiguous                             | Inspect neighbors in the same domain folder; **ask the user**       |
+| Situation                       | Approach                                                           |
+| ------------------------------- | ------------------------------------------------------------------ |
+| New feature in an existing area | Follow sibling features under `docs.domainMirror` / `code.appRoot` |
+| Improvement or bug fix          | Match the files you modify — same layers, naming, and data flow    |
+| Ambiguous                       | Inspect neighbors in the same domain folder; **ask the user**      |
 
 Common layer labels vary by project. Map them from conventions instead of assuming:
 
-| Layer                      | Typical responsibility                                           |
-| -------------------------- | ---------------------------------------------------------------- |
-| **Presentation**           | Screens, widgets, components, pages, CLI/API surface             |
-| **Orchestration**          | Hooks, controllers, blocs, services — loading, errors, wiring    |
-| **Data access**            | Repositories, queries, API clients — persistence and network     |
-| **Routing / entry points** | Routes, commands, jobs, deep links, guards                       |
-| **Shared / cross-cutting** | Auth, layout, design system, utilities, observability            |
-| **Contracts / schema**     | Migrations, generated types, RPC/API definitions                 |
+| Layer                      | Typical responsibility                                        |
+| -------------------------- | ------------------------------------------------------------- |
+| **Presentation**           | Screens, widgets, components, pages, CLI/API surface          |
+| **Orchestration**          | Hooks, controllers, blocs, services — loading, errors, wiring |
+| **Data access**            | Repositories, queries, API clients — persistence and network  |
+| **Routing / entry points** | Routes, commands, jobs, deep links, guards                    |
+| **Shared / cross-cutting** | Auth, layout, design system, utilities, observability         |
+| **Contracts / schema**     | Migrations, generated types, RPC/API definitions              |
 
 ---
 
@@ -66,14 +68,14 @@ CREATE  {code.appRoot}/<domain>/<feature>/<test-file>
 
 Derive concrete paths from the repo:
 
-| Need                         | How to decide                                             |
-| ---------------------------- | --------------------------------------------------------- |
-| New feature file             | Same folder pattern as sibling features                   |
-| Shared code                  | Project's shared/core package or module                   |
-| Entry point                  | Existing router, command registry, job scheduler, etc.    |
-| User-facing copy             | Project i18n/l10n/copy convention, if one exists          |
-| Tests                        | Co-located or separate test tree per project norm         |
-| Contracts / schema           | Canonical migrations, generated types, or API schema path |
+| Need               | How to decide                                             |
+| ------------------ | --------------------------------------------------------- |
+| New feature file   | Same folder pattern as sibling features                   |
+| Shared code        | Project's shared/core package or module                   |
+| Entry point        | Existing router, command registry, job scheduler, etc.    |
+| User-facing copy   | Project i18n/l10n/copy convention, if one exists          |
+| Tests              | Co-located or separate test tree per project norm         |
+| Contracts / schema | Canonical migrations, generated types, or API schema path |
 
 If conventions are missing, document assumptions in `02-context.md`.
 
@@ -232,19 +234,19 @@ Use subagents only when they reduce risk or speed up isolated work:
 
 This is an optional example from a frontend workflow. Use it only if it matches the user's project or the user chooses it. Rename, remove, split, or reorder steps freely.
 
-| Step | Example workflow step       | Notes                                                                  |
-| ---- | --------------------------- | ---------------------------------------------------------------------- |
-| 1    | UI                          | Screens, pages, components, widgets; match existing domain patterns    |
-| 2    | Orchestration               | Controllers, hooks, view models, blocs; loading, errors, mutations     |
-| 3    | UI ↔ orchestration          | Wire presentation to orchestration; keep presentation thin             |
-| 4    | Data access                 | Repositories, queries, API clients; generated types if applicable      |
-| 5    | Routes / navigation         | Register routes and map every entry point from the spec                |
-| 6    | Tests                       | Project test stack; purposeful behavior coverage                       |
-| 7    | Internationalization        | Required locales only; reuse existing keys when possible               |
-| 8    | Analytics                   | Include only when product/project asks for tracking                    |
-| 9    | Code review                 | Inline review or `code-reviewer` for large/cross-layer changes         |
-| 10   | Finalize docs               | Mandatory final step; see [Finalize docs](#finalize-docs)              |
-| 11   | New skill needed?           | Optional; propose only for recurring gaps                              |
+| Step | Example workflow step | Notes                                                               |
+| ---- | --------------------- | ------------------------------------------------------------------- |
+| 1    | UI                    | Screens, pages, components, widgets; match existing domain patterns |
+| 2    | Orchestration         | Controllers, hooks, view models, blocs; loading, errors, mutations  |
+| 3    | UI ↔ orchestration    | Wire presentation to orchestration; keep presentation thin          |
+| 4    | Data access           | Repositories, queries, API clients; generated types if applicable   |
+| 5    | Routes / navigation   | Register routes and map every entry point from the spec             |
+| 6    | Tests                 | Project test stack; purposeful behavior coverage                    |
+| 7    | Internationalization  | Required locales only; reuse existing keys when possible            |
+| 8    | Analytics             | Include only when product/project asks for tracking                 |
+| 9    | Code review           | Inline review or `code-reviewer` for large/cross-layer changes      |
+| 10   | Finalize docs         | Mandatory final step; see [Finalize docs](#finalize-docs)           |
+| 11   | New skill needed?     | Optional; propose only for recurring gaps                           |
 
 Do not force this on backend, CLI, data, infrastructure, content, or small maintenance work.
 
@@ -268,12 +270,12 @@ Mandatory final step for non-trivial planned work.
 
 **Merge map from transient files:**
 
-| `03-plan.md` section | Destination in `02-context.md`    |
-| -------------------- | --------------------------------- |
-| Files CREATE/MODIFY  | `## Key files`                    |
-| Skipped steps        | `## Behavior notes` if relevant   |
-| Checkboxes           | Delete — do not copy verbatim     |
-| Validation commands  | `## Validation`                   |
+| `03-plan.md` section | Destination in `02-context.md`  |
+| -------------------- | ------------------------------- |
+| Files CREATE/MODIFY  | `## Key files`                  |
+| Skipped steps        | `## Behavior notes` if relevant |
+| Checkboxes           | Delete — do not copy verbatim   |
+| Validation commands  | `## Validation`                 |
 
 | `handoff.md` section | Destination                                |
 | -------------------- | ------------------------------------------ |

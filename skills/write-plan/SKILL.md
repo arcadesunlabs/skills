@@ -1,36 +1,46 @@
 ---
 name: write-plan
-description: Plan and implement non-trivial feature work using the project's configured workflow — map scope, architecture, files, execution steps, validation, and review. Use after brainstorm/spec or for direct implementation tasks.
+description: Plan and implement non-trivial feature work using the project's configured workflow. Requires project conventions and architecture/workflow docs; it does not define phases or file patterns by itself. Use after brainstorm/spec or for direct implementation tasks.
 ---
 
 # Write Plan
 
 **Announce at start:** "I'm using the write-plan skill."
 
-Plan **and** implement non-trivial feature work. The result is only as good as the project's configuration: the user must describe how their project/team works in `project.conventionsFile`, `{docs.root}/codebase/architecture.md`, or nearby project docs. Do not treat this skill's examples as the user's workflow.
+Plan **and** implement non-trivial feature work, but only as an orchestrator over the user's project workflow. This skill does not define architecture, phases, file locations, validation commands, or review rules by itself.
+
+The result is only as good as the project's configuration. The user/team must describe how the project works in `skills.config.json`, `project.conventionsFile`, `{docs.root}/codebase/architecture.md`, or nearby project docs. If those sources are missing or too generic, this skill has no reliable workflow to execute: stop, explain what is missing, and ask the user to configure or confirm the needed decisions.
 
 Two modes:
 
-| Mode             | What it does                                                                  |
-| ---------------- | ----------------------------------------------------------------------------- |
-| **Write**        | Map scope, architecture, files, workflow steps; save artifacts; get user confirmation |
-| **Read/Execute** | Implement step by step from the confirmed plan                                     |
+| Mode             | What it does                                                                                                                                |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Write**        | Map scope, architecture, files, workflow steps, artifacts, and validation from project configuration; save artifacts; get user confirmation |
+| **Read/Execute** | Implement step by step from the confirmed project-specific plan                                                                             |
 
-**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Read `project.conventionsFile` and, when present, `{docs.root}/codebase/architecture.md` before choosing patterns or file paths.
+**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Then read `project.conventionsFile`, `{docs.root}/codebase/architecture.md` when present, and any linked local docs before choosing patterns, file paths, workflow order, validation, or documentation rules.
+
+**Configuration contract:** before planning, verify that project docs answer the essentials below. If not, inspect the repo for local patterns and ask the user to confirm the missing pieces before saving `03-plan.md`.
+
+- Architecture boundaries, naming conventions, and allowed patterns
+- Where code, tests, routes, copy, schemas, generated files, and docs belong
+- Preferred workflow order for the task type, including hard dependencies
+- Validation, review, and documentation expectations
+- Project-specific skills, agents, scripts, or external systems to invoke
 
 **Artifacts:** `{docs.root}/<domain>/<feature>/03-plan.md` + updates to `02-context.md` (see `project.conventionsFile` in config)
 
-**Reference:** templates and optional workflow examples → [REFERENCE.md](REFERENCE.md)
+**Reference:** templates and optional examples → [REFERENCE.md](REFERENCE.md). The reference file is not the user's workflow; use it only to structure the project-specific decisions above.
 
 ---
 
 ## Entry paths
 
-| Path   | When                                                                                 | Input                                                      |
-| ------ | ------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| **A**  | After `mode-brainstorm` → `write-feature-spec`                                       | `01-spec.md`                                               |
-| **A′** | Epic child slice — after user picks a slice from `04-tasks.md` (when present)         | `01-spec.md` + slice scope from `04-tasks.md` or conversation |
-| **B**  | No spec — direct implementation task                                                 | Conversation                                               |
+| Path   | When                                                                          | Input                                                         |
+| ------ | ----------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| **A**  | After `mode-brainstorm` → `write-feature-spec`                                | `01-spec.md`                                                  |
+| **A′** | Epic child slice — after user picks a slice from `04-tasks.md` (when present) | `01-spec.md` + slice scope from `04-tasks.md` or conversation |
+| **B**  | No spec — direct implementation task                                          | Conversation                                                  |
 
 **Epic scoping (path A′):** Plan and implement **only** the selected slice — from `04-tasks.md` when it exists, otherwise from the agreed brainstorm breakdown. Reference the epic `01-spec.md` for shared context; do not plan phases for other slices.
 
@@ -42,7 +52,7 @@ Skip this skill for trivial tasks (typo, single-line fix) — implement per `pro
 
 ### Step 0 — Flow boundaries
 
-Confirm entry point, exit point, screens/pages, and routes. **Stop and ask** if unclear. Do not proceed until boundaries are defined.
+Confirm entry point, exit point, user/system surfaces, and affected call paths. **Stop and ask** if unclear. Do not proceed until boundaries are defined.
 
 ### Step 1 — Classify the task
 
@@ -63,7 +73,7 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 | New feature (greenfield in this area)          | Match project stack  | `project.conventionsFile`, [REFERENCE.md](REFERENCE.md#architecture-patterns) |
 | Improvement / bug fix on existing feature code | Match existing files | Inspect touched files first; same reference when extending                    |
 
-> **Rule:** never introduce foreign patterns unless the touched area already uses them. Do not downgrade a screen/module to a simpler pattern just because the task is an "improvement". When ambiguous, inspect neighbors under `docs.domainMirror` and **ask the user**.
+> **Rule:** never introduce foreign patterns unless the touched area already uses them. Do not downgrade an area to a simpler pattern just because the task is an "improvement". When ambiguous, inspect neighbors under `docs.domainMirror` and **ask the user**.
 
 ### Step 3 — Scope
 
@@ -76,8 +86,9 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 1. List every **CREATE** / **MODIFY** file (see [files example](REFERENCE.md#files-example)).
 2. Note project-specific atomic skills to invoke during execution, if the repo defines them.
 3. Group into [increments](REFERENCE.md#increments).
-4. Derive the implementation workflow from project configuration and the touched code. If no explicit workflow exists, propose a short workflow that fits the task and ask the user to confirm.
-5. Add checklist items per agreed workflow step to `03-plan.md`. Document intentionally skipped or irrelevant steps only when that helps review.
+4. Derive the implementation workflow from project configuration and the touched code. Do not import phases from examples unless the project docs or user explicitly choose them.
+5. If no explicit workflow exists, propose a short workflow that fits the task and ask the user to confirm it before saving the plan.
+6. Add checklist items per agreed workflow step to `03-plan.md`. Document intentionally skipped or irrelevant steps only when that helps review.
 
 ### Step 5 — Confirm
 
@@ -90,7 +101,9 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 
 ## Mode Read/Execute — Implement after confirmation
 
-Use the confirmed project workflow. There is no built-in default order.
+Use the confirmed project workflow from `03-plan.md`. There is no built-in default order, phase table, architecture pattern, validation command, or review rule in this skill.
+
+If the plan lacks the information needed to execute safely, pause and get the missing project-specific decision from the user instead of filling the gap from generic examples.
 
 ### Execution flexibility
 
@@ -104,7 +117,7 @@ Respect **hard dependencies** from the project workflow and code. Finalize docs 
 
 Note parallel work or subagent use in `03-plan.md` when it helps traceability. Details: [REFERENCE.md — Execution strategy](REFERENCE.md#execution-strategy).
 
-If useful, use [REFERENCE.md — Frontend workflow example](REFERENCE.md#frontend-workflow-example) as a starting point. It is only an example from one frontend/Flutter-style project; do not apply it when the user's project, team, or task suggests a different flow.
+If useful, use [REFERENCE.md — Frontend workflow example](REFERENCE.md#frontend-workflow-example) only as a checklist of questions to ask. Do not apply it as an implementation order unless the user's project config or explicit confirmation says it matches.
 
 **Key rules:**
 
@@ -120,7 +133,7 @@ For each workflow step: update `03-plan.md` checkboxes, invoke listed project sk
 
 ## When to stop and ask
 
-- Flow boundaries, routes, or call sites unclear
+- Flow boundaries, surfaces, or call paths unclear
 - Architecture pattern ambiguous for touched files
 - Blocker (missing dependency, failing verification, unclear requirement)
 - User has not confirmed the plan (Write phase)

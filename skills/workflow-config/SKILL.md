@@ -32,11 +32,11 @@ Example file: [skills.config.example.json](../../../skills.config.example.json) 
 
 Compute these from config — do not hardcode project-specific paths:
 
-| Symbol          | Rule                                        |
-| --------------- | ------------------------------------------- |
-| `{docsFeature}`    | `{docs.root}/<domain>/<feature>/`           |
-| `{handoffPath}`    | `{docs.root}/<domain>/<feature>/handoff.md` |
-| `{architecturePath}` | `{docs.root}/codebase/architecture.md`    |
+| Symbol               | Rule                                        |
+| -------------------- | ------------------------------------------- |
+| `{docsFeature}`      | `{docs.root}/<domain>/<feature>/`           |
+| `{handoffPath}`      | `{docs.root}/<domain>/<feature>/handoff.md` |
+| `{architecturePath}` | `{docs.root}/codebase/architecture.md`      |
 
 ## Recommended project docs
 
