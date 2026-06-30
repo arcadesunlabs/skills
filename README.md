@@ -52,6 +52,7 @@ Read or create `skills.config.json` at the project root. If it does not exist, a
 - documentation root, such as `.docs`, `.specs`, or `docs`;
 - documentation index file;
 - code path that documentation domains should mirror;
+- capabilities folder and touchpoints folder (relative to docs root; defaults: `capabilities`, `features`);
 - main app or package root.
 
 Then help me document the project's real workflow. Ask focused questions about:
@@ -100,6 +101,20 @@ Main fields: `project`, `docs`, `code`, and optional `workflow`. Reference: [ski
 
 Recommended: create `{docs.root}/codebase/architecture.md` with an overview of the stack, layers, and architectural decisions. The `mode-brainstorm` and `write-plan` skills read that file when it exists.
 
+#### Cross-cutting capabilities
+
+Some domain rules span multiple surfaces (API, web app, mobile app, CLI, etc.). The workflow supports a **capability + touchpoints** layout alongside vertical feature folders:
+
+```text
+{docs.root}/
+├── capabilities/<capability>/spec.md    # canonical shared rules
+├── capabilities/<capability>/scenarios.md   # optional shared Gherkin
+├── features/<surface>/spec.md           # how one surface consumes the capability
+└── <domain>/<feature>/01-spec.md        # full vertical feature spec (unchanged)
+```
+
+Configure folder names via `docs.capabilitiesRoot` and `docs.touchpointsRoot` in `skills.config.json` (defaults: `capabilities`, `features`). See [workflow-config](./skills/workflow-config/SKILL.md) for the decision tree.
+
 ### 3. Use Day To Day
 
 Ask the agent in natural language. It chooses the skill from the `description` field in `SKILL.md`. Examples:
@@ -122,7 +137,7 @@ The `workflow-config` skill is the entry point: the agent should load `skills.co
 | `workflow-config`    | Loads or creates `skills.config.json`                      |
 | `mode-brainstorm`    | Brainstorm, spec, and task breakdown (`04-tasks` optional) |
 | `mode-grill`         | Critical review mode                                       |
-| `write-feature-spec` | Product spec (`01-spec`)                                   |
+| `write-feature-spec` | Product, capability, or touchpoint specs                   |
 | `write-plan`         | Technical plan and implementation (`03-plan`)              |
 | `write-handoff`      | Session handoff                                            |
 | `write-skill`        | Create or improve skills                                   |

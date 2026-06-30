@@ -26,12 +26,17 @@ A good feature specification should answer:
 
 Load [workflow-config](../workflow-config/SKILL.md) first. This skill is the **single source of truth** for spec structure. Settings below use config placeholders.
 
-- **Location:** save specs to `{docs.root}/<domain>/<feature>/01-spec.md` (`<domain>` and `<feature>` in kebab-case, mirroring `docs.domainMirror` or functional area). User preferences for spec location override this default.
+- **Location:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md) decision tree):
+  - **Vertical feature:** `{docsFeature}/01-spec.md` (`<domain>` and `<feature>` in kebab-case, mirroring `docs.domainMirror` or functional area).
+  - **Capability:** `{docsCapability}/spec.md` (`<capability>` in kebab-case — name the domain concept, not a ticket or fix).
+  - **Touchpoint:** `{docsTouchpoint}` — delta for how one surface consumes a capability.
 - **No YAML frontmatter** in `docs/` feature files — start each file with a single `# Title`.
-- **Two spec flavors:**
-  - **Product spec** (default) — a new feature / user-facing behavior being designed. Use the structure in _Draft the specification_ below.
-  - **Flow/architecture spec** — documenting how an existing feature already works. Replace the design-oriented sections with: `## Overview`, `## Flow` (mermaid), `## Special cases / Important rules`, `## Key components` (table), `## Key files` (table).
-- **`02-context.md`** (same folder) — brownfield context for devs/agents. Create or update when implementation is defined; code snippets and class names go here, never in `01-spec.md`.
+- **Spec flavors:**
+  - **Product spec (vertical)** — a new feature / user-facing behavior being designed. Use the structure in _Draft the specification_ below. Pair with `{docsFeature}/02-context.md` for brownfield context.
+  - **Flow/architecture spec (vertical)** — documenting how an existing vertical feature already works. Replace the design-oriented sections with: `## Overview`, `## Flow` (mermaid), `## Special cases / Important rules`, `## Key components` (table), `## Key files` (table).
+  - **Capability spec** — cross-cutting domain rules consumed by multiple surfaces. Use the [capability template](#capability-spec-template) below. Optional `{docsCapability}/scenarios.md` for shared Gherkin scenarios.
+  - **Touchpoint spec** — how one surface implements a capability. Use the [touchpoint template](#touchpoint-spec-template) below. Must link to `{docsCapability}/spec.md`. Full vertical product spec (if any) stays at `{docsFeature}/01-spec.md`.
+- **`02-context.md`** (vertical features only, same folder as `01-spec.md`) — brownfield context for devs/agents. Create or update when implementation is defined; code snippets and class names go here, never in `01-spec.md`. Capabilities use `spec.md` for shared contracts; touchpoints use `{docsTouchpoint}` for surface-specific code paths.
 
 ## Process
 
@@ -267,6 +272,58 @@ Use this shorter version when the user wants something lightweight:
 ## Open questions
 
 ## Assumptions
+```
+
+## Capability spec template
+
+Use for cross-cutting domain rules (`{docsCapability}/spec.md`):
+
+```md
+# [Capability Name] — Canonical rules
+
+## Touchpoints
+
+| Surface | Doc                        | Code path |
+| ------- | -------------------------- | --------- |
+| …       | link to `{docsTouchpoint}` | …         |
+
+Shared scenarios: [scenarios.md](scenarios.md) (create when multiple surfaces share acceptance criteria).
+
+## Domain rules
+
+Canonical invariants, semantics tables, flags, and kernel contracts. No UI-specific layout.
+
+## Kernel / shared contracts
+
+Helpers, enums, options, or services that enforce the rules (paths allowed here).
+
+## Tests
+
+Regression commands or test files that lock the contract.
+```
+
+## Touchpoint spec template
+
+Use for one surface (`{docsTouchpoint}`):
+
+```md
+# [Feature] — [Capability] touchpoint
+
+Canonical rules: link to `{docsCapability}/spec.md`.
+
+Full vertical spec (if any): link to `{docsFeature}/01-spec.md`.
+
+## How this surface consumes the capability
+
+Surface-specific behavior only — do not duplicate the capability spec table.
+
+## Key files
+
+Paths and components for this touchpoint.
+
+## Tests
+
+Commands or files for this surface.
 ```
 
 ## Example

@@ -35,7 +35,17 @@ Stress-test the request using `mode-grill`:
 
 Do not proceed while any important flow or business rule is unclear.
 
-### 2. Write the spec
+### 2. Classify documentation scope
+
+Before writing specs, decide where documentation lives (see [workflow-config](../workflow-config/SKILL.md) decision tree):
+
+- **Vertical** — single product flow or screen with its own identity → `{docsFeature}/01-spec.md`.
+- **Capability (+ touchpoints)** — domain rule consumed by 2+ surfaces → `{docsCapability}/spec.md` first, then `{docsTouchpoint}` per affected surface.
+- **Touchpoint-only** — change on one surface that already consumes an existing capability → `{docsTouchpoint}` only; update capability spec if shared rules changed.
+
+Ask the user or infer from scope. If **capability**, list all touchpoints (each surface that consumes the shared rule) before drafting.
+
+### 3. Write the spec
 
 When the understanding is closed, invoke [write-feature-spec](../write-feature-spec/SKILL.md).
 
@@ -50,7 +60,9 @@ The spec is the source of truth for:
 
 Follow `write-feature-spec` exactly. Do not invent a parallel spec structure here.
 
-### 3. Decide task breakdown
+For **capability** scope: write `{docsCapability}/spec.md` (and `scenarios.md` when shared Gherkin helps), then draft or update each `{docsTouchpoint}`.
+
+### 4. Decide task breakdown
 
 After the spec is written, discuss the implementation breakdown with the user.
 
@@ -59,13 +71,13 @@ Analyze the actual case and recommend one of:
 - **Single task**: one coherent, reviewable change.
 - **Micro-tasks**: small independent steps when risk, uncertainty, or review size is high.
 - **Layer tasks**: separate UI, orchestration, data, routing, tests, or platform work when layers can be owned or reviewed independently.
-- **Epic + slices**: multiple user-visible slices or subsystems that should not be planned as one branch.
+- **Epic + slices**: multiple user-visible slices or subsystems that should not be planned as one branch. For capabilities, slices are often **one per touchpoint** (each surface updated independently).
 
 Explain the trade-off, recommend a breakdown, then ask the user to confirm or adjust it. Do not leave this step until the tasks are agreed.
 
-Write `{docs.root}/<domain>/<feature>/04-tasks.md` only when the agreed breakdown needs a durable task artifact, such as epic slices, multiple micro-tasks, layer-owned tasks, tracker/card creation, or a user request to record the breakdown. For a single task or a breakdown that will immediately become a `write-plan`, keep the task agreement in the conversation/spec context and skip `04-tasks.md`.
+Write `{docsCapability}/04-tasks.md` when the breakdown is cross-cutting and needs a durable artifact. For vertical features, use `{docsFeature}/04-tasks.md`. Skip `04-tasks.md` for a single task or when moving straight to `write-plan`.
 
-### 4. Transition to plan
+### 5. Transition to plan
 
 If the user decides to implement a task now, invoke [write-plan](../write-plan/SKILL.md) for the selected task/slice.
 

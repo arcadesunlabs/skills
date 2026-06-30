@@ -28,7 +28,15 @@ Two modes:
 - Validation, review, and documentation expectations (`workflow.validationCommands`, `workflow.review`, `workflow.docsFinalization` when configured)
 - Project-specific skills, agents, scripts, or external systems to invoke
 
-**Artifacts:** `{docs.root}/<domain>/<feature>/03-plan.md` + updates to `02-context.md` (see `project.conventionsFile` in config)
+**Artifacts:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md)):
+
+| Scope           | Plan location                                                                  | Permanent docs updated during delivery                        |
+| --------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| Vertical        | `{docsFeature}/03-plan.md` + `02-context.md`                                   | `01-spec.md`, `02-context.md`                                 |
+| Capability      | `{docsCapability}/03-plan.md` + `spec.md`                                      | `spec.md`, `scenarios.md` (optional), each `{docsTouchpoint}` |
+| Touchpoint-only | `{docs.root}/{touchpointsRoot}/<feature>/03-plan.md` or parent capability plan | `{docsTouchpoint}`                                            |
+
+See `project.conventionsFile` in config for project-specific rules.
 
 **Reference:** templates and optional examples → [REFERENCE.md](REFERENCE.md). The reference file is not the user's workflow; use it only to structure the project-specific decisions above.
 
@@ -38,11 +46,14 @@ Two modes:
 
 | Path   | When                                                                          | Input                                                         |
 | ------ | ----------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| **A**  | After `mode-brainstorm` → `write-feature-spec`                                | `01-spec.md`                                                  |
+| **A**  | After `mode-brainstorm` → `write-feature-spec` (vertical)                     | `01-spec.md`                                                  |
 | **A′** | Epic child slice — after user picks a slice from `04-tasks.md` (when present) | `01-spec.md` + slice scope from `04-tasks.md` or conversation |
 | **B**  | No spec — direct implementation task                                          | Conversation                                                  |
+| **C**  | Cross-cutting capability spanning multiple surfaces                           | `{docsCapability}/spec.md` or conversation                    |
 
-**Epic scoping (path A′):** Plan and implement **only** the selected slice — from `04-tasks.md` when it exists, otherwise from the agreed brainstorm breakdown. Reference the epic `01-spec.md` for shared context; do not plan phases for other slices.
+**Epic scoping (path A′):** Plan and implement **only** the selected slice — from `04-tasks.md` when it exists, otherwise from the agreed brainstorm breakdown. Reference the epic spec for shared context; do not plan phases for other slices.
+
+**Capability scoping (path C):** Plan lives in `{docsCapability}/03-plan.md`. Update `{docsCapability}/spec.md` for shared rules; update each `{docsTouchpoint}` for surface-specific behavior. Link from affected `{docsFeature}/02-context.md` files — do not duplicate canonical rules there.
 
 Skip this skill for trivial tasks (typo, single-line fix) — implement per `project.conventionsFile` in config.
 
@@ -61,6 +72,8 @@ Use `AskQuestion`:
 - `question`: "What type of task is this?"
 - `header`: "Task type"
 - `options`: New feature | Improvement / refactor | Bug fix
+
+Then classify **documentation scope** (see [workflow-config](../workflow-config/SKILL.md)): vertical | capability | touchpoint-only.
 
 Informs — but does not by itself decide — the architecture pattern (see Step 2).
 
@@ -92,7 +105,7 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 
 ### Step 5 — Confirm
 
-1. Save `03-plan.md` and update `02-context.md` using [templates](REFERENCE.md#03-planmd-template).
+1. Save `03-plan.md` to the folder matching documentation scope and update the relevant permanent docs (`02-context.md` for vertical, `spec.md` for capability) using [templates](REFERENCE.md#03-planmd-template).
 2. Present [confirmation summary](REFERENCE.md#confirmation-summary-template).
 
 **Do not write implementation code before user confirms.** Revise and re-confirm if requested.
@@ -125,7 +138,7 @@ If useful, use [REFERENCE.md — Frontend workflow example](REFERENCE.md#fronten
 - Use the project's configured workflow when it exists; otherwise derive one from the code and confirm it.
 - Purposeful tests only — test behavior that matters.
 - Use `code-reviewer` or inline review for large or cross-layer changes before finalizing docs.
-- Finalize docs is **mandatory** — reflect shipped behavior in `01-spec.md` (no code), update `02-context.md` to match implementation; merge useful content from `03-plan.md`, `04-tasks.md`, `handoff.md`; delete those transient files. Folder must end with only `01-spec.md` + `02-context.md`. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
+- Finalize docs is **mandatory** — scope determines which folders to update. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
 
 For each workflow step: update `03-plan.md` checkboxes, invoke listed project skills when applicable, stop when blocked.
 
@@ -144,11 +157,11 @@ For each workflow step: update `03-plan.md` checkboxes, invoke listed project sk
 
 ## Completion
 
-1. Update `03-plan.md` checkboxes and `02-context.md` (Known Behavior, validation checklist).
-2. **Mandatory:** Finalize docs — update `01-spec.md` to shipped product truth; merge transient content into `02-context.md`; delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other stray files. Folder must contain only `01-spec.md` and `02-context.md`. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
-3. Tell the user:
+1. Update `03-plan.md` checkboxes and the relevant permanent docs (Known Behavior, validation checklist).
+2. **Mandatory:** Finalize docs per scope. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
+3. Tell the user (adjust path to scope):
 
-> Implementation complete. Docs finalized at `{docs.root}/<domain>/<feature>/` — only `01-spec.md` and `02-context.md` remain.
+> Implementation complete. Docs finalized — vertical: `{docsFeature}/` (`01-spec.md` + `02-context.md`); capability: `{docsCapability}/` (`spec.md` + optional `scenarios.md`) and touchpoints updated; touchpoint-only: `{docsTouchpoint}` updated.
 
 ---
 
@@ -156,7 +169,7 @@ For each workflow step: update `03-plan.md` checkboxes, invoke listed project sk
 
 **After Write (before code):**
 
-- [ ] Plan saved to `{docs.root}/<domain>/<feature>/03-plan.md`
+- [ ] Plan saved to the folder matching documentation scope
 - [ ] Architecture pattern chosen and justified
 - [ ] File list identified
 - [ ] User confirmed
@@ -165,4 +178,4 @@ For each workflow step: update `03-plan.md` checkboxes, invoke listed project sk
 
 - [ ] All agreed workflow steps completed
 - [ ] Code review passed when appropriate
-- [ ] Docs finalized — only `01-spec.md` + `02-context.md` in feature folder
+- [ ] Docs finalized per scope — see [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs)

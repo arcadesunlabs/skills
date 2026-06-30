@@ -7,7 +7,9 @@
   "docs": {
     "root": ".docs",
     "indexFile": ".docs/index.md",
-    "domainMirror": "apps/my-app/lib/features"
+    "domainMirror": "apps/my-app/lib/features",
+    "capabilitiesRoot": "capabilities",
+    "touchpointsRoot": "features"
   },
   "code": {
     "appRoot": "apps/my-app"
@@ -37,6 +39,6 @@
     ],
     "validationCommands": [],
     "review": "Use the project's normal review path; use a review agent for broad or cross-layer changes.",
-    "docsFinalization": "Update 01-spec.md and 02-context.md, then remove transient plan/task/handoff files."
+    "docsFinalization": "Vertical features: update 01-spec.md and 02-context.md. Capabilities: update spec.md and scenarios.md (optional). Touchpoints: update features/<feature>/spec.md. Remove transient plan/task/handoff files after merge."
   }
 }

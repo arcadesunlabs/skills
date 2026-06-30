@@ -105,7 +105,8 @@ Workflow: {from project config | inferred and confirmed | custom for this task}
 Domain:   {feature area}
 Slice:    {slice title if path A′}
 Branch:   {branch name if known}
-Entry:    A (with spec) | A′ (epic slice) | B (direct)
+Entry:    A (with spec) | A′ (epic slice) | B (direct) | C (capability)
+Doc scope: vertical | capability | touchpoint-only
 
 Files:
   CREATE ...
@@ -125,7 +126,11 @@ Waiting for confirmation to start implementation.
 
 ## 03-plan.md template
 
-Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed after delivery by finalization.
+Save to the folder matching documentation scope. Removed after delivery by finalization.
+
+- **Vertical:** `{docsFeature}/03-plan.md`
+- **Capability:** `{docsCapability}/03-plan.md`
+- **Touchpoint-only:** `{docs.root}/{touchpointsRoot}/<feature>/03-plan.md` (or under parent capability when part of path C)
 
 ```markdown
 # [Feature Name] Implementation Plan
@@ -135,7 +140,8 @@ Save to `{docs.root}/<domain>/<feature>/03-plan.md`. Removed after delivery by f
 **Pattern:** {architecture chosen from inspection}
 **Workflow source:** project config | inferred from repo | custom for this task
 **Domain:** {feature area}
-**Entry path:** A | A′ | B
+**Entry path:** A | A′ | B | C
+**Doc scope:** vertical | capability | touchpoint-only
 **Slice:** {slice title if A′}
 **Branch:** {branch name if known}
 
@@ -160,9 +166,8 @@ MODIFY ...
 
 ### Final step — Finalize docs
 
-- [ ] `01-spec.md` updated to shipped product truth (no code)
-- [ ] `02-context.md` updated to match implementation
-- [ ] Deleted `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other transient files
+- [ ] Permanent docs updated per scope — see [Finalize docs](#finalize-docs)
+- [ ] Deleted transient files (`03-plan.md`, `04-tasks.md`, `handoff.md`, etc.)
 ```
 
 ---
@@ -255,14 +260,32 @@ Do not force this on backend, CLI, data, infrastructure, content, or small maint
 
 ## Finalize docs
 
-Mandatory final step for non-trivial planned work.
+Mandatory final step for non-trivial planned work. Apply the checklist for the **documentation scope** of the task.
+
+### Vertical feature folder (`{docsFeature}/`)
 
 - Update `01-spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
 - Update `02-context.md`: merge final file list, architecture decisions, validation checks, and useful notes from `03-plan.md`; merge status/PR from `handoff.md` if present; discard handoff next steps.
-- Delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other file in the feature folder except `01-spec.md` and `02-context.md`.
+- Delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other transient file in the folder.
 - Folder must end with only `01-spec.md` and `02-context.md`.
 
-**`01-spec.md` checklist:**
+### Capability folder (`{docsCapability}/`)
+
+- Update `spec.md` with shipped canonical rules and shared contracts.
+- Update `scenarios.md` when shared acceptance scenarios exist.
+- Update each affected `{docsTouchpoint}` with surface-specific behavior.
+- In affected vertical `{docsFeature}/02-context.md` files, add or refresh **links** to the capability spec — do not duplicate canonical rules.
+- Delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other transient file in the capability folder.
+- Folder must end with only `spec.md` and optional `scenarios.md`.
+
+### Touchpoint folder (`{docs.root}/{touchpointsRoot}/<feature>/`)
+
+- Update `spec.md` with shipped surface-specific behavior.
+- Link to parent `{docsCapability}/spec.md` when applicable.
+- Delete any transient `handoff.md` in the touchpoint folder.
+- Folder must end with only `spec.md`.
+
+**`01-spec.md` checklist (vertical only):**
 
 - [ ] Context describes current product state, not pre-implementation pain only
 - [ ] Scope = what shipped; out of scope = what was explicitly not built

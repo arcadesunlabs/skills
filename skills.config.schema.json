@@ -18,7 +18,9 @@
       "properties": {
         "root": { "type": "string", "minLength": 1 },
         "indexFile": { "type": "string", "minLength": 1 },
-        "domainMirror": { "type": "string", "minLength": 1 }
+        "domainMirror": { "type": "string", "minLength": 1 },
+        "capabilitiesRoot": { "type": "string", "minLength": 1 },
+        "touchpointsRoot": { "type": "string", "minLength": 1 }
       }
     },
     "code": {

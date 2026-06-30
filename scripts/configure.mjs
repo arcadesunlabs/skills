@@ -57,6 +57,14 @@ try {
     "Code path that docs domains mirror",
     config.docs.domainMirror,
   );
+  config.docs.capabilitiesRoot = await ask(
+    "Capabilities folder (relative to docs root)",
+    config.docs.capabilitiesRoot || "capabilities",
+  );
+  config.docs.touchpointsRoot = await ask(
+    "Feature touchpoints folder (relative to docs root)",
+    config.docs.touchpointsRoot || "features",
+  );
 
   config.code ??= {};
   config.code.appRoot = await ask(
@@ -87,7 +95,7 @@ try {
     config.workflow.docsFinalization = await ask(
       "Docs finalization rule",
       config.workflow.docsFinalization ||
-        "Update 01-spec.md and 02-context.md, then remove transient plan/task/handoff files.",
+        "Vertical features: update 01-spec.md and 02-context.md. Capabilities: update spec.md and scenarios.md (optional). Touchpoints: update features/<feature>/spec.md. Remove transient plan/task/handoff files after merge.",
     );
   }
 
@@ -132,6 +140,8 @@ function defaultConfig() {
       root: ".docs",
       indexFile: ".docs/index.md",
       domainMirror: "lib/features",
+      capabilitiesRoot: "capabilities",
+      touchpointsRoot: "features",
     },
     code: {},
     workflow: {
@@ -140,7 +150,7 @@ function defaultConfig() {
       review:
         "Use the project's normal review path; use a review agent for broad or cross-layer changes.",
       docsFinalization:
-        "Update 01-spec.md and 02-context.md, then remove transient plan/task/handoff files.",
+        "Vertical features: update 01-spec.md and 02-context.md. Capabilities: update spec.md and scenarios.md (optional). Touchpoints: update features/<feature>/spec.md. Remove transient plan/task/handoff files after merge.",
     },
   };
 }
