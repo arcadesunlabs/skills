@@ -158,9 +158,13 @@ MODIFY ...
 
 ### Step 1 — [Project-specific step name]
 
+> Skills: [project skills to invoke in this step, from `workflow.implementationFlow[].skills`; note conditionals ("only if …") or "none — <reason>"]
+
 - [ ] ...
 
 ### Step 2 — [Project-specific step name]
+
+> Skills: ...
 
 - [ ] ...
 
