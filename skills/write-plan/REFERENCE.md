@@ -78,7 +78,7 @@ Derive concrete paths from the repo:
 | Tests              | Co-located or separate test tree per project norm         |
 | Contracts / schema | Canonical migrations, generated types, or API schema path |
 
-If conventions are missing, document assumptions in `02-context.md`.
+If conventions are missing, document assumptions in `03-plan.md` (or as `%% comment` notes inside the `02-context.md` flow diagram) — the context file itself stays diagram + files only.
 
 ---
 
@@ -178,36 +178,26 @@ MODIFY ...
 
 ## 02-context.md sections
 
-Update `{docs.root}/<domain>/<feature>/02-context.md` with technical detail. Append or revise these sections as implementation progresses:
+Keep `{docs.root}/<domain>/<feature>/02-context.md` **diagram-first**: an intuitive flow diagram plus the files that participate in that flow. No written walkthroughs, no contracts, no code — just the flow and its files. Revise the diagram and file list as implementation progresses:
 
 ```markdown
 # {Feature Name} — Context
 
-## Feature Snapshot
+## Flow
 
-- Feature: {short description}
-- Status: In progress ({slice title or branch if known})
-- Entry point: {screen, route, command, job, API, or trigger}
-- Domain: {feature area}
-
-## API / data contracts
-
-{From spec if path A; otherwise from exploration.}
+{One or more mermaid diagrams showing the path of the flow — entry → steps → output.
+Use `flowchart` or `sequenceDiagram`. Label each node by its responsibility, not by code.}
 
 ## Key files
 
-{From 03-plan.md Files section.}
+{Table of every file that participates in the flow above and its role. From 03-plan.md Files section.}
 
-## Known behavior
-
-TBD — fill as implementation progresses.
-
-## Validation
-
-{Commands, manual checks, and acceptance-criteria checks.}
+| Arquivo | Papel no fluxo |
+| ------- | -------------- |
+| ...     | ...            |
 ```
 
-Code snippets and file paths **belong here**, never in `01-spec.md`.
+**No code snippets** — represent the flow as a mermaid diagram; file paths live in `## Key files`. Neither belongs in `01-spec.md`.
 
 ---
 
@@ -269,7 +259,7 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 ### Vertical feature folder (`{docsFeature}/`)
 
 - Update `01-spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
-- Update `02-context.md`: merge final file list, architecture decisions, validation checks, and useful notes from `03-plan.md`; merge status/PR from `handoff.md` if present; discard handoff next steps.
+- Update `02-context.md`: refine the flow diagram(s) and merge the final file list from `03-plan.md` into `## Key files`. Do not merge validation, notes, status, or PR into the context — it stays diagram + files only.
 - Delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other transient file in the folder.
 - Folder must end with only `01-spec.md` and `02-context.md`.
 
@@ -298,16 +288,17 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 
 **Merge map from transient files:**
 
-| `03-plan.md` section | Destination in `02-context.md`  |
-| -------------------- | ------------------------------- |
-| Files CREATE/MODIFY  | `## Key files`                  |
-| Skipped steps        | `## Behavior notes` if relevant |
-| Checkboxes           | Delete — do not copy verbatim   |
-| Validation commands  | `## Validation`                 |
+| `03-plan.md` section | Destination in `02-context.md`     |
+| -------------------- | ---------------------------------- |
+| Files CREATE/MODIFY  | `## Key files`                     |
+| Flow / steps         | Fold into the `## Flow` diagram(s) |
+| Skipped steps        | Discard                            |
+| Checkboxes           | Discard                            |
+| Validation commands  | Discard — not kept in context      |
 
-| `handoff.md` section | Destination                                |
-| -------------------- | ------------------------------------------ |
-| Key files            | `## Key files` if missing                  |
-| PR / branch          | `## Status`                                |
-| Next steps           | Discard                                    |
-| Current decisions    | `## Behavior notes` or update `01-spec.md` |
+| `handoff.md` section | Destination                        |
+| -------------------- | ---------------------------------- |
+| Key files            | `## Key files` if missing          |
+| PR / branch          | Discard — or update `01-spec.md`   |
+| Next steps           | Discard                            |
+| Current decisions    | Discard — or update `01-spec.md`   |

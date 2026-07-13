@@ -36,7 +36,7 @@ Load [workflow-config](../workflow-config/SKILL.md) first. This skill is the **s
   - **Flow/architecture spec (vertical)** — documenting how an existing vertical feature already works. Replace the design-oriented sections with: `## Overview`, `## Flow` (mermaid), `## Special cases / Important rules`, `## Key components` (table), `## Key files` (table).
   - **Capability spec** — cross-cutting domain rules consumed by multiple surfaces. Use the [capability template](#capability-spec-template) below. Optional `{docsCapability}/scenarios.md` for shared Gherkin scenarios.
   - **Touchpoint spec** — how one surface implements a capability. Use the [touchpoint template](#touchpoint-spec-template) below. Must link to `{docsCapability}/spec.md`. Full vertical product spec (if any) stays at `{docsFeature}/01-spec.md`.
-- **`02-context.md`** (vertical features only, same folder as `01-spec.md`) — brownfield context for devs/agents. Create or update when implementation is defined; code snippets and class names go here, never in `01-spec.md`. Capabilities use `spec.md` for shared contracts; touchpoints use `{docsTouchpoint}` for surface-specific code paths.
+- **`02-context.md`** (vertical features only, same folder as `01-spec.md`) — brownfield context for devs/agents, kept **diagram-first**: an intuitive mermaid flow diagram plus the list of files in that flow. No code snippets or written walkthroughs — those never go here or in `01-spec.md`. Create or update when implementation is defined (see the [02-context.md template](../write-plan/REFERENCE.md#02-contextmd-sections)). Capabilities use `spec.md` for shared contracts; touchpoints use `{docsTouchpoint}` for surface-specific code paths.
 
 ## Process
 
