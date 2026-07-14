@@ -39,7 +39,7 @@ npx skills add arcadesunlabs/skills --list
 
 ### 2. Configure Your Project Workflow
 
-Workflow skills read **`skills.config.json` at your project root**. The recommended setup path is to configure it with help from your agent, because the agent can inspect the project, ask relevant questions, and document the real implementation flow in `skills.config.json`, the project conventions file, and `{docs.root}/codebase/architecture.md`.
+Workflow skills read **`skills.config.json` at your project root**. The recommended setup path is to configure it with help from your agent, because the agent can inspect the project, ask relevant questions, and document the real implementation flow in `skills.config.json`, the project conventions file, and `{docs.root}/architecture/architecture.md`.
 
 Use this prompt from the root of the project where you code:
 
@@ -99,7 +99,7 @@ npm --prefix skills run configure -- /path/to/your-project
 
 Main fields: `project`, `docs`, `code`, and optional `workflow`. Reference: [skills.config.example.json](./skills.config.example.json).
 
-Recommended: create `{docs.root}/codebase/architecture.md` with an overview of the stack, layers, and architectural decisions. The `mode-brainstorm` and `write-plan` skills read that file when it exists.
+Recommended: create `{docs.root}/architecture/architecture.md` with an overview of the stack, layers, and architectural decisions. The `mode-brainstorm` and `write-plan` skills read that file when it exists.
 
 #### Cross-cutting capabilities
 

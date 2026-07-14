@@ -4,7 +4,7 @@ Templates and optional workflow examples. Load when drafting `03-plan.md`, updat
 
 Load [workflow-config](../workflow-config/SKILL.md) first. Paths use `{docs.root}` from config.
 
-Before planning file paths, architecture, or workflow order, read `project.conventionsFile`, `{docs.root}/codebase/architecture.md` when present, and inspect the code under `docs.domainMirror` and `code.appRoot`. **Match what the project actually uses.**
+Before planning file paths, architecture, or workflow order, read `project.conventionsFile`, `{docs.root}/architecture/architecture.md` when present, and inspect the code under `docs.domainMirror` and `code.appRoot`. **Match what the project actually uses.**
 
 This reference provides structure only. It does not define the user's architecture, phases, file layout, validation commands, or review rules.
 
@@ -18,7 +18,7 @@ The user/team should describe their real workflow in one of:
 
 - `workflow.*` fields in `skills.config.json` for short machine-readable workflow settings
 - `project.conventionsFile`
-- `{docs.root}/codebase/architecture.md`
+- `{docs.root}/architecture/architecture.md`
 - nearby project docs referenced by those files
 
 Good configuration explains:

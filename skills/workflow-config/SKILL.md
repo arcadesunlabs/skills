@@ -44,7 +44,7 @@ Compute these from config — do not hardcode project-specific paths:
 | `{docsCapability}`   | `{docs.root}/{capabilitiesRoot}/<capability>/` (default `{capabilitiesRoot}` = `capabilities`) |
 | `{docsTouchpoint}`   | `{docs.root}/{touchpointsRoot}/<feature>/spec.md` (default `{touchpointsRoot}` = `features`)   |
 | `{handoffPath}`      | `{docs.root}/<domain>/<feature>/handoff.md`                                                    |
-| `{architecturePath}` | `{docs.root}/codebase/architecture.md`                                                         |
+| `{architecturePath}` | `{docs.root}/architecture/architecture.md`                                                      |
 
 When `capabilitiesRoot` or `touchpointsRoot` is absent from config, use the defaults above.
 
@@ -57,7 +57,7 @@ Suggested layout under `{docs.root}`:
 ```text
 {docs.root}/
 ├── index.md                          # docs index (docs.indexFile)
-├── codebase/
+├── architecture/
 │   └── architecture.md               # project architecture reference
 ├── capabilities/<capability>/        # cross-cutting domain rules
 │   ├── spec.md                       # canonical rules (permanent)
@@ -89,7 +89,7 @@ If the user has not run `npm run configure`, gather at minimum:
 2. Docs root, domain mirror path, capabilities root, and touchpoints root
 3. Optional: app root
 4. Optional: implementation flow, validation commands, review rule, and docs finalization rule
-5. Remind the user to add `{docs.root}/codebase/architecture.md` when absent
+5. Remind the user to add `{docs.root}/architecture/architecture.md` when absent
 
 Write `skills.config.json` to the workspace root, then continue.
 

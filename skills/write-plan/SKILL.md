@@ -9,7 +9,7 @@ description: Plan and implement non-trivial feature work using the project's con
 
 Plan **and** implement non-trivial feature work, but only as an orchestrator over the user's project workflow. This skill does not define architecture, phases, file locations, validation commands, or review rules by itself.
 
-The result is only as good as the project's configuration. The user/team must describe how the project works in `skills.config.json` (`workflow.*` when present), `project.conventionsFile`, `{docs.root}/codebase/architecture.md`, or nearby project docs. If those sources are missing or too generic, this skill has no reliable workflow to execute: stop, explain what is missing, and ask the user to configure or confirm the needed decisions.
+The result is only as good as the project's configuration. The user/team must describe how the project works in `skills.config.json` (`workflow.*` when present), `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, or nearby project docs. If those sources are missing or too generic, this skill has no reliable workflow to execute: stop, explain what is missing, and ask the user to configure or confirm the needed decisions.
 
 Two modes:
 
@@ -18,7 +18,7 @@ Two modes:
 | **Write**        | Map scope, architecture, files, workflow steps, artifacts, and validation from project configuration; save artifacts; get user confirmation |
 | **Read/Execute** | Implement step by step from the confirmed project-specific plan                                                                             |
 
-**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Then read `project.conventionsFile`, `{docs.root}/codebase/architecture.md` when present, and any linked local docs before choosing patterns, file paths, workflow order, validation, or documentation rules.
+**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Then read `project.conventionsFile`, `{docs.root}/architecture/architecture.md` when present, and any linked local docs before choosing patterns, file paths, workflow order, validation, or documentation rules.
 
 **Configuration contract:** before planning, verify that project docs answer the essentials below. If not, inspect the repo for local patterns and ask the user to confirm the missing pieces before saving `03-plan.md`.
 
@@ -79,7 +79,7 @@ Informs — but does not by itself decide — the architecture pattern (see Step
 
 ### Step 2 — Architecture pattern
 
-Task type is only the starting hint. The pattern is decided by the **architecture the touched code already uses** — read `{docs.root}/codebase/architecture.md` when present, then inspect the files you will modify before choosing:
+Task type is only the starting hint. The pattern is decided by the **architecture the touched code already uses** — read `{docs.root}/architecture/architecture.md` when present, then inspect the files you will modify before choosing:
 
 | Situation                                      | Pattern              | Reference                                                                     |
 | ---------------------------------------------- | -------------------- | ----------------------------------------------------------------------------- |

@@ -10,14 +10,14 @@ Turn an idea into a closed, implementation-ready spec and task breakdown.
 ## Required setup
 
 1. Invoke [workflow-config](../workflow-config/SKILL.md) and load `skills.config.json`.
-2. Read `project.conventionsFile` and `{docs.root}/codebase/architecture.md` when present.
+2. Read `project.conventionsFile` and `{docs.root}/architecture/architecture.md` when present.
 3. Use [mode-grill](../mode-grill/SKILL.md) behavior during clarification.
 
 ## Hard gates
 
 - Do not write code, scaffold, or implement during this skill.
 - Do not assume unclear flows, business rules, permissions, states, integrations, or architecture decisions.
-- If a question can be answered from the codebase, `{docs.root}/codebase/architecture.md`, other project docs, or `project.conventionsFile`, inspect those first.
+- If a question can be answered from the codebase, `{docs.root}/architecture/architecture.md`, other project docs, or `project.conventionsFile`, inspect those first.
 - Ask the user one question at a time. Include your recommended answer when useful.
 - Continue questioning and refining until each decision point is fully closed.
 
@@ -29,8 +29,8 @@ Stress-test the request using `mode-grill`:
 
 - Walk the decision tree one branch at a time.
 - Resolve dependencies between decisions before moving forward.
-- Validate the idea against the existing architecture/conventions from `project.conventionsFile` and `{docs.root}/codebase/architecture.md` when present.
-- Check the codebase, `{docs.root}/codebase/architecture.md`, and other project docs when they can answer a question.
+- Validate the idea against the existing architecture/conventions from `project.conventionsFile` and `{docs.root}/architecture/architecture.md` when present.
+- Check the codebase, `{docs.root}/architecture/architecture.md`, and other project docs when they can answer a question.
 - Keep drilling until there are no material ambiguities left.
 
 Do not proceed while any important flow or business rule is unclear.
