@@ -1,5 +1,12 @@
 #!/usr/bin/env node
-import { copyFile, readFile, writeFile } from "node:fs/promises";
+import {
+  copyFile,
+  mkdir,
+  readFile,
+  realpath,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import readline from "node:readline/promises";
@@ -16,6 +23,8 @@ const configPath = path.join(root, "skills.config.json");
 const examplePath = path.join(root, "skills.config.example.json");
 const schemaPath = path.join(root, "skills.config.schema.json");
 const defaultDocsFinalization =
+  "Update docs.indexFile when domains, use cases, actors, capabilities, or navigation change. Use cases: update <use-case>.spec.md and <use-case>.context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
+const preIndexDocsFinalization =
   "Use cases: update <use-case>.spec.md and <use-case>.context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
 const preUniqueNameDocsFinalization =
   "Use cases: update spec.md and context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
@@ -62,7 +71,8 @@ try {
   if (
     config.workflow?.docsFinalization === legacyDocsFinalization ||
     config.workflow?.docsFinalization === preActorDocsFinalization ||
-    config.workflow?.docsFinalization === preUniqueNameDocsFinalization
+    config.workflow?.docsFinalization === preUniqueNameDocsFinalization ||
+    config.workflow?.docsFinalization === preIndexDocsFinalization
   ) {
     config.workflow.docsFinalization = defaultDocsFinalization;
   }
@@ -137,6 +147,7 @@ try {
     );
   }
 
+  await ensureDocsIndex(config);
   await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
   console.log(`\nSaved ${configPath}`);
   const architecturePath = path.join(
@@ -247,6 +258,159 @@ function parseList(value) {
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+async function ensureDocsIndex(config) {
+  const { capabilitiesPath, docsRoot, indexPath } = resolveDocsPaths(config);
+  await assertRealPathInsideWorkspace(docsRoot, "docs.root");
+  await assertRealPathInsideWorkspace(indexPath, "docs.indexFile");
+  await assertRealPathInsideWorkspace(
+    capabilitiesPath,
+    "docs.capabilitiesRoot",
+  );
+
+  if (existsSync(indexPath)) {
+    const indexStats = await stat(indexPath);
+    if (!indexStats.isFile()) {
+      throw new Error(`Docs index is not a file: ${indexPath}`);
+    }
+    console.log(`Docs index already exists: ${indexPath}`);
+    return;
+  }
+
+  const architecturePath = path.join(
+    docsRoot,
+    "architecture",
+    "architecture.md",
+  );
+  const actorsIndexPath = path.join(docsRoot, "actors", "index.md");
+  const hasArchitecture =
+    existsSync(architecturePath) && (await stat(architecturePath)).isFile();
+  const hasActorsIndex =
+    existsSync(actorsIndexPath) && (await stat(actorsIndexPath)).isFile();
+  const linkFromIndex = (target) => {
+    const relativePath = path
+      .relative(path.dirname(indexPath), target)
+      .split(path.sep)
+      .join("/");
+    return relativePath
+      .split("/")
+      .map((segment) =>
+        encodeURIComponent(segment).replace(/[!'()*]/g, (character) =>
+          `%${character.charCodeAt(0).toString(16).toUpperCase()}`,
+        ),
+      )
+      .join("/");
+  };
+  const availableStartLinks = [
+    hasArchitecture
+      ? `- [Architecture](${linkFromIndex(architecturePath)})`
+      : "",
+    hasActorsIndex
+      ? `- [Actors](${linkFromIndex(actorsIndexPath)})`
+      : "",
+  ].filter(Boolean);
+  const startLinks =
+    availableStartLinks.length > 0
+      ? availableStartLinks.join("\n")
+      : "Add links to architecture, actors, and other existing documentation entry points.";
+  const projectName = String(config.project.name).replace(/\s+/g, " ").trim();
+  const capabilitiesRoot = config.docs.capabilitiesRoot || "capabilities";
+  const docsPath = (...parts) =>
+    path.join(config.docs.root, ...parts).split(path.sep).join("/");
+  const markdownCode = (value) => {
+    const backtickRuns = value.match(/`+/g) || [""];
+    const delimiter = "`".repeat(
+      Math.max(...backtickRuns.map((run) => run.length)) + 1,
+    );
+    return `${delimiter}${value}${delimiter}`;
+  };
+  const content = `# ${projectName} Documentation
+
+Canonical entry point for project documentation. Use this file to find documentation and understand its organization; keep detailed rules in the linked canonical documents.
+
+## Start Here
+
+${startLinks}
+
+## Documentation Map
+
+- ${markdownCode(`${docsPath("actors")}/`)} — product user types, goals, responsibilities, and boundaries
+- ${markdownCode(`${docsPath(capabilitiesRoot)}/`)} — rules and scenarios shared by multiple use cases
+- ${markdownCode(`${docsPath("<domain>", "<verb-object>")}/`)} — user behavior specs and implementation context
+- ${markdownCode(`${docsPath("codebase", "<initiative>")}/`)} — technical work without user behavior changes
+
+Add links here for each domain, use case, actor catalog, capability, integration, setup guide, and other important documentation entry point.
+
+## Conventions
+
+- Organize behavior by user intent, not code structure.
+- Name use cases as kebab-case verb-object goals.
+- Keep behavior in \`<use-case>.spec.md\` and implementation mapping in \`<use-case>.context.md\`.
+- Keep this index navigational; do not duplicate architecture, rules, specs, or implementation details.
+
+## Maintenance
+
+Update this index when documentation entry points are added, moved, renamed, or removed. Remove transient \`plan.md\`, \`tasks.md\`, and \`handoff.md\` files after work is finalized.
+`;
+
+  await mkdir(path.dirname(indexPath), { recursive: true });
+  await writeFile(indexPath, content, { encoding: "utf8", flag: "wx" });
+  console.log(`Created docs index: ${indexPath}`);
+}
+
+function resolveDocsPaths(config) {
+  const docsRoot = resolveRelativePath(root, config.docs.root, "docs.root");
+  const indexPath = resolveRelativePath(
+    root,
+    config.docs.indexFile,
+    "docs.indexFile",
+  );
+  const capabilitiesPath = resolveRelativePath(
+    docsRoot,
+    config.docs.capabilitiesRoot || "capabilities",
+    "docs.capabilitiesRoot",
+  );
+  return { capabilitiesPath, docsRoot, indexPath };
+}
+
+async function assertRealPathInsideWorkspace(targetPath, fieldName) {
+  const workspaceRealPath = await realpath(root);
+  let existingAncestor = targetPath;
+  while (!existsSync(existingAncestor)) {
+    const parent = path.dirname(existingAncestor);
+    if (parent === existingAncestor) {
+      break;
+    }
+    existingAncestor = parent;
+  }
+
+  const ancestorRealPath = await realpath(existingAncestor);
+  const relativePath = path.relative(workspaceRealPath, ancestorRealPath);
+  if (
+    relativePath === ".." ||
+    relativePath.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relativePath)
+  ) {
+    throw new Error(`${fieldName} resolves outside the workspace`);
+  }
+}
+
+function resolveRelativePath(base, configuredPath, fieldName) {
+  if (path.isAbsolute(configuredPath)) {
+    throw new Error(`${fieldName} must be relative to the workspace`);
+  }
+
+  const resolvedPath = path.resolve(base, configuredPath);
+  const relativePath = path.relative(base, resolvedPath);
+  if (
+    relativePath === ".." ||
+    relativePath.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relativePath)
+  ) {
+    throw new Error(`${fieldName} must stay inside the workspace`);
+  }
+  return resolvedPath;
 }
 
 async function ensureProjectTemplates() {

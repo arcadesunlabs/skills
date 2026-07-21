@@ -10,7 +10,7 @@ Turn an idea into a closed, implementation-ready spec and task breakdown.
 ## Required setup
 
 1. Invoke [workflow-config](../workflow-config/SKILL.md) and load `skills.config.json`.
-2. Read `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, and relevant files under `{docsActors}` when present.
+2. Read `docs.indexFile`, `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, and relevant files under `{docsActors}` when present.
 3. Use [mode-grill](../mode-grill/SKILL.md) behavior during clarification.
 
 ## Hard gates
@@ -73,6 +73,8 @@ The spec is the source of truth for:
 Follow `write-feature-spec` exactly when writing behavior or capability rules. Do not invent a parallel spec structure here.
 
 For **capability** scope: write `{docsCapability}/rules.md` (and `scenarios.md` when shared Gherkin helps), then link it from every affected use-case spec.
+
+Update `docs.indexFile` when this work adds or changes a domain, use case, actor, capability, or other documentation entry point. Add links only; keep canonical details in their own documents.
 
 ### 5. Decide task breakdown
 

@@ -24,7 +24,7 @@ A good feature specification should answer:
 
 ## Project conventions
 
-Load [workflow-config](../workflow-config/SKILL.md) first. This skill is the **single source of truth** for spec structure. Settings below use config placeholders.
+Load [workflow-config](../workflow-config/SKILL.md) first, then read `docs.indexFile` for project-specific documentation taxonomy, conventions, and existing entry points. This skill is the **single source of truth** for spec structure. Settings below use config placeholders.
 
 - **Location:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md) decision tree):
   - **Use case:** `{specPath}` (`<domain>/<use-case>/<use-case>.spec.md`; name `<use-case>` as a kebab-case verb-object user goal).
@@ -244,6 +244,7 @@ After drafting, review the specification using this checklist:
 - [ ] Dependencies are listed.
 - [ ] Open questions are clearly documented.
 - [ ] Assumptions are explicit.
+- [ ] `docs.indexFile` reflects any added, moved, renamed, or removed domain, use case, actor, or capability without duplicating its content.
 - [ ] The document is concise enough to be useful.
 
 ## Output style

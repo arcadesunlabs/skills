@@ -9,7 +9,7 @@ description: Plan and implement non-trivial feature work using the project's con
 
 Plan **and** implement non-trivial feature work, but only as an orchestrator over the user's project workflow. This skill does not define architecture, phases, file locations, validation commands, or review rules by itself.
 
-The result is only as good as the project's configuration. The user/team must describe how the project works in `skills.config.json` (`workflow.*` when present), `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, or nearby project docs. If those sources are missing or too generic, this skill has no reliable workflow to execute: stop, explain what is missing, and ask the user to configure or confirm the needed decisions.
+The result is only as good as the project's configuration. The user/team must describe how the project works in `skills.config.json` (`workflow.*` when present), `docs.indexFile`, `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, or nearby project docs. If those sources are missing or too generic, this skill has no reliable workflow to execute: stop, explain what is missing, and ask the user to configure or confirm the needed decisions.
 
 Two modes:
 
@@ -18,7 +18,7 @@ Two modes:
 | **Write**        | Map scope, architecture, files, workflow steps, artifacts, and validation from project configuration; save artifacts; get user confirmation |
 | **Read/Execute** | Implement step by step from the confirmed project-specific plan                                                                             |
 
-**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Then read `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, and any linked local docs before choosing patterns, file paths, workflow order, validation, or documentation rules. For use-case or capability work, also read relevant `{docsActor}` files when present.
+**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Then read `docs.indexFile`, `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, and any linked local docs before choosing patterns, file paths, workflow order, validation, or documentation rules. For use-case or capability work, also read relevant `{docsActor}` files when present.
 
 **Configuration contract:** before planning, verify that project docs answer the essentials below. If not, inspect the repo for local patterns and ask the user to confirm the missing pieces before saving `plan.md`.
 
@@ -162,7 +162,7 @@ For each workflow step: update `plan.md` checkboxes, invoke listed project skill
 ## Completion
 
 1. Update `plan.md` checkboxes and the relevant permanent docs.
-2. **Mandatory:** Finalize docs per scope. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
+2. **Mandatory:** Finalize docs per scope, including `docs.indexFile` when navigation changed. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
 3. Tell the user (adjust path to scope):
 
 > Implementation complete. Docs finalized — use case: `{docsUseCase}/` (`{specPath}` + `{contextPath}`); capability: `{docsCapability}/` (`rules.md` + optional `scenarios.md`); or codebase context updated.
@@ -182,4 +182,4 @@ For each workflow step: update `plan.md` checkboxes, invoke listed project skill
 
 - [ ] All agreed workflow steps completed
 - [ ] Code review passed when appropriate
-- [ ] Docs finalized per scope — see [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs)
+- [ ] Docs finalized per scope and `docs.indexFile` updated when navigation changed — see [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs)

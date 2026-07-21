@@ -16,9 +16,24 @@
       "type": "object",
       "required": ["root", "indexFile"],
       "properties": {
-        "root": { "type": "string", "minLength": 1 },
-        "indexFile": { "type": "string", "minLength": 1 },
-        "capabilitiesRoot": { "type": "string", "minLength": 1 }
+        "root": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?![\\\\/])(?![A-Za-z]:[\\\\/])(?!\\.\\.(?:[\\\\/]|$))(?!.*[\\\\/]\\.\\.(?:[\\\\/]|$)).+$",
+          "description": "Workspace-relative root for behavior-first project documentation."
+        },
+        "indexFile": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?![\\\\/])(?![A-Za-z]:[\\\\/])(?!\\.\\.(?:[\\\\/]|$))(?!.*[\\\\/]\\.\\.(?:[\\\\/]|$)).+$",
+          "description": "Workspace-relative canonical navigation file for documentation structure, conventions, and links to domains, use cases, actors, capabilities, architecture, and other entry points."
+        },
+        "capabilitiesRoot": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?![\\\\/])(?![A-Za-z]:[\\\\/])(?!\\.\\.(?:[\\\\/]|$))(?!.*[\\\\/]\\.\\.(?:[\\\\/]|$)).+$",
+          "description": "Folder under docs.root for rules shared by multiple use cases."
+        }
       },
       "additionalProperties": false
     },

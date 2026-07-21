@@ -24,7 +24,7 @@ Example file: [skills.config.example.json](../../../skills.config.example.json) 
 | `project.name`                | Human-readable project label in plans and handoffs          |
 | `project.conventionsFile`     | Repo rules file (e.g. `CLAUDE.md`)                          |
 | `docs.root`                   | Behavior docs folder (e.g. `.docs` or `docs`)               |
-| `docs.indexFile`              | Docs index path                                             |
+| `docs.indexFile`              | Canonical docs navigation, taxonomy, and conventions file  |
 | `docs.capabilitiesRoot`       | Cross-cutting capabilities folder (default: `capabilities`) |
 | `code.appRoot`                | Main app or package root                                    |
 | `code.searchRoots`            | Optional code roots to inspect when building context        |
@@ -44,12 +44,49 @@ Organize documentation by **user intent**, not code structure.
 - Use `code.appRoot` and `code.searchRoots` only to discover implementation recorded in `<use-case>.context.md` or a codebase initiative's `context.md`.
 - When both code fields are absent, inspect from the workspace root.
 
+## Documentation index contract
+
+`docs.indexFile` is a workspace-relative path to the canonical entry point for project documentation. It must remain inside the workspace. Read it immediately after `skills.config.json`, before choosing documentation scope or paths. It should help humans and agents navigate the docs without scanning the entire tree.
+
+Keep the index short and navigational. It should:
+
+- Link architecture, actor catalog, domains, use cases, capabilities, integrations, setup guides, and other important entry points.
+- State project-specific documentation naming or organization rules that extend this skill.
+- Point to canonical documents instead of duplicating their architecture, behavior, rules, or implementation details.
+- Be updated when entry points are added, moved, renamed, or removed.
+
+If `docs.indexFile` is missing during setup, create it. The configuration helper creates this starter automatically without overwriting an existing index:
+
+```md
+# <Project> Documentation
+
+Canonical entry point for project documentation.
+
+## Start Here
+
+Add links to architecture, actors, and other existing documentation entry points.
+
+## Documentation Map
+
+- `{docs.root}/actors/` — product user types and boundaries
+- `{docs.root}/{docs.capabilitiesRoot}/` — rules shared by multiple use cases
+- `{docs.root}/<domain>/<verb-object>/` — behavior specs and implementation context
+- `{docs.root}/codebase/<initiative>/` — technical work without behavior changes
+
+## Conventions
+
+- Organize behavior by user intent, not code structure.
+- Name use cases as kebab-case verb-object goals.
+- Keep this index navigational; link canonical details.
+```
+
 ## Derived values
 
 Compute these from config and the agreed behavior scope:
 
 | Symbol               | Rule                                                                                           |
 | -------------------- | ---------------------------------------------------------------------------------------------- |
+| `{docsIndex}`        | Value of `docs.indexFile`                                                                       |
 | `{docsDomain}`       | `{docs.root}/<domain>/`                                                                        |
 | `{docsUseCase}`      | `{docsDomain}/<use-case>/`                                                                     |
 | `{docsActors}`       | `{docs.root}/actors/`                                                                          |
@@ -71,7 +108,7 @@ Suggested layout under `{docs.root}`:
 
 ```text
 {docs.root}/
-├── index.md                          # docs index (docs.indexFile)
+├── index.md                          # canonical navigation and conventions (docs.indexFile)
 ├── architecture/
 │   └── architecture.md               # project architecture reference
 ├── actors/
@@ -115,7 +152,7 @@ Use `workflow.implementationFlow` in `skills.config.json` for the short machine-
 If the user has not run `npm run configure`, gather at minimum:
 
 1. Project name and conventions file
-2. Docs root, index file, and capabilities root
+2. Docs root, index file, and capabilities root; create the index from the contract above when missing
 3. Optional: app root and code search roots
 4. Optional: implementation flow, validation commands, review rule, and docs finalization rule
 5. Identify distinct product user types and create `{docsActors}/index.md` plus one `{docsActor}` per meaningful actor

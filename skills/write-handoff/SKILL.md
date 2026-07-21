@@ -7,7 +7,7 @@ Write a handoff document summarising the current conversation so a fresh agent c
 
 ## Step 0 — Load config
 
-Invoke [workflow-config](../workflow-config/SKILL.md) and read `skills.config.json`. Paths below use `{docs.root}` from config.
+Invoke [workflow-config](../workflow-config/SKILL.md), read `skills.config.json`, then read `docs.indexFile` for project-specific documentation taxonomy, paths, and navigation. Paths below use `{docs.root}` from config.
 
 ## Where to save
 
@@ -25,7 +25,7 @@ Invoke [workflow-config](../workflow-config/SKILL.md) and read `skills.config.js
 
 **Naming:** use `handoff.md`. Remove or replace an existing `handoff.md` in the same folder when writing a new handoff for the same slice of work.
 
-Choose use-case folders from user intent, never code structure: `<domain>/<verb-object>/` in kebab-case (for example, `customers/create-customer/`). See `docs.indexFile` for project-specific conventions.
+Choose use-case folders from user intent, never code structure: `<domain>/<verb-object>/` in kebab-case (for example, `customers/create-customer/`). Follow project-specific conventions from `docs.indexFile`.
 
 ## What to include
 

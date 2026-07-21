@@ -55,6 +55,8 @@ Read or create `skills.config.json` at the project root. If it does not exist, a
 - main app or package root;
 - code search roots used to build technical context.
 
+The documentation index is the canonical navigation file for humans and agents. It links architecture, actor catalogs, domains, use cases, capabilities, and other documentation entry points; records project-specific documentation conventions; and points to canonical documents instead of duplicating their content.
+
 Then help me document the project's real workflow. Ask focused questions about:
 - distinct product user types, their goals, responsibilities, and boundaries;
 - architecture, layers, naming conventions, and forbidden patterns;
@@ -88,7 +90,7 @@ If you only want to generate the base file without that conversation, run the in
 npx github:arcadesunlabs/skills skills-configure /path/to/your-project
 ```
 
-Answer the questions (Enter accepts the default value). The file is created at `/path/to/your-project/skills.config.json`.
+Answer the questions (Enter accepts the default value). The file is created at `/path/to/your-project/skills.config.json`. If `docs.indexFile` does not exist, the helper creates a starter index without overwriting existing documentation.
 
 To reconfigure later, ask the agent to review the configuration or run the same command again.
 
@@ -131,6 +133,7 @@ Document reusable actors under `{docs.root}/actors/`. Actor documents explain wh
 
 ```text
 {docs.root}/
+├── index.md                              # canonical navigation and documentation conventions
 ├── architecture/architecture.md
 ├── actors/
 │   ├── index.md

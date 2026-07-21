@@ -270,6 +270,12 @@ Do not force this on backend, CLI, data, infrastructure, content, or small maint
 
 Mandatory final step for non-trivial planned work. Apply the checklist for the **documentation scope** of the task.
 
+### Documentation index (`docs.indexFile`)
+
+- Update links when domains, use cases, actors, capabilities, architecture docs, or other entry points are added, moved, renamed, or removed.
+- Keep the index navigational. Link canonical documents instead of copying their content.
+- Leave it unchanged when work changes no documentation entry point or project-specific documentation convention.
+
 ### Use-case folder (`{docsUseCase}/`)
 
 - Update `{specPath}` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
