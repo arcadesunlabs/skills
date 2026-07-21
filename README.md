@@ -207,10 +207,10 @@ More options: [`vercel-labs/skills`](https://github.com/vercel-labs/skills).
 
 The following skills are adapted from [Matt Pocock's skills repository](https://github.com/mattpocock/skills):
 
-| Skill | Original |
-| --- | --- |
-| [`mode-grill`](./skills/mode-grill/SKILL.md) | [`grilling`](https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling) |
-| [`write-handoff`](./skills/write-handoff/SKILL.md) | [`handoff`](https://github.com/mattpocock/skills/tree/main/skills/productivity/handoff) |
-| [`write-skill`](./skills/write-skill/SKILL.md) | [`writing-great-skills`](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-great-skills) |
+| Skill                                              | Original                                                                                                          |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| [`mode-grill`](./skills/mode-grill/SKILL.md)       | [`grilling`](https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling)                         |
+| [`write-handoff`](./skills/write-handoff/SKILL.md) | [`handoff`](https://github.com/mattpocock/skills/tree/main/skills/productivity/handoff)                           |
+| [`write-skill`](./skills/write-skill/SKILL.md)     | [`writing-great-skills`](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-great-skills) |
 
 Original work copyright (c) 2026 Matt Pocock and licensed under the MIT License. These versions include project-specific modifications. See [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) for the full license notice.
