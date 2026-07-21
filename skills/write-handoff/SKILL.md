@@ -16,6 +16,7 @@ Invoke [workflow-config](../workflow-config/SKILL.md) and read `skills.config.js
 | Work context                            | Path                                                                                            |
 | --------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | User-facing behavior                    | `{docsUseCase}/handoff.md`                                                                      |
+| Actor definitions                       | `{docsActors}/handoff.md`                                                                       |
 | Cross-cutting capability                | `{docsCapability}/handoff.md`                                                                   |
 | Architecture, navigation, or refactor   | `{docs.root}/codebase/<initiative>/handoff.md`                                                  |
 | External integration or extension guide | `{docs.root}/integrations/<integration>/handoff.md`                                             |
@@ -29,6 +30,7 @@ Choose use-case folders from user intent, never code structure: `<domain>/<verb-
 ## What to include
 
 - Current objective and active branch (if known)
+- Affected actors and links to canonical `{docsActor}` files when handing off behavioral work
 - What was done (commits, branches, key files)
 - What is in progress or blocked
 - Explicit next steps for the receiving agent

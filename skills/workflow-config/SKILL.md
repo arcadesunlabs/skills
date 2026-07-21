@@ -39,6 +39,7 @@ Organize documentation by **user intent**, not code structure.
 
 - Choose `<domain>` as a stable product or business area that groups related user goals (`customers`, `orders`, `payments`, `authentication`). It describes what the product is about, not where code lives.
 - Choose `<use-case>` as a kebab-case verb-object goal (`create-customer`, `edit-customer`, `approve-payment`).
+- Choose `<actor>` as a kebab-case product user type with distinct goals, responsibilities, or boundaries (`administrator`, `operator`, `sales-manager`). An actor is not a code role or a research persona.
 - Never derive documentation paths from component, package, module, route, controller, or filesystem names.
 - Use `code.appRoot` and `code.searchRoots` only to discover the implementation recorded in `context.md`.
 - When both code fields are absent, inspect from the workspace root.
@@ -51,6 +52,8 @@ Compute these from config and the agreed behavior scope:
 | -------------------- | ---------------------------------------------------------------------------------------------- |
 | `{docsDomain}`       | `{docs.root}/<domain>/`                                                                        |
 | `{docsUseCase}`      | `{docsDomain}/<use-case>/`                                                                     |
+| `{docsActors}`       | `{docs.root}/actors/`                                                                          |
+| `{docsActor}`        | `{docsActors}/<actor>.md`                                                                      |
 | `{specPath}`         | `{docsUseCase}/spec.md`                                                                        |
 | `{contextPath}`      | `{docsUseCase}/context.md`                                                                     |
 | `{planPath}`         | `{docsUseCase}/plan.md`                                                                        |
@@ -71,6 +74,9 @@ Suggested layout under `{docs.root}`:
 ├── index.md                          # docs index (docs.indexFile)
 ├── architecture/
 │   └── architecture.md               # project architecture reference
+├── actors/
+│   ├── index.md                       # actor catalog
+│   └── <actor>.md                     # goals, responsibilities, and boundaries
 ├── capabilities/<capability>/        # cross-cutting domain rules
 │   ├── rules.md                      # canonical rules (permanent)
 │   └── scenarios.md                  # shared acceptance scenarios (optional)
@@ -87,13 +93,16 @@ Suggested layout under `{docs.root}`:
 | Situation                                                 | Doc type             | Where to write                                          |
 | --------------------------------------------------------- | -------------------- | ------------------------------------------------------- |
 | User seeks an observable outcome                          | **Use case**         | `{specPath}` + `{contextPath}`                          |
+| User type has distinct goals, responsibilities, or limits | **Actor**            | `{docsActor}`                                           |
 | Rule or invariant is shared by multiple use cases         | **Capability**       | `{docsCapability}/rules.md` (+ optional `scenarios.md`) |
 | Refactor or technical initiative changes no user behavior | **Codebase context** | `{docs.root}/codebase/<initiative>/context.md`          |
 | Architecture affects the whole project                    | **Architecture**     | `{architecturePath}`                                    |
 
-For each use case, identify the user goal and business domain before inspecting code. `spec.md` must remain useful without code paths. `context.md` links back to `spec.md` and maps the current routes, components, APIs, schemas, persistence, tests, data flow, decisions, and dependencies.
+For each use case, identify the user goal, business domain, and affected actors before inspecting code. `spec.md` must remain useful without code paths. `context.md` links back to `spec.md` and maps the current routes, components, APIs, schemas, persistence, tests, data flow, decisions, and dependencies.
 
 Create separate use cases for distinct user goals even when they share one implementation component. Put genuinely shared rules in a capability document and link to it instead of duplicating rules.
+
+Create an actor document when a user type appears in multiple use cases or has materially different goals, responsibilities, or boundaries. Actor docs describe product meaning; authorization rules belong in a capability such as `access-control/rules.md`, and technical role identifiers may be linked from the actor doc.
 
 If `{architecturePath}` is missing during setup, remind the user to create it (even a short draft) before large features or refactors.
 
@@ -107,7 +116,8 @@ If the user has not run `npm run configure`, gather at minimum:
 2. Docs root, index file, and capabilities root
 3. Optional: app root and code search roots
 4. Optional: implementation flow, validation commands, review rule, and docs finalization rule
-5. Remind the user to add `{docs.root}/architecture/architecture.md` when absent
+5. Identify distinct product user types and create `{docsActors}/index.md` plus one `{docsActor}` per meaningful actor
+6. Remind the user to add `{docs.root}/architecture/architecture.md` when absent
 
 Write `skills.config.json` to the workspace root, then continue.
 

@@ -24,6 +24,7 @@ The user/team should describe their real workflow in one of:
 Good configuration explains:
 
 - architecture boundaries and naming conventions
+- canonical actors, their product boundaries, and where authorization rules live
 - where new code, tests, routes, copy, schemas, and generated files belong
 - preferred implementation order for common task types
 - review, validation, and documentation expectations
@@ -76,6 +77,7 @@ Derive concrete paths from the repo:
 | Entry point        | Existing router, command registry, job scheduler, etc.    |
 | User-facing copy   | Project i18n/l10n/copy convention, if one exists          |
 | Tests              | Co-located or separate test tree per project norm         |
+| Authorization      | Existing policy, guard, role, or access-control location  |
 | Contracts / schema | Canonical migrations, generated types, or API schema path |
 
 If conventions are missing, document assumptions in `plan.md` and ask the user to confirm them before implementation.
@@ -104,6 +106,7 @@ Pattern:  {from touched files / conventions}
 Workflow: {from project config | inferred and confirmed | custom for this task}
 Business domain: {product area}
 Use case: {verb-object user goal, when applicable}
+Actors:   {linked product actors, when applicable}
 Slice:    {slice title if path A′}
 Branch:   {branch name if known}
 Entry:    A (with spec) | A′ (epic slice) | B (direct) | C (capability)
@@ -142,6 +145,7 @@ Save to the folder matching documentation scope. Removed after delivery by final
 **Workflow source:** project config | inferred from repo | custom for this task
 **Business domain:** {product area}
 **Use case:** {verb-object user goal, when applicable}
+**Actors:** {linked product actors, when applicable}
 **Entry path:** A | A′ | B | C
 **Doc scope:** use case | capability | codebase context
 **Slice:** {slice title if A′}
@@ -251,7 +255,7 @@ This is an optional example from a frontend workflow. Use it only if it matches 
 | 3    | UI ↔ orchestration    | Wire presentation to orchestration; keep presentation thin          |
 | 4    | Data access           | Repositories, queries, API clients; generated types if applicable   |
 | 5    | Routes / navigation   | Register routes and map every entry point from the spec             |
-| 6    | Tests                 | Project test stack; purposeful behavior coverage                    |
+| 6    | Tests                 | Project test stack; purposeful behavior and actor coverage          |
 | 7    | Internationalization  | Required locales only; reuse existing keys when possible            |
 | 8    | Analytics             | Include only when product/project asks for tracking                 |
 | 9    | Code review           | Inline review or `code-reviewer` for large/cross-layer changes      |
@@ -269,6 +273,7 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 ### Use-case folder (`{docsUseCase}/`)
 
 - Update `spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
+- Link every meaningful canonical actor and keep actor-specific behavior explicit. Generic inline users do not require actor documents.
 - Update `context.md`: link to `spec.md`, refine the flow, and merge the final implementation map and durable decisions from `plan.md`.
 - Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the folder.
 - Folder must end with `spec.md` and `context.md`.
@@ -281,6 +286,13 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 - Update each affected use-case `context.md` with its implementation map.
 - Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the capability folder.
 - Folder must end with only `rules.md` and optional `scenarios.md`.
+
+### Actor docs affected by use-case or capability work (`{docsActors}/`)
+
+- Update `{docsActor}` when shipped behavior changes an actor's goals, responsibilities, boundaries, or related use cases.
+- Keep authorization matrices in the relevant capability rules; actor docs may link technical role identifiers but do not own permissions.
+- Update `index.md` when actors are added, renamed, or removed.
+- Delete transient `{docsActors}/handoff.md` when actor-definition work is complete.
 
 ### Codebase context folder (`{docs.root}/codebase/<initiative>/`)
 

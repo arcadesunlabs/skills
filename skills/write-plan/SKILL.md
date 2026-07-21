@@ -18,11 +18,12 @@ Two modes:
 | **Write**        | Map scope, architecture, files, workflow steps, artifacts, and validation from project configuration; save artifacts; get user confirmation |
 | **Read/Execute** | Implement step by step from the confirmed project-specific plan                                                                             |
 
-**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Then read `project.conventionsFile`, `{docs.root}/architecture/architecture.md` when present, and any linked local docs before choosing patterns, file paths, workflow order, validation, or documentation rules.
+**Prerequisite:** Load [workflow-config](../workflow-config/SKILL.md). Then read `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, and any linked local docs before choosing patterns, file paths, workflow order, validation, or documentation rules. For use-case or capability work, also read relevant `{docsActor}` files when present.
 
 **Configuration contract:** before planning, verify that project docs answer the essentials below. If not, inspect the repo for local patterns and ask the user to confirm the missing pieces before saving `plan.md`.
 
 - Architecture boundaries, naming conventions, and allowed patterns
+- For use-case or capability work: actor definitions, actor-specific behavior, and canonical authorization rules
 - Where code, tests, routes, copy, schemas, generated files, and docs belong
 - Preferred workflow order for the task type, including hard dependencies (`workflow.implementationFlow` when configured)
 - Validation, review, and documentation expectations (`workflow.validationCommands`, `workflow.review`, `workflow.docsFinalization` when configured)
@@ -63,7 +64,7 @@ Skip this skill for trivial tasks (typo, single-line fix) — implement per `pro
 
 ### Step 0 — Flow boundaries
 
-Confirm entry point, exit point, user/system surfaces, and affected call paths. **Stop and ask** if unclear. Do not proceed until boundaries are defined.
+Confirm entry point, exit point, user/system surfaces, and affected call paths. For behavioral work, also confirm affected actors. **Stop and ask** if unclear. Do not proceed until boundaries are defined.
 
 ### Step 1 — Classify the task
 
@@ -92,8 +93,9 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 
 - **Business domain** — product area that owns the behavior (e.g. `customers`, `billing`, `authentication`).
 - **Use case** — observable user goal in verb-object form (e.g. `create-customer`, `approve-payment`).
+- **Actors** — when applicable, product user types participating in the use case; link `{docsActor}` files and distinguish them from technical roles.
 - **Module / package** — single app, monorepo package, or client + server? Confirm with user if unclear.
-- **Layers** — see [layer table](REFERENCE.md#layer-and-location-selection).
+- **Layers** — map project-specific layers using [architecture patterns](REFERENCE.md#architecture-patterns).
 
 ### Step 4 — Files, workflow
 
@@ -103,6 +105,7 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 4. Derive the implementation workflow from project configuration and the touched code. Do not import phases from examples unless the project docs or user explicitly choose them.
 5. If no explicit workflow exists, propose a short workflow that fits the task and ask the user to confirm it before saving the plan.
 6. Add checklist items per agreed workflow step to `plan.md`. Document intentionally skipped or irrelevant steps only when that helps review.
+7. For behavioral work with distinct actors, map actor-specific permissions, behavior, and tests. Link canonical access-control rules instead of duplicating permission matrices in the plan.
 
 ### Step 5 — Confirm
 

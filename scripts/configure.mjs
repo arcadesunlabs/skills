@@ -16,6 +16,8 @@ const configPath = path.join(root, "skills.config.json");
 const examplePath = path.join(root, "skills.config.example.json");
 const schemaPath = path.join(root, "skills.config.schema.json");
 const defaultDocsFinalization =
+  "Use cases: update spec.md and context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
+const preActorDocsFinalization =
   "Use cases: update spec.md and context.md. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
 const legacyDocsFinalization =
   "Vertical features: update 01-spec.md and 02-context.md. Capabilities: update spec.md and scenarios.md (optional). Touchpoints: update features/<feature>/spec.md. Remove transient plan/task/handoff files after merge.";
@@ -55,7 +57,10 @@ try {
   }
   delete config.docs.domainMirror;
   delete config.docs.touchpointsRoot;
-  if (config.workflow?.docsFinalization === legacyDocsFinalization) {
+  if (
+    config.workflow?.docsFinalization === legacyDocsFinalization ||
+    config.workflow?.docsFinalization === preActorDocsFinalization
+  ) {
     config.workflow.docsFinalization = defaultDocsFinalization;
   }
 
@@ -64,6 +69,9 @@ try {
   );
   console.log(
     "Docs are organized as <domain>/<use-case>. A domain is a stable product or business area, such as customers, orders, payments, or authentication — never a code folder or layer.\n",
+  );
+  console.log(
+    "Distinct user types are actors, such as administrator, operator, manager, or salesperson. Document them under <docs-root>/actors; keep authorization rules separate.\n",
   );
 
   config.project.name = await ask("Project name", config.project.name);
@@ -145,6 +153,9 @@ try {
   );
   console.log(
     "Docs convention: choose a business domain, then a verb-object user goal (for example, customers/create-customer).",
+  );
+  console.log(
+    `Actors convention: document distinct product user types under ${path.join(config.docs.root, "actors")} (for example, actors/operator.md).`,
   );
   if (root !== process.cwd()) {
     console.log(`Project: ${root}`);

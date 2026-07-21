@@ -15,10 +15,9 @@ Users who forget their password currently need to contact support to recover acc
 
 Allow users to securely reset their password without contacting support.
 
-## 3. Target users
+## 3. Actors
 
 - Existing users who forgot their password.
-- Support team, indirectly, by reducing manual recovery requests.
 
 ## 4. Scope
 

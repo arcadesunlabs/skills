@@ -38,6 +38,6 @@
     ],
     "validationCommands": [],
     "review": "Use the project's normal review path; use a review agent for broad or cross-layer changes.",
-    "docsFinalization": "Use cases: update spec.md and context.md. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge."
+    "docsFinalization": "Use cases: update spec.md and context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge."
   }
 }

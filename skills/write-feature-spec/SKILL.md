@@ -1,6 +1,6 @@
 ---
 name: write-feature-spec
-description: Create clear feature specifications with goals, scope, user flows, business rules, use cases, acceptance criteria, edge cases, and open questions. Use when the user wants to define, document, refine, or review a feature, product requirement, user story, use case, acceptance criteria, or implementation-ready specification.
+description: Create clear use-case specifications and actor definitions with goals, scope, flows, business rules, acceptance criteria, and edge cases. Use when the user wants to define, document, refine, or review a feature, product requirement, user story, use case, actor, user type, acceptance criteria, or implementation-ready specification.
 ---
 
 # Write Feature Spec
@@ -28,10 +28,12 @@ Load [workflow-config](../workflow-config/SKILL.md) first. This skill is the **s
 
 - **Location:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md) decision tree):
   - **Use case:** `{specPath}` (`<domain>/<use-case>/spec.md`; name `<use-case>` as a kebab-case verb-object user goal).
+  - **Actor:** `{docsActor}` (`actors/<actor>.md`; name `<actor>` from product language, not a code role identifier).
   - **Capability:** `{docsCapability}/rules.md` (`<capability>` in kebab-case; name the shared domain concept, not a ticket or fix).
 - **No YAML frontmatter** in `docs/` feature files — start each file with a single `# Title`.
 - **Spec flavors:**
   - **Use-case spec** — a user-facing behavior being designed or documented. Use the structure in _Draft the specification_ below. Pair with `{contextPath}` for implementation context.
+  - **Actor definition** — a reusable product user type. Use the [actor document template](#actor-document-template), update `{docsActors}/index.md`, and stop unless a use-case or capability document was also requested.
   - **Capability rules** — cross-cutting domain rules consumed by multiple use cases. Use the [capability template](#capability-rules-template) below. Optional `{docsCapability}/scenarios.md` for shared Gherkin scenarios.
 - **`context.md`** (same folder as `spec.md`) — implementation context for developers and agents. It links to `spec.md` and maps the current flow, routes, components, APIs, schemas, persistence, tests, decisions, dependencies, and code paths. Create or update when implementation is known (see the [context.md template](../write-plan/REFERENCE.md#contextmd-sections)).
 - `spec.md` must remain useful without code paths. Distinct user goals get separate use-case specs even when they share one component.
@@ -47,13 +49,22 @@ Ask only the most important questions when needed. If enough context exists, pro
 Useful questions:
 
 - What problem does this feature solve?
-- Who is the target user?
+- Which actors participate, and what does each one want?
 - What should the user be able to do?
 - What is the expected business or product outcome?
 - Are there any existing screens, APIs, systems, or rules involved?
 - What should be explicitly out of scope?
 - Are there known edge cases, permissions, limits, or validations?
 - How will the team know this feature is complete?
+
+Resolve actors before drafting the use-case spec:
+
+- Reuse and link existing `{docsActor}` files.
+- Create an actor document when the user type appears in multiple use cases or has distinct goals, responsibilities, or boundaries.
+- Keep a generic `user` inline when no meaningful distinction exists.
+- Treat actor as product meaning, role as technical authorization, and persona as a research archetype. Do not use these terms interchangeably.
+
+For an actor-only request, create or update `{docsActor}` and `{docsActors}/index.md` using the template below. Do not invent a use case, acceptance criteria, or implementation context unless the user also requested behavioral work.
 
 ### 2. Draft the specification
 
@@ -70,9 +81,9 @@ Explain the current situation, problem, or opportunity.
 
 Describe the expected outcome of the feature.
 
-## 3. Target users
+## 3. Actors
 
-Describe who will use or be affected by this feature.
+Link affected actor documents and describe actor-specific participation in this use case. Keep a generic user inline when no canonical actor document is needed.
 
 ## 4. Scope
 
@@ -222,6 +233,8 @@ After drafting, review the specification using this checklist:
 
 - [ ] The problem is clear.
 - [ ] The objective is clear.
+- [ ] Every meaningful canonical actor is identified and linked; generic inline users do not require actor documents.
+- [ ] Actor-specific behavior and restrictions are explicit.
 - [ ] Scope and out of scope are explicit.
 - [ ] The main user flow is understandable.
 - [ ] Use cases cover the main scenarios.
@@ -255,6 +268,8 @@ Use this shorter version when the user wants something lightweight:
 
 ## Objective
 
+## Actors
+
 ## Scope
 
 ## Out of scope
@@ -272,6 +287,48 @@ Use this shorter version when the user wants something lightweight:
 ## Assumptions
 ```
 
+## Actor document template
+
+Use for a product user type with distinct goals, responsibilities, or boundaries (`{docsActor}`):
+
+```md
+# [Actor Name]
+
+## Definition
+
+Describe who this actor is in product or business language.
+
+## Goals
+
+List outcomes this actor seeks across the product.
+
+## Responsibilities
+
+List duties this actor is expected to perform.
+
+## Boundaries
+
+List actions or decisions outside this actor's responsibility.
+
+## Technical roles
+
+List authorization identifiers only when useful, and link to canonical access-control rules. This section is not the source of truth for permissions.
+
+## Related use cases
+
+Link use-case specs involving this actor.
+```
+
+Maintain `{docsActors}/index.md` as a short catalog linking every canonical actor. Keep actor-specific behavior in each use-case spec and canonical authorization matrices in a capability such as `access-control/rules.md`.
+
+```md
+# Actors
+
+| Actor                   | Definition                     | Technical roles |
+| ----------------------- | ------------------------------ | --------------- |
+| [Operator](operator.md) | Handles daily operational work | `operator`      |
+```
+
 ## Capability rules template
 
 Use for cross-cutting domain rules (`{docsCapability}/rules.md`):
@@ -285,7 +342,11 @@ Use for cross-cutting domain rules (`{docsCapability}/rules.md`):
 | -------- | -------------------- |
 | …        | link to `{specPath}` |
 
-Shared scenarios: [scenarios.md](scenarios.md) (create when multiple surfaces share acceptance criteria).
+Shared scenarios: [scenarios.md](scenarios.md) (create when multiple use cases share acceptance criteria).
+
+## Affected actors
+
+Link canonical `{docsActor}` files when rules differ by actor. Keep permission matrices here when this capability owns authorization.
 
 ## Domain rules
 

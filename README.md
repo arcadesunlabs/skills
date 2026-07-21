@@ -56,6 +56,7 @@ Read or create `skills.config.json` at the project root. If it does not exist, a
 - code search roots used to build technical context.
 
 Then help me document the project's real workflow. Ask focused questions about:
+- distinct product user types, their goals, responsibilities, and boundaries;
 - architecture, layers, naming conventions, and forbidden patterns;
 - where code, tests, routes, copy/i18n, schemas, migrations, generated files, and docs belong;
 - implementation flow for features, improvements/refactors, and bug fixes (`workflow.implementationFlow` in `skills.config.json`);
@@ -67,11 +68,11 @@ Most importantly, help me define an implementation-flow table similar to this ex
 
 | #   | Phase                  | Skills / agents                                      |
 | --- | ---------------------- | ---------------------------------------------------- |
-| 1   | Surface / entry point  | project-specific build or design skills             |
-| 2   | Orchestration          | project-specific controller, state, or service skills |
+| 1   | Surface / entry point  | project-specific build or design skills              |
+| 2   | Orchestration          | project-specific controller, state, or service skills|
 | 3   | Data / contracts       | schema, migration, API client, or repository skills  |
 | 4   | Wiring / integration   | routing, dependency injection, jobs, or event wiring |
-| 5   | Tests                  | project-specific test skill or commands             |
+| 5   | Tests                  | project-specific test skill or commands              |
 | 6   | Copy / localization    | i18n or content skill, when applicable               |
 | 7   | Analytics / telemetry  | analytics skill, when applicable                     |
 | 8   | Code review            | review skill or review agent                         |
@@ -116,9 +117,25 @@ Documentation is organized by user intent, not code structure. Choose a product/
 
 Use language users and product teams recognize. Do not choose component, route, package, layer, or folder names such as `forms`, `screens`, `controllers`, or `src/features`.
 
+**What is an actor?** An actor is a product user type with distinct goals, responsibilities, or boundaries. Examples include `administrator`, `operator`, `manager`, and `salesperson`.
+
+Do not mix these concepts:
+
+| Concept | Meaning                                         | Example                                        |
+| ------- | ----------------------------------------------- | ---------------------------------------------- |
+| Actor   | Product user type participating in use cases    | Store manager                                  |
+| Role    | Technical authorization identifier              | `sales_manager`                                |
+| Persona | Research archetype with context and motivations | Busy store owner with low technical confidence |
+
+Document reusable actors under `{docs.root}/actors/`. Actor documents explain who users are and what they are responsible for. Canonical permission matrices belong in capability rules such as `capabilities/access-control/rules.md`.
+
 ```text
 {docs.root}/
 ├── architecture/architecture.md
+├── actors/
+│   ├── index.md
+│   ├── administrator.md
+│   └── operator.md
 ├── customers/create-customer/
 │   ├── spec.md                          # user behavior and acceptance criteria
 │   └── context.md                       # routes, components, APIs, data, and tests
@@ -139,6 +156,7 @@ Ask the agent in natural language. It chooses the skill from the `description` f
 | Situation                    | What to ask                                         |
 | ---------------------------- | --------------------------------------------------- |
 | Epic brainstorm              | _"Brainstorm feature X"_ -> `mode-brainstorm`       |
+| Define product users         | _"Document our user types"_ -> `write-feature-spec` |
 | Write a product spec         | _"Spec for social login"_ -> `write-feature-spec`   |
 | Technical plan before coding | _"Technical plan for social login"_ -> `write-plan` |
 | Session handoff              | _"Handoff what we did"_ -> `write-handoff`          |
@@ -154,7 +172,7 @@ The `workflow-config` skill is the entry point: the agent should load `skills.co
 | `workflow-config`    | Loads or creates `skills.config.json`                      |
 | `mode-brainstorm`    | Brainstorm, spec, and task breakdown (`tasks.md` optional) |
 | `mode-grill`         | Critical review mode                                       |
-| `write-feature-spec` | Use-case specs and shared capability rules                 |
+| `write-feature-spec` | Use-case specs, actor definitions, and capability rules    |
 | `write-plan`         | Technical plan and implementation (`plan.md`)              |
 | `write-handoff`      | Session handoff                                            |
 | `write-skill`        | Create or improve skills                                   |

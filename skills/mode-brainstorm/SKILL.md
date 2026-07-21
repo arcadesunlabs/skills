@@ -10,13 +10,13 @@ Turn an idea into a closed, implementation-ready spec and task breakdown.
 ## Required setup
 
 1. Invoke [workflow-config](../workflow-config/SKILL.md) and load `skills.config.json`.
-2. Read `project.conventionsFile` and `{docs.root}/architecture/architecture.md` when present.
+2. Read `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, and relevant files under `{docsActors}` when present.
 3. Use [mode-grill](../mode-grill/SKILL.md) behavior during clarification.
 
 ## Hard gates
 
 - Do not write code, scaffold, or implement during this skill.
-- Do not assume unclear flows, business rules, permissions, states, integrations, or architecture decisions.
+- Do not assume unclear actors, flows, business rules, permissions, states, integrations, or architecture decisions.
 - If a question can be answered from the codebase, `{docs.root}/architecture/architecture.md`, other project docs, or `project.conventionsFile`, inspect those first.
 - Ask the user one question at a time. Include your recommended answer when useful.
 - Continue questioning and refining until each decision point is fully closed.
@@ -43,9 +43,21 @@ Before writing specs, decide where documentation lives (see [workflow-config](..
 - **Capability** — rule consumed by multiple use cases → `{docsCapability}/rules.md`, linked from affected specs.
 - **Codebase context** — technical change with no behavior change → `{docs.root}/codebase/<initiative>/context.md`.
 
-Identify the product/business domain and name each use case as a kebab-case verb-object goal before inspecting code. If **capability**, list the affected use cases before drafting.
+Identify the product/business domain and name each use case as a kebab-case verb-object goal before inspecting code. If **capability**, list the affected use cases and actors before drafting.
 
-### 3. Write the spec
+### 3. Identify actors
+
+For **use-case** and **capability** work, identify every product user type participating in the behavior. Track indirect beneficiaries or stakeholders separately. Skip this gate for actorless codebase-context work.
+
+- Reuse definitions from `{docsActors}` when they exist.
+- Ask what each actor wants, is responsible for, and must not do.
+- Separate product actors from technical authorization roles and research personas.
+- Create or update `{docsActor}` when a user type appears across use cases or has materially distinct goals, responsibilities, or boundaries.
+- Keep a generic user inline when no meaningful distinction exists.
+
+For behavioral work, do not proceed until actor-specific behavior and restrictions are clear.
+
+### 4. Write the spec
 
 When understanding is closed for a **use case** or **capability**, invoke [write-feature-spec](../write-feature-spec/SKILL.md). For **codebase context**, do not create a behavior spec; record the agreed technical scope and continue to planning.
 
@@ -62,7 +74,7 @@ Follow `write-feature-spec` exactly when writing behavior or capability rules. D
 
 For **capability** scope: write `{docsCapability}/rules.md` (and `scenarios.md` when shared Gherkin helps), then link it from every affected use-case spec.
 
-### 4. Decide task breakdown
+### 5. Decide task breakdown
 
 After the spec is written, discuss the implementation breakdown with the user.
 
@@ -77,7 +89,7 @@ Explain the trade-off, recommend a breakdown, then ask the user to confirm or ad
 
 Write `{docsCapability}/tasks.md` when the breakdown is cross-cutting and needs a durable artifact. For a use case, use `{docsUseCase}/tasks.md`. For codebase context, use `{docs.root}/codebase/<initiative>/tasks.md`. Skip `tasks.md` for a single task or when moving straight to `write-plan`.
 
-### 5. Transition to plan
+### 6. Transition to plan
 
 If the user decides to implement a task now, invoke [write-plan](../write-plan/SKILL.md) for the selected task/slice.
 
