@@ -1,10 +1,10 @@
 # Write Plan — Reference
 
-Templates and optional workflow examples. Load when drafting `03-plan.md`, updating `02-context.md`, or finalizing docs.
+Templates and optional workflow examples. Load when drafting `plan.md`, updating `context.md`, or finalizing docs.
 
 Load [workflow-config](../workflow-config/SKILL.md) first. Paths use `{docs.root}` from config.
 
-Before planning file paths, architecture, or workflow order, read `project.conventionsFile`, `{docs.root}/architecture/architecture.md` when present, and inspect the code under `docs.domainMirror` and `code.appRoot`. **Match what the project actually uses.**
+Before planning file paths, architecture, or workflow order, read `project.conventionsFile`, `{docs.root}/architecture/architecture.md` when present, and inspect relevant code under `code.searchRoots` and `code.appRoot`. **Match what the project actually uses.**
 
 This reference provides structure only. It does not define the user's architecture, phases, file layout, validation commands, or review rules.
 
@@ -37,11 +37,11 @@ If this configuration is missing or too generic, inspect the codebase and ask th
 
 Choose by the architecture the **touched files already use**, not by task type alone.
 
-| Situation                       | Approach                                                           |
-| ------------------------------- | ------------------------------------------------------------------ |
-| New feature in an existing area | Follow sibling features under `docs.domainMirror` / `code.appRoot` |
-| Improvement or bug fix          | Match the files you modify — same layers, naming, and data flow    |
-| Ambiguous                       | Inspect neighbors in the same domain folder; **ask the user**      |
+| Situation                       | Approach                                                        |
+| ------------------------------- | --------------------------------------------------------------- |
+| New feature in an existing area | Follow sibling code under `code.searchRoots` / `code.appRoot`   |
+| Improvement or bug fix          | Match the files you modify — same layers, naming, and data flow |
+| Ambiguous                       | Inspect neighbors in the same domain folder; **ask the user**   |
 
 Common layer labels vary by project. Map them from conventions instead of assuming:
 
@@ -78,7 +78,7 @@ Derive concrete paths from the repo:
 | Tests              | Co-located or separate test tree per project norm         |
 | Contracts / schema | Canonical migrations, generated types, or API schema path |
 
-If conventions are missing, document assumptions in `03-plan.md` (or as `%% comment` notes inside the `02-context.md` flow diagram) — the context file itself stays diagram + files only.
+If conventions are missing, document assumptions in `plan.md` and ask the user to confirm them before implementation.
 
 ---
 
@@ -102,11 +102,12 @@ Implementation plan
 Type:     New feature | Improvement | Bug fix
 Pattern:  {from touched files / conventions}
 Workflow: {from project config | inferred and confirmed | custom for this task}
-Domain:   {feature area}
+Business domain: {product area}
+Use case: {verb-object user goal, when applicable}
 Slice:    {slice title if path A′}
 Branch:   {branch name if known}
 Entry:    A (with spec) | A′ (epic slice) | B (direct) | C (capability)
-Doc scope: vertical | capability | touchpoint-only
+Doc scope: use case | capability | codebase context
 
 Files:
   CREATE ...
@@ -124,13 +125,13 @@ Waiting for confirmation to start implementation.
 
 ---
 
-## 03-plan.md template
+## plan.md template
 
 Save to the folder matching documentation scope. Removed after delivery by finalization.
 
-- **Vertical:** `{docsFeature}/03-plan.md`
-- **Capability:** `{docsCapability}/03-plan.md`
-- **Touchpoint-only:** `{docs.root}/{touchpointsRoot}/<feature>/03-plan.md` (or under parent capability when part of path C)
+- **Use case:** `{docsUseCase}/plan.md`
+- **Capability:** `{docsCapability}/plan.md`
+- **Codebase context:** `{docs.root}/codebase/<initiative>/plan.md`
 
 ```markdown
 # [Feature Name] Implementation Plan
@@ -139,9 +140,10 @@ Save to the folder matching documentation scope. Removed after delivery by final
 **Type:** New feature | Improvement | Bug fix
 **Pattern:** {architecture chosen from inspection}
 **Workflow source:** project config | inferred from repo | custom for this task
-**Domain:** {feature area}
+**Business domain:** {product area}
+**Use case:** {verb-object user goal, when applicable}
 **Entry path:** A | A′ | B | C
-**Doc scope:** vertical | capability | touchpoint-only
+**Doc scope:** use case | capability | codebase context
 **Slice:** {slice title if A′}
 **Branch:** {branch name if known}
 
@@ -171,39 +173,47 @@ MODIFY ...
 ### Final step — Finalize docs
 
 - [ ] Permanent docs updated per scope — see [Finalize docs](#finalize-docs)
-- [ ] Deleted transient files (`03-plan.md`, `04-tasks.md`, `handoff.md`, etc.)
+- [ ] Deleted transient files (`plan.md`, `tasks.md`, `handoff.md`, etc.)
 ```
 
 ---
 
-## 02-context.md sections
+## context.md sections
 
-Keep `{docs.root}/<domain>/<feature>/02-context.md` **diagram-first**: an intuitive flow diagram plus the files that participate in that flow. No written walkthroughs, no contracts, no code — just the flow and its files. Revise the diagram and file list as implementation progresses:
+Keep `{contextPath}` focused on how the current system realizes the behavior in `spec.md`. Link to the spec, show the flow, and map every participating technical responsibility to current code. For codebase context without user-visible behavior, omit the spec link and describe the technical scope in the opening sentence. Revise it as implementation changes:
 
 ```markdown
-# {Feature Name} — Context
+# {Use Case or Technical Initiative} Context
+
+{For use cases only: Behavior: [spec.md](spec.md)}
+
+{For codebase context only: one sentence defining the technical scope.}
 
 ## Flow
 
 {One or more mermaid diagrams showing the path of the flow — entry → steps → output.
 Use `flowchart` or `sequenceDiagram`. Label each node by its responsibility, not by code.}
 
-## Key files
+## Implementation map
 
-{Table of every file that participates in the flow above and its role. From 03-plan.md Files section.}
+{Table of every route, component, API, schema, persistence path, and test that participates in the flow. From the plan.md Files section and final implementation.}
 
-| Arquivo | Papel no fluxo |
-| ------- | -------------- |
-| ...     | ...            |
+| Responsibility | Path | Role in flow |
+| -------------- | ---- | ------------ |
+| ...            | ...  | ...          |
+
+## Decisions and dependencies
+
+{Only durable current decisions and dependencies needed to understand the implementation. No task status, temporary notes, or proposed changes.}
 ```
 
-**No code snippets** — represent the flow as a mermaid diagram; file paths live in `## Key files`. Neither belongs in `01-spec.md`.
+**No code snippets** — represent behavior in `spec.md`, flow in Mermaid, and code locations in `## Implementation map`.
 
 ---
 
 ## Execution strategy
 
-Use the confirmed workflow from `03-plan.md`.
+Use the confirmed workflow from `plan.md`.
 
 ### When to parallelize
 
@@ -256,30 +266,29 @@ Do not force this on backend, CLI, data, infrastructure, content, or small maint
 
 Mandatory final step for non-trivial planned work. Apply the checklist for the **documentation scope** of the task.
 
-### Vertical feature folder (`{docsFeature}/`)
+### Use-case folder (`{docsUseCase}/`)
 
-- Update `01-spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
-- Update `02-context.md`: refine the flow diagram(s) and merge the final file list from `03-plan.md` into `## Key files`. Do not merge validation, notes, status, or PR into the context — it stays diagram + files only.
-- Delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other transient file in the folder.
-- Folder must end with only `01-spec.md` and `02-context.md`.
+- Update `spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
+- Update `context.md`: link to `spec.md`, refine the flow, and merge the final implementation map and durable decisions from `plan.md`.
+- Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the folder.
+- Folder must end with `spec.md` and `context.md`.
 
 ### Capability folder (`{docsCapability}/`)
 
-- Update `spec.md` with shipped canonical rules and shared contracts.
+- Update `rules.md` with shipped canonical rules and shared contracts.
 - Update `scenarios.md` when shared acceptance scenarios exist.
-- Update each affected `{docsTouchpoint}` with surface-specific behavior.
-- In affected vertical `{docsFeature}/02-context.md` files, add or refresh **links** to the capability spec — do not duplicate canonical rules.
-- Delete `03-plan.md`, `04-tasks.md`, `handoff.md`, and any other transient file in the capability folder.
-- Folder must end with only `spec.md` and optional `scenarios.md`.
+- Link affected use-case specs to the capability rules instead of duplicating them.
+- Update each affected use-case `context.md` with its implementation map.
+- Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the capability folder.
+- Folder must end with only `rules.md` and optional `scenarios.md`.
 
-### Touchpoint folder (`{docs.root}/{touchpointsRoot}/<feature>/`)
+### Codebase context folder (`{docs.root}/codebase/<initiative>/`)
 
-- Update `spec.md` with shipped surface-specific behavior.
-- Link to parent `{docsCapability}/spec.md` when applicable.
-- Delete any transient `handoff.md` in the touchpoint folder.
-- Folder must end with only `spec.md`.
+- Update `context.md` with current architecture, flow, implementation map, and durable decisions.
+- Delete `plan.md`, `tasks.md`, `handoff.md`, and other transient files.
+- Do not create a behavior spec when user-visible behavior did not change.
 
-**`01-spec.md` checklist (vertical only):**
+**`spec.md` checklist (use cases only):**
 
 - [ ] Context describes current product state, not pre-implementation pain only
 - [ ] Scope = what shipped; out of scope = what was explicitly not built
@@ -288,17 +297,18 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 
 **Merge map from transient files:**
 
-| `03-plan.md` section | Destination in `02-context.md`     |
-| -------------------- | ---------------------------------- |
-| Files CREATE/MODIFY  | `## Key files`                     |
-| Flow / steps         | Fold into the `## Flow` diagram(s) |
-| Skipped steps        | Discard                            |
-| Checkboxes           | Discard                            |
-| Validation commands  | Discard — not kept in context      |
+| `plan.md` section   | Destination in `context.md`               |
+| ------------------- | ----------------------------------------- |
+| Files CREATE/MODIFY | `## Implementation map`                   |
+| Flow / steps        | Fold into the `## Flow` diagram(s)        |
+| Durable decisions   | `## Decisions and dependencies`           |
+| Skipped steps       | Discard                                   |
+| Checkboxes          | Discard                                   |
+| Validation commands | Discard unless needed to understand tests |
 
 | `handoff.md` section | Destination                        |
 | -------------------- | ---------------------------------- |
-| Key files            | `## Key files` if missing          |
-| PR / branch          | Discard — or update `01-spec.md`   |
+| Key files            | `## Implementation map` if missing |
+| PR / branch          | Discard                            |
 | Next steps           | Discard                            |
-| Current decisions    | Discard — or update `01-spec.md`   |
+| Durable decisions    | `## Decisions and dependencies`    |

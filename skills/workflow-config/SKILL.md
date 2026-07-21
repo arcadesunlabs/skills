@@ -23,30 +23,42 @@ Example file: [skills.config.example.json](../../../skills.config.example.json) 
 | ----------------------------- | ----------------------------------------------------------- |
 | `project.name`                | Human-readable project label in plans and handoffs          |
 | `project.conventionsFile`     | Repo rules file (e.g. `CLAUDE.md`)                          |
-| `docs.root`                   | Feature docs folder (e.g. `.docs` or `docs`)                |
+| `docs.root`                   | Behavior docs folder (e.g. `.docs` or `docs`)               |
 | `docs.indexFile`              | Docs index path                                             |
-| `docs.domainMirror`           | Code path that doc domains mirror                           |
 | `docs.capabilitiesRoot`       | Cross-cutting capabilities folder (default: `capabilities`) |
-| `docs.touchpointsRoot`        | Feature touchpoints folder (default: `features`)            |
-| `code.appRoot`                | App root for file paths in plans                            |
+| `code.appRoot`                | Main app or package root                                    |
+| `code.searchRoots`            | Optional code roots to inspect when building context        |
 | `workflow.implementationFlow` | Optional project-specific implementation phases             |
 | `workflow.validationCommands` | Optional validation commands                                |
 | `workflow.review`             | Optional review expectations                                |
 | `workflow.docsFinalization`   | Optional docs finalization rule                             |
 
+## Documentation model
+
+Organize documentation by **user intent**, not code structure.
+
+- Choose `<domain>` as a stable product or business area that groups related user goals (`customers`, `orders`, `payments`, `authentication`). It describes what the product is about, not where code lives.
+- Choose `<use-case>` as a kebab-case verb-object goal (`create-customer`, `edit-customer`, `approve-payment`).
+- Never derive documentation paths from component, package, module, route, controller, or filesystem names.
+- Use `code.appRoot` and `code.searchRoots` only to discover the implementation recorded in `context.md`.
+- When both code fields are absent, inspect from the workspace root.
+
 ## Derived values
 
-Compute these from config — do not hardcode project-specific paths:
+Compute these from config and the agreed behavior scope:
 
 | Symbol               | Rule                                                                                           |
 | -------------------- | ---------------------------------------------------------------------------------------------- |
-| `{docsFeature}`      | `{docs.root}/<domain>/<feature>/`                                                              |
+| `{docsDomain}`       | `{docs.root}/<domain>/`                                                                        |
+| `{docsUseCase}`      | `{docsDomain}/<use-case>/`                                                                     |
+| `{specPath}`         | `{docsUseCase}/spec.md`                                                                        |
+| `{contextPath}`      | `{docsUseCase}/context.md`                                                                     |
+| `{planPath}`         | `{docsUseCase}/plan.md`                                                                        |
+| `{handoffPath}`      | `{docsUseCase}/handoff.md`                                                                     |
 | `{docsCapability}`   | `{docs.root}/{capabilitiesRoot}/<capability>/` (default `{capabilitiesRoot}` = `capabilities`) |
-| `{docsTouchpoint}`   | `{docs.root}/{touchpointsRoot}/<feature>/spec.md` (default `{touchpointsRoot}` = `features`)   |
-| `{handoffPath}`      | `{docs.root}/<domain>/<feature>/handoff.md`                                                    |
-| `{architecturePath}` | `{docs.root}/architecture/architecture.md`                                                      |
+| `{architecturePath}` | `{docs.root}/architecture/architecture.md`                                                     |
 
-When `capabilitiesRoot` or `touchpointsRoot` is absent from config, use the defaults above.
+When `capabilitiesRoot` is absent from config, use `capabilities`.
 
 ## Recommended project docs
 
@@ -60,22 +72,28 @@ Suggested layout under `{docs.root}`:
 ├── architecture/
 │   └── architecture.md               # project architecture reference
 ├── capabilities/<capability>/        # cross-cutting domain rules
-│   ├── spec.md                       # canonical rules (permanent)
+│   ├── rules.md                      # canonical rules (permanent)
 │   └── scenarios.md                  # shared acceptance scenarios (optional)
-├── features/<feature>/               # touchpoints — how a surface consumes a capability
-│   └── spec.md
-└── <domain>/<feature>/               # vertical features
-    ├── 01-spec.md
-    └── 02-context.md
+├── <domain>/                         # product or business domain
+│   └── <use-case>/                   # user goal in verb-object form
+│       ├── spec.md                   # behavior and acceptance criteria
+│       └── context.md                # implementation map
+└── codebase/<initiative>/            # technical work without behavior changes
+    └── context.md
 ```
 
 ### Documentation scope decision tree
 
-| Situation                                                     | Doc type                     | Where to write                                                                     |
-| ------------------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------- |
-| Single product flow or screen with its own identity           | **Vertical feature**         | `{docsFeature}/01-spec.md` + `02-context.md`                                       |
-| Domain rule or invariant consumed by 2+ surfaces              | **Capability** + touchpoints | `{docsCapability}/spec.md` (+ `scenarios.md`); then `{docsTouchpoint}` per surface |
-| Change only on one surface that already consumes a capability | **Touchpoint only**          | `{docsTouchpoint}`; update `{docsCapability}/spec.md` if the shared rule changed   |
+| Situation                                                 | Doc type             | Where to write                                          |
+| --------------------------------------------------------- | -------------------- | ------------------------------------------------------- |
+| User seeks an observable outcome                          | **Use case**         | `{specPath}` + `{contextPath}`                          |
+| Rule or invariant is shared by multiple use cases         | **Capability**       | `{docsCapability}/rules.md` (+ optional `scenarios.md`) |
+| Refactor or technical initiative changes no user behavior | **Codebase context** | `{docs.root}/codebase/<initiative>/context.md`          |
+| Architecture affects the whole project                    | **Architecture**     | `{architecturePath}`                                    |
+
+For each use case, identify the user goal and business domain before inspecting code. `spec.md` must remain useful without code paths. `context.md` links back to `spec.md` and maps the current routes, components, APIs, schemas, persistence, tests, data flow, decisions, and dependencies.
+
+Create separate use cases for distinct user goals even when they share one implementation component. Put genuinely shared rules in a capability document and link to it instead of duplicating rules.
 
 If `{architecturePath}` is missing during setup, remind the user to create it (even a short draft) before large features or refactors.
 
@@ -86,8 +104,8 @@ Use `workflow.implementationFlow` in `skills.config.json` for the short machine-
 If the user has not run `npm run configure`, gather at minimum:
 
 1. Project name and conventions file
-2. Docs root, domain mirror path, capabilities root, and touchpoints root
-3. Optional: app root
+2. Docs root, index file, and capabilities root
+3. Optional: app root and code search roots
 4. Optional: implementation flow, validation commands, review rule, and docs finalization rule
 5. Remind the user to add `{docs.root}/architecture/architecture.md` when absent
 

@@ -39,15 +39,15 @@ Do not proceed while any important flow or business rule is unclear.
 
 Before writing specs, decide where documentation lives (see [workflow-config](../workflow-config/SKILL.md) decision tree):
 
-- **Vertical** — single product flow or screen with its own identity → `{docsFeature}/01-spec.md`.
-- **Capability (+ touchpoints)** — domain rule consumed by 2+ surfaces → `{docsCapability}/spec.md` first, then `{docsTouchpoint}` per affected surface.
-- **Touchpoint-only** — change on one surface that already consumes an existing capability → `{docsTouchpoint}` only; update capability spec if shared rules changed.
+- **Use case** — observable user goal → `{docsUseCase}/spec.md` and `{docsUseCase}/context.md`.
+- **Capability** — rule consumed by multiple use cases → `{docsCapability}/rules.md`, linked from affected specs.
+- **Codebase context** — technical change with no behavior change → `{docs.root}/codebase/<initiative>/context.md`.
 
-Ask the user or infer from scope. If **capability**, list all touchpoints (each surface that consumes the shared rule) before drafting.
+Identify the product/business domain and name each use case as a kebab-case verb-object goal before inspecting code. If **capability**, list the affected use cases before drafting.
 
 ### 3. Write the spec
 
-When the understanding is closed, invoke [write-feature-spec](../write-feature-spec/SKILL.md).
+When understanding is closed for a **use case** or **capability**, invoke [write-feature-spec](../write-feature-spec/SKILL.md). For **codebase context**, do not create a behavior spec; record the agreed technical scope and continue to planning.
 
 The spec is the source of truth for:
 
@@ -58,9 +58,9 @@ The spec is the source of truth for:
 - acceptance criteria
 - edge cases, dependencies, assumptions, and open questions
 
-Follow `write-feature-spec` exactly. Do not invent a parallel spec structure here.
+Follow `write-feature-spec` exactly when writing behavior or capability rules. Do not invent a parallel spec structure here.
 
-For **capability** scope: write `{docsCapability}/spec.md` (and `scenarios.md` when shared Gherkin helps), then draft or update each `{docsTouchpoint}`.
+For **capability** scope: write `{docsCapability}/rules.md` (and `scenarios.md` when shared Gherkin helps), then link it from every affected use-case spec.
 
 ### 4. Decide task breakdown
 
@@ -71,11 +71,11 @@ Analyze the actual case and recommend one of:
 - **Single task**: one coherent, reviewable change.
 - **Micro-tasks**: small independent steps when risk, uncertainty, or review size is high.
 - **Layer tasks**: separate UI, orchestration, data, routing, tests, or platform work when layers can be owned or reviewed independently.
-- **Epic + slices**: multiple user-visible slices or subsystems that should not be planned as one branch. For capabilities, slices are often **one per touchpoint** (each surface updated independently).
+- **Epic + slices**: multiple user-visible use cases or subsystems that should not be planned as one branch. For capabilities, slices are often one per affected use case.
 
 Explain the trade-off, recommend a breakdown, then ask the user to confirm or adjust it. Do not leave this step until the tasks are agreed.
 
-Write `{docsCapability}/04-tasks.md` when the breakdown is cross-cutting and needs a durable artifact. For vertical features, use `{docsFeature}/04-tasks.md`. Skip `04-tasks.md` for a single task or when moving straight to `write-plan`.
+Write `{docsCapability}/tasks.md` when the breakdown is cross-cutting and needs a durable artifact. For a use case, use `{docsUseCase}/tasks.md`. For codebase context, use `{docs.root}/codebase/<initiative>/tasks.md`. Skip `tasks.md` for a single task or when moving straight to `write-plan`.
 
 ### 5. Transition to plan
 

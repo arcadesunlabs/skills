@@ -78,7 +78,7 @@ Before drafting, check the new skill does not overlap an existing one.
 workflow-config (load skills.config.json)
 write-plan (path B, direct task)
 mode-brainstorm → write-feature-spec → write-plan (path A, single task)
-mode-brainstorm → write-feature-spec → 04-tasks.md (optional — epic or when tracking needed) → STOP or write-plan
+mode-brainstorm → write-feature-spec → tasks.md (optional — epic or when tracking needed) → STOP or write-plan
   → user picks slice → confirm branch → write-plan (slice only; final docs step closes the work)
 write-plan final follow-up → write-skill (if a recurring gap justifies a new skill)
 ```

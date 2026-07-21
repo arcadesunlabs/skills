@@ -51,9 +51,9 @@ Read or create `skills.config.json` at the project root. If it does not exist, a
 - project conventions file, such as `CLAUDE.md`, `AGENTS.md`, or equivalent;
 - documentation root, such as `.docs`, `.specs`, or `docs`;
 - documentation index file;
-- code path that documentation domains should mirror;
-- capabilities folder and touchpoints folder (relative to docs root; defaults: `capabilities`, `features`);
-- main app or package root.
+- capabilities folder (relative to docs root; default: `capabilities`);
+- main app or package root;
+- code search roots used to build technical context.
 
 Then help me document the project's real workflow. Ask focused questions about:
 - architecture, layers, naming conventions, and forbidden patterns;
@@ -101,19 +101,36 @@ Main fields: `project`, `docs`, `code`, and optional `workflow`. Reference: [ski
 
 Recommended: create `{docs.root}/architecture/architecture.md` with an overview of the stack, layers, and architectural decisions. The `mode-brainstorm` and `write-plan` skills read that file when it exists.
 
-#### Cross-cutting capabilities
+#### Behavior-first documentation
 
-Some domain rules span multiple surfaces (API, web app, mobile app, CLI, etc.). The workflow supports a **capability + touchpoints** layout alongside vertical feature folders:
+Documentation is organized by user intent, not code structure. Choose a product/business domain, then name each use case as a kebab-case verb-object goal. The use-case spec describes behavior; its context maps that behavior to current code.
+
+**What is a domain?** A domain is a stable product or business area that groups related user goals. It describes what the product is about, not where code lives. Examples:
+
+| Product     | Domain           | Use cases                          |
+| ----------- | ---------------- | ---------------------------------- |
+| CRM         | `customers`      | `create-customer`, `edit-customer` |
+| Store       | `orders`         | `place-order`, `cancel-order`      |
+| Finance app | `payments`       | `send-payment`, `refund-payment`   |
+| Any app     | `authentication` | `sign-in`, `reset-password`        |
+
+Use language users and product teams recognize. Do not choose component, route, package, layer, or folder names such as `forms`, `screens`, `controllers`, or `src/features`.
 
 ```text
 {docs.root}/
-├── capabilities/<capability>/spec.md    # canonical shared rules
-├── capabilities/<capability>/scenarios.md   # optional shared Gherkin
-├── features/<surface>/spec.md           # how one surface consumes the capability
-└── <domain>/<feature>/01-spec.md        # full vertical feature spec (unchanged)
+├── architecture/architecture.md
+├── customers/create-customer/
+│   ├── spec.md                          # user behavior and acceptance criteria
+│   └── context.md                       # routes, components, APIs, data, and tests
+├── customers/edit-customer/
+│   ├── spec.md
+│   └── context.md
+└── capabilities/<capability>/
+    ├── rules.md                         # canonical rules shared by multiple use cases
+    └── scenarios.md                     # optional shared Gherkin
 ```
 
-Configure folder names via `docs.capabilitiesRoot` and `docs.touchpointsRoot` in `skills.config.json` (defaults: `capabilities`, `features`). See [workflow-config](./skills/workflow-config/SKILL.md) for the decision tree.
+Distinct user goals get separate specs even when they share one component. Put genuinely shared rules in `capabilities/` and link affected specs to them. `code.appRoot` and `code.searchRoots` guide technical discovery without determining documentation paths. See [workflow-config](./skills/workflow-config/SKILL.md) for the decision tree.
 
 ### 3. Use Day To Day
 
@@ -135,10 +152,10 @@ The `workflow-config` skill is the entry point: the agent should load `skills.co
 | Skill                | Purpose                                                    |
 | -------------------- | ---------------------------------------------------------- |
 | `workflow-config`    | Loads or creates `skills.config.json`                      |
-| `mode-brainstorm`    | Brainstorm, spec, and task breakdown (`04-tasks` optional) |
+| `mode-brainstorm`    | Brainstorm, spec, and task breakdown (`tasks.md` optional) |
 | `mode-grill`         | Critical review mode                                       |
-| `write-feature-spec` | Product, capability, or touchpoint specs                   |
-| `write-plan`         | Technical plan and implementation (`03-plan`)              |
+| `write-feature-spec` | Use-case specs and shared capability rules                 |
+| `write-plan`         | Technical plan and implementation (`plan.md`)              |
 | `write-handoff`      | Session handoff                                            |
 | `write-skill`        | Create or improve skills                                   |
 

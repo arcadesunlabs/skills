@@ -15,6 +15,10 @@ const root = projectArg ? path.resolve(projectArg) : process.cwd();
 const configPath = path.join(root, "skills.config.json");
 const examplePath = path.join(root, "skills.config.example.json");
 const schemaPath = path.join(root, "skills.config.schema.json");
+const defaultDocsFinalization =
+  "Use cases: update spec.md and context.md. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
+const legacyDocsFinalization =
+  "Vertical features: update 01-spec.md and 02-context.md. Capabilities: update spec.md and scenarios.md (optional). Touchpoints: update features/<feature>/spec.md. Remove transient plan/task/handoff files after merge.";
 
 const rl = readline.createInterface({ input, output });
 
@@ -41,8 +45,25 @@ try {
     }
   }
 
+  config.code ??= {};
+  if (
+    (!Array.isArray(config.code.searchRoots) ||
+      config.code.searchRoots.length === 0) &&
+    config.docs?.domainMirror
+  ) {
+    config.code.searchRoots = [config.docs.domainMirror];
+  }
+  delete config.docs.domainMirror;
+  delete config.docs.touchpointsRoot;
+  if (config.workflow?.docsFinalization === legacyDocsFinalization) {
+    config.workflow.docsFinalization = defaultDocsFinalization;
+  }
+
   console.log(
     "\nWorkflow skills setup — answer prompts or press Enter to keep defaults.\n",
+  );
+  console.log(
+    "Docs are organized as <domain>/<use-case>. A domain is a stable product or business area, such as customers, orders, payments, or authentication — never a code folder or layer.\n",
   );
 
   config.project.name = await ask("Project name", config.project.name);
@@ -53,24 +74,31 @@ try {
 
   config.docs.root = await ask("Docs root folder", config.docs.root);
   config.docs.indexFile = await ask("Docs index file", config.docs.indexFile);
-  config.docs.domainMirror = await ask(
-    "Code path that docs domains mirror",
-    config.docs.domainMirror,
-  );
   config.docs.capabilitiesRoot = await ask(
     "Capabilities folder (relative to docs root)",
     config.docs.capabilitiesRoot || "capabilities",
   );
-  config.docs.touchpointsRoot = await ask(
-    "Feature touchpoints folder (relative to docs root)",
-    config.docs.touchpointsRoot || "features",
-  );
 
-  config.code ??= {};
-  config.code.appRoot = await ask(
+  const appRoot = await ask(
     "App root path (optional)",
     config.code.appRoot || "",
   );
+  if (appRoot) {
+    config.code.appRoot = appRoot;
+  } else {
+    delete config.code.appRoot;
+  }
+  const searchRoots = parseList(
+    await ask(
+      "Code search roots (comma-separated, optional)",
+      (config.code.searchRoots || []).join(", "),
+    ),
+  );
+  if (searchRoots.length > 0) {
+    config.code.searchRoots = searchRoots;
+  } else {
+    delete config.code.searchRoots;
+  }
 
   config.workflow ??= {};
   const shouldAddWorkflow = await ask(
@@ -94,8 +122,7 @@ try {
     );
     config.workflow.docsFinalization = await ask(
       "Docs finalization rule",
-      config.workflow.docsFinalization ||
-        "Vertical features: update 01-spec.md and 02-context.md. Capabilities: update spec.md and scenarios.md (optional). Touchpoints: update features/<feature>/spec.md. Remove transient plan/task/handoff files after merge.",
+      config.workflow.docsFinalization || defaultDocsFinalization,
     );
   }
 
@@ -104,7 +131,7 @@ try {
   const architecturePath = path.join(
     root,
     config.docs.root,
-    "codebase",
+    "architecture",
     "architecture.md",
   );
   console.log(
@@ -115,6 +142,9 @@ try {
   );
   console.log(
     "Recommended: refine workflow.implementationFlow with your real project phases, dependencies, and skills.",
+  );
+  console.log(
+    "Docs convention: choose a business domain, then a verb-object user goal (for example, customers/create-customer).",
   );
   if (root !== process.cwd()) {
     console.log(`Project: ${root}`);
@@ -139,18 +169,15 @@ function defaultConfig() {
     docs: {
       root: ".docs",
       indexFile: ".docs/index.md",
-      domainMirror: "lib/features",
       capabilitiesRoot: "capabilities",
-      touchpointsRoot: "features",
     },
-    code: {},
+    code: { searchRoots: ["lib/features"] },
     workflow: {
       implementationFlow: defaultImplementationFlow(),
       validationCommands: [],
       review:
         "Use the project's normal review path; use a review agent for broad or cross-layer changes.",
-      docsFinalization:
-        "Vertical features: update 01-spec.md and 02-context.md. Capabilities: update spec.md and scenarios.md (optional). Touchpoints: update features/<feature>/spec.md. Remove transient plan/task/handoff files after merge.",
+      docsFinalization: defaultDocsFinalization,
     },
   };
 }
@@ -210,7 +237,10 @@ async function ensureProjectTemplates() {
     await copyFile(repoExample, examplePath);
     console.log(`Copied template to ${examplePath}`);
   }
-  if (!existsSync(schemaPath) && existsSync(repoSchema)) {
+  if (
+    existsSync(repoSchema) &&
+    path.resolve(schemaPath) !== path.resolve(repoSchema)
+  ) {
     await copyFile(repoSchema, schemaPath);
   }
 }

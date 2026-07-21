@@ -27,16 +27,14 @@ A good feature specification should answer:
 Load [workflow-config](../workflow-config/SKILL.md) first. This skill is the **single source of truth** for spec structure. Settings below use config placeholders.
 
 - **Location:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md) decision tree):
-  - **Vertical feature:** `{docsFeature}/01-spec.md` (`<domain>` and `<feature>` in kebab-case, mirroring `docs.domainMirror` or functional area).
-  - **Capability:** `{docsCapability}/spec.md` (`<capability>` in kebab-case — name the domain concept, not a ticket or fix).
-  - **Touchpoint:** `{docsTouchpoint}` — delta for how one surface consumes a capability.
+  - **Use case:** `{specPath}` (`<domain>/<use-case>/spec.md`; name `<use-case>` as a kebab-case verb-object user goal).
+  - **Capability:** `{docsCapability}/rules.md` (`<capability>` in kebab-case; name the shared domain concept, not a ticket or fix).
 - **No YAML frontmatter** in `docs/` feature files — start each file with a single `# Title`.
 - **Spec flavors:**
-  - **Product spec (vertical)** — a new feature / user-facing behavior being designed. Use the structure in _Draft the specification_ below. Pair with `{docsFeature}/02-context.md` for brownfield context.
-  - **Flow/architecture spec (vertical)** — documenting how an existing vertical feature already works. Replace the design-oriented sections with: `## Overview`, `## Flow` (mermaid), `## Special cases / Important rules`, `## Key components` (table), `## Key files` (table).
-  - **Capability spec** — cross-cutting domain rules consumed by multiple surfaces. Use the [capability template](#capability-spec-template) below. Optional `{docsCapability}/scenarios.md` for shared Gherkin scenarios.
-  - **Touchpoint spec** — how one surface implements a capability. Use the [touchpoint template](#touchpoint-spec-template) below. Must link to `{docsCapability}/spec.md`. Full vertical product spec (if any) stays at `{docsFeature}/01-spec.md`.
-- **`02-context.md`** (vertical features only, same folder as `01-spec.md`) — brownfield context for devs/agents, kept **diagram-first**: an intuitive mermaid flow diagram plus the list of files in that flow. No code snippets or written walkthroughs — those never go here or in `01-spec.md`. Create or update when implementation is defined (see the [02-context.md template](../write-plan/REFERENCE.md#02-contextmd-sections)). Capabilities use `spec.md` for shared contracts; touchpoints use `{docsTouchpoint}` for surface-specific code paths.
+  - **Use-case spec** — a user-facing behavior being designed or documented. Use the structure in _Draft the specification_ below. Pair with `{contextPath}` for implementation context.
+  - **Capability rules** — cross-cutting domain rules consumed by multiple use cases. Use the [capability template](#capability-rules-template) below. Optional `{docsCapability}/scenarios.md` for shared Gherkin scenarios.
+- **`context.md`** (same folder as `spec.md`) — implementation context for developers and agents. It links to `spec.md` and maps the current flow, routes, components, APIs, schemas, persistence, tests, decisions, dependencies, and code paths. Create or update when implementation is known (see the [context.md template](../write-plan/REFERENCE.md#contextmd-sections)).
+- `spec.md` must remain useful without code paths. Distinct user goals get separate use-case specs even when they share one component.
 
 ## Process
 
@@ -274,56 +272,24 @@ Use this shorter version when the user wants something lightweight:
 ## Assumptions
 ```
 
-## Capability spec template
+## Capability rules template
 
-Use for cross-cutting domain rules (`{docsCapability}/spec.md`):
+Use for cross-cutting domain rules (`{docsCapability}/rules.md`):
 
 ```md
 # [Capability Name] — Canonical rules
 
-## Touchpoints
+## Affected use cases
 
-| Surface | Doc                        | Code path |
-| ------- | -------------------------- | --------- |
-| …       | link to `{docsTouchpoint}` | …         |
+| Use case | Spec                 |
+| -------- | -------------------- |
+| …        | link to `{specPath}` |
 
 Shared scenarios: [scenarios.md](scenarios.md) (create when multiple surfaces share acceptance criteria).
 
 ## Domain rules
 
 Canonical invariants, semantics tables, flags, and kernel contracts. No UI-specific layout.
-
-## Kernel / shared contracts
-
-Helpers, enums, options, or services that enforce the rules (paths allowed here).
-
-## Tests
-
-Regression commands or test files that lock the contract.
-```
-
-## Touchpoint spec template
-
-Use for one surface (`{docsTouchpoint}`):
-
-```md
-# [Feature] — [Capability] touchpoint
-
-Canonical rules: link to `{docsCapability}/spec.md`.
-
-Full vertical spec (if any): link to `{docsFeature}/01-spec.md`.
-
-## How this surface consumes the capability
-
-Surface-specific behavior only — do not duplicate the capability spec table.
-
-## Key files
-
-Paths and components for this touchpoint.
-
-## Tests
-
-Commands or files for this surface.
 ```
 
 ## Example
