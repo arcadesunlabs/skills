@@ -137,17 +137,19 @@ Document reusable actors under `{docs.root}/actors/`. Actor documents explain wh
 │   ├── administrator.md
 │   └── operator.md
 ├── customers/create-customer/
-│   ├── spec.md                          # user behavior and acceptance criteria
-│   └── context.md                       # routes, components, APIs, data, and tests
+│   ├── create-customer.spec.md          # user behavior and acceptance criteria
+│   └── create-customer.context.md       # routes, components, APIs, data, and tests
 ├── customers/edit-customer/
-│   ├── spec.md
-│   └── context.md
+│   ├── edit-customer.spec.md
+│   └── edit-customer.context.md
 └── capabilities/<capability>/
     ├── rules.md                         # canonical rules shared by multiple use cases
     └── scenarios.md                     # optional shared Gherkin
 ```
 
-Distinct user goals get separate specs even when they share one component. Put genuinely shared rules in `capabilities/` and link affected specs to them. `code.appRoot` and `code.searchRoots` guide technical discovery without determining documentation paths. See [workflow-config](./skills/workflow-config/SKILL.md) for the decision tree.
+Distinct user goals get separate specs even when they share one component. Use `<use-case>.spec.md` and `<use-case>.context.md` so filenames remain descriptive in Obsidian Graph View, global search, backlinks, and exports. Put genuinely shared rules in `capabilities/` and link affected specs to them. `code.appRoot` and `code.searchRoots` guide technical discovery without determining documentation paths. See [workflow-config](./skills/workflow-config/SKILL.md) for the decision tree.
+
+When migrating existing docs, rename each use-case `spec.md` and `context.md`, then update Markdown links before creating new files. For example: `customers/create-customer/spec.md` becomes `customers/create-customer/create-customer.spec.md`.
 
 ### 3. Use Day To Day
 

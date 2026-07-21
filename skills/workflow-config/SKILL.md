@@ -41,7 +41,7 @@ Organize documentation by **user intent**, not code structure.
 - Choose `<use-case>` as a kebab-case verb-object goal (`create-customer`, `edit-customer`, `approve-payment`).
 - Choose `<actor>` as a kebab-case product user type with distinct goals, responsibilities, or boundaries (`administrator`, `operator`, `sales-manager`). An actor is not a code role or a research persona.
 - Never derive documentation paths from component, package, module, route, controller, or filesystem names.
-- Use `code.appRoot` and `code.searchRoots` only to discover the implementation recorded in `context.md`.
+- Use `code.appRoot` and `code.searchRoots` only to discover implementation recorded in `<use-case>.context.md` or a codebase initiative's `context.md`.
 - When both code fields are absent, inspect from the workspace root.
 
 ## Derived values
@@ -54,8 +54,8 @@ Compute these from config and the agreed behavior scope:
 | `{docsUseCase}`      | `{docsDomain}/<use-case>/`                                                                     |
 | `{docsActors}`       | `{docs.root}/actors/`                                                                          |
 | `{docsActor}`        | `{docsActors}/<actor>.md`                                                                      |
-| `{specPath}`         | `{docsUseCase}/spec.md`                                                                        |
-| `{contextPath}`      | `{docsUseCase}/context.md`                                                                     |
+| `{specPath}`         | `{docsUseCase}/<use-case>.spec.md`                                                             |
+| `{contextPath}`      | `{docsUseCase}/<use-case>.context.md`                                                          |
 | `{planPath}`         | `{docsUseCase}/plan.md`                                                                        |
 | `{handoffPath}`      | `{docsUseCase}/handoff.md`                                                                     |
 | `{docsCapability}`   | `{docs.root}/{capabilitiesRoot}/<capability>/` (default `{capabilitiesRoot}` = `capabilities`) |
@@ -82,8 +82,8 @@ Suggested layout under `{docs.root}`:
 │   └── scenarios.md                  # shared acceptance scenarios (optional)
 ├── <domain>/                         # product or business domain
 │   └── <use-case>/                   # user goal in verb-object form
-│       ├── spec.md                   # behavior and acceptance criteria
-│       └── context.md                # implementation map
+│       ├── <use-case>.spec.md        # behavior and acceptance criteria
+│       └── <use-case>.context.md     # implementation map
 └── codebase/<initiative>/            # technical work without behavior changes
     └── context.md
 ```
@@ -98,7 +98,9 @@ Suggested layout under `{docs.root}`:
 | Refactor or technical initiative changes no user behavior | **Codebase context** | `{docs.root}/codebase/<initiative>/context.md`          |
 | Architecture affects the whole project                    | **Architecture**     | `{architecturePath}`                                    |
 
-For each use case, identify the user goal, business domain, and affected actors before inspecting code. `spec.md` must remain useful without code paths. `context.md` links back to `spec.md` and maps the current routes, components, APIs, schemas, persistence, tests, data flow, decisions, and dependencies.
+For each use case, identify the user goal, business domain, and affected actors before inspecting code. `<use-case>.spec.md` must remain useful without code paths. `<use-case>.context.md` links back to the spec and maps the current routes, components, APIs, schemas, persistence, tests, data flow, decisions, and dependencies. Repeating the use-case name makes Obsidian Graph View nodes, global search results, and exported files descriptive.
+
+When old use-case `spec.md` or `context.md` files exist, rename them and update Markdown links before writing new artifacts. Never create the new filenames beside stale canonical files.
 
 Create separate use cases for distinct user goals even when they share one implementation component. Put genuinely shared rules in a capability document and link to it instead of duplicating rules.
 

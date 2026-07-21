@@ -16,6 +16,8 @@ const configPath = path.join(root, "skills.config.json");
 const examplePath = path.join(root, "skills.config.example.json");
 const schemaPath = path.join(root, "skills.config.schema.json");
 const defaultDocsFinalization =
+  "Use cases: update <use-case>.spec.md and <use-case>.context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
+const preUniqueNameDocsFinalization =
   "Use cases: update spec.md and context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
 const preActorDocsFinalization =
   "Use cases: update spec.md and context.md. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
@@ -59,7 +61,8 @@ try {
   delete config.docs.touchpointsRoot;
   if (
     config.workflow?.docsFinalization === legacyDocsFinalization ||
-    config.workflow?.docsFinalization === preActorDocsFinalization
+    config.workflow?.docsFinalization === preActorDocsFinalization ||
+    config.workflow?.docsFinalization === preUniqueNameDocsFinalization
   ) {
     config.workflow.docsFinalization = defaultDocsFinalization;
   }
@@ -153,6 +156,12 @@ try {
   );
   console.log(
     "Docs convention: choose a business domain, then a verb-object user goal (for example, customers/create-customer).",
+  );
+  console.log(
+    "Use-case files repeat that goal for descriptive graph labels (for example, create-customer.spec.md and create-customer.context.md).",
+  );
+  console.log(
+    "Migration: rename existing use-case spec.md/context.md files and update their Markdown links before creating new docs.",
   );
   console.log(
     `Actors convention: document distinct product user types under ${path.join(config.docs.root, "actors")} (for example, actors/operator.md).`,

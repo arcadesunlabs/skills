@@ -39,7 +39,7 @@ Do not proceed while any important flow or business rule is unclear.
 
 Before writing specs, decide where documentation lives (see [workflow-config](../workflow-config/SKILL.md) decision tree):
 
-- **Use case** — observable user goal → `{docsUseCase}/spec.md` and `{docsUseCase}/context.md`.
+- **Use case** — observable user goal → `{specPath}` and `{contextPath}`.
 - **Capability** — rule consumed by multiple use cases → `{docsCapability}/rules.md`, linked from affected specs.
 - **Codebase context** — technical change with no behavior change → `{docs.root}/codebase/<initiative>/context.md`.
 

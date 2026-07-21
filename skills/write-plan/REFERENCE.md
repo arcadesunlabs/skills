@@ -1,6 +1,6 @@
 # Write Plan — Reference
 
-Templates and optional workflow examples. Load when drafting `plan.md`, updating `context.md`, or finalizing docs.
+Templates and optional workflow examples. Load when drafting `plan.md`, updating context documents, or finalizing docs.
 
 Load [workflow-config](../workflow-config/SKILL.md) first. Paths use `{docs.root}` from config.
 
@@ -182,14 +182,14 @@ MODIFY ...
 
 ---
 
-## context.md sections
+## Use-case context sections
 
-Keep `{contextPath}` focused on how the current system realizes the behavior in `spec.md`. Link to the spec, show the flow, and map every participating technical responsibility to current code. For codebase context without user-visible behavior, omit the spec link and describe the technical scope in the opening sentence. Revise it as implementation changes:
+Keep `{contextPath}` focused on how the current system realizes the behavior in `{specPath}`. Link to the spec, show the flow, and map every participating technical responsibility to current code. For codebase context without user-visible behavior, use `context.md`, omit the spec link, and describe the technical scope in the opening sentence. Revise it as implementation changes:
 
 ```markdown
 # {Use Case or Technical Initiative} Context
 
-{For use cases only: Behavior: [spec.md](spec.md)}
+{For use cases only: Behavior: [<use-case>.spec.md](<use-case>.spec.md)}
 
 {For codebase context only: one sentence defining the technical scope.}
 
@@ -211,7 +211,7 @@ Use `flowchart` or `sequenceDiagram`. Label each node by its responsibility, not
 {Only durable current decisions and dependencies needed to understand the implementation. No task status, temporary notes, or proposed changes.}
 ```
 
-**No code snippets** — represent behavior in `spec.md`, flow in Mermaid, and code locations in `## Implementation map`.
+**No code snippets** — represent behavior in `{specPath}`, flow in Mermaid, and code locations in `## Implementation map`.
 
 ---
 
@@ -272,18 +272,18 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 
 ### Use-case folder (`{docsUseCase}/`)
 
-- Update `spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
+- Update `{specPath}` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
 - Link every meaningful canonical actor and keep actor-specific behavior explicit. Generic inline users do not require actor documents.
-- Update `context.md`: link to `spec.md`, refine the flow, and merge the final implementation map and durable decisions from `plan.md`.
+- Update `{contextPath}`: link to `{specPath}`, refine the flow, and merge the final implementation map and durable decisions from `plan.md`.
 - Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the folder.
-- Folder must end with `spec.md` and `context.md`.
+- Folder must end with `<use-case>.spec.md` and `<use-case>.context.md`.
 
 ### Capability folder (`{docsCapability}/`)
 
 - Update `rules.md` with shipped canonical rules and shared contracts.
 - Update `scenarios.md` when shared acceptance scenarios exist.
 - Link affected use-case specs to the capability rules instead of duplicating them.
-- Update each affected use-case `context.md` with its implementation map.
+- Resolve `{contextPath}` separately for each affected use case and update every implementation map.
 - Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the capability folder.
 - Folder must end with only `rules.md` and optional `scenarios.md`.
 
@@ -300,7 +300,7 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 - Delete `plan.md`, `tasks.md`, `handoff.md`, and other transient files.
 - Do not create a behavior spec when user-visible behavior did not change.
 
-**`spec.md` checklist (use cases only):**
+**`<use-case>.spec.md` checklist (use cases only):**
 
 - [ ] Context describes current product state, not pre-implementation pain only
 - [ ] Scope = what shipped; out of scope = what was explicitly not built
@@ -309,7 +309,7 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 
 **Merge map from transient files:**
 
-| `plan.md` section   | Destination in `context.md`               |
+| `plan.md` section   | Destination in `{contextPath}`            |
 | ------------------- | ----------------------------------------- |
 | Files CREATE/MODIFY | `## Implementation map`                   |
 | Flow / steps        | Fold into the `## Flow` diagram(s)        |

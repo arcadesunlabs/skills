@@ -27,7 +27,7 @@ A good feature specification should answer:
 Load [workflow-config](../workflow-config/SKILL.md) first. This skill is the **single source of truth** for spec structure. Settings below use config placeholders.
 
 - **Location:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md) decision tree):
-  - **Use case:** `{specPath}` (`<domain>/<use-case>/spec.md`; name `<use-case>` as a kebab-case verb-object user goal).
+  - **Use case:** `{specPath}` (`<domain>/<use-case>/<use-case>.spec.md`; name `<use-case>` as a kebab-case verb-object user goal).
   - **Actor:** `{docsActor}` (`actors/<actor>.md`; name `<actor>` from product language, not a code role identifier).
   - **Capability:** `{docsCapability}/rules.md` (`<capability>` in kebab-case; name the shared domain concept, not a ticket or fix).
 - **No YAML frontmatter** in `docs/` feature files — start each file with a single `# Title`.
@@ -35,8 +35,8 @@ Load [workflow-config](../workflow-config/SKILL.md) first. This skill is the **s
   - **Use-case spec** — a user-facing behavior being designed or documented. Use the structure in _Draft the specification_ below. Pair with `{contextPath}` for implementation context.
   - **Actor definition** — a reusable product user type. Use the [actor document template](#actor-document-template), update `{docsActors}/index.md`, and stop unless a use-case or capability document was also requested.
   - **Capability rules** — cross-cutting domain rules consumed by multiple use cases. Use the [capability template](#capability-rules-template) below. Optional `{docsCapability}/scenarios.md` for shared Gherkin scenarios.
-- **`context.md`** (same folder as `spec.md`) — implementation context for developers and agents. It links to `spec.md` and maps the current flow, routes, components, APIs, schemas, persistence, tests, decisions, dependencies, and code paths. Create or update when implementation is known (see the [context.md template](../write-plan/REFERENCE.md#contextmd-sections)).
-- `spec.md` must remain useful without code paths. Distinct user goals get separate use-case specs even when they share one component.
+- **`<use-case>.context.md`** (same folder as `<use-case>.spec.md`) — implementation context for developers and agents. It links to the spec and maps the current flow, routes, components, APIs, schemas, persistence, tests, decisions, dependencies, and code paths. Create or update when implementation is known (see the [context template](../write-plan/REFERENCE.md#use-case-context-sections)).
+- `<use-case>.spec.md` must remain useful without code paths. Distinct user goals get separate use-case specs even when they share one component.
 
 ## Process
 

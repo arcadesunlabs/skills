@@ -33,7 +33,7 @@ Two modes:
 
 | Scope            | Plan location                                              | Permanent docs updated during delivery                                    |
 | ---------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Use case         | `{docsUseCase}/plan.md` + `context.md`                     | `spec.md`, `context.md`                                                   |
+| Use case         | `{docsUseCase}/plan.md` + `{contextPath}`                  | `{specPath}`, `{contextPath}`                                             |
 | Capability       | `{docsCapability}/plan.md` + `rules.md`                    | `rules.md`, optional `scenarios.md`, affected use-case specs and contexts |
 | Codebase context | `{docs.root}/codebase/<initiative>/plan.md` + `context.md` | `context.md`                                                              |
 
@@ -45,16 +45,16 @@ See `project.conventionsFile` in config for project-specific rules.
 
 ## Entry paths
 
-| Path   | When                                                                       | Input                                                   |
-| ------ | -------------------------------------------------------------------------- | ------------------------------------------------------- |
-| **A**  | After `mode-brainstorm` → `write-feature-spec` (use case)                  | `spec.md`                                               |
-| **A′** | Epic child slice — after user picks a slice from `tasks.md` (when present) | `spec.md` + slice scope from `tasks.md` or conversation |
-| **B**  | No spec — direct implementation task                                       | Conversation                                            |
-| **C**  | Cross-cutting capability spanning multiple use cases                       | `{docsCapability}/rules.md` or conversation             |
+| Path   | When                                                                       | Input                                                      |
+| ------ | -------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| **A**  | After `mode-brainstorm` → `write-feature-spec` (use case)                  | `{specPath}`                                               |
+| **A′** | Epic child slice — after user picks a slice from `tasks.md` (when present) | `{specPath}` + slice scope from `tasks.md` or conversation |
+| **B**  | No spec — direct implementation task                                       | Conversation                                               |
+| **C**  | Cross-cutting capability spanning multiple use cases                       | `{docsCapability}/rules.md` or conversation                |
 
 **Epic scoping (path A′):** Plan and implement **only** the selected slice — from `tasks.md` when it exists, otherwise from the agreed brainstorm breakdown. Reference the epic spec for shared context; do not plan phases for other slices.
 
-**Capability scoping (path C):** Plan lives in `{docsCapability}/plan.md`. Update `{docsCapability}/rules.md` for shared rules and link it from affected use-case specs. Update each affected `{contextPath}` with its implementation map; do not duplicate canonical rules there.
+**Capability scoping (path C):** Plan lives in `{docsCapability}/plan.md`. Update `{docsCapability}/rules.md` for shared rules and link it from affected use-case specs. Resolve `{contextPath}` separately for each affected use case and update every implementation map; do not duplicate canonical rules there.
 
 Skip this skill for trivial tasks (typo, single-line fix) — implement per `project.conventionsFile` in config.
 
@@ -109,7 +109,7 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 
 ### Step 5 — Confirm
 
-1. Save `plan.md` to the folder matching documentation scope and update the relevant permanent docs (`context.md` for use cases and codebase work, `rules.md` for capabilities) using [templates](REFERENCE.md#planmd-template).
+1. Save `plan.md` to the folder matching documentation scope and update the relevant permanent docs (`{contextPath}` for use cases, `context.md` for codebase work, `rules.md` for capabilities) using [templates](REFERENCE.md#planmd-template).
 2. Present [confirmation summary](REFERENCE.md#confirmation-summary-template).
 
 **Do not write implementation code before user confirms.** Revise and re-confirm if requested.
@@ -165,7 +165,7 @@ For each workflow step: update `plan.md` checkboxes, invoke listed project skill
 2. **Mandatory:** Finalize docs per scope. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
 3. Tell the user (adjust path to scope):
 
-> Implementation complete. Docs finalized — use case: `{docsUseCase}/` (`spec.md` + `context.md`); capability: `{docsCapability}/` (`rules.md` + optional `scenarios.md`); or codebase context updated.
+> Implementation complete. Docs finalized — use case: `{docsUseCase}/` (`{specPath}` + `{contextPath}`); capability: `{docsCapability}/` (`rules.md` + optional `scenarios.md`); or codebase context updated.
 
 ---
 

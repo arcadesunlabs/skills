@@ -35,7 +35,7 @@ Choose use-case folders from user intent, never code structure: `<domain>/<verb-
 - What is in progress or blocked
 - Explicit next steps for the receiving agent
 - **Suggested skills** — which skills the next agent should invoke and why
-- Links to existing artifacts (`spec.md`, `context.md`, `rules.md`, `scenarios.md`, `plan.md`, PRs, branches) — do not duplicate their content
+- Links to existing artifacts (`<use-case>.spec.md`, `<use-case>.context.md`, `rules.md`, `scenarios.md`, `plan.md`, PRs, branches) — do not duplicate their content
 
 ## Rules
 
