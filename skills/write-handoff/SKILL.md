@@ -25,7 +25,7 @@ Invoke [workflow-config](../workflow-config/SKILL.md), read `skills.config.json`
 
 **Naming:** use `handoff.md`. Remove or replace an existing `handoff.md` in the same folder when writing a new handoff for the same slice of work.
 
-Choose use-case folders from user intent, never code structure: `<domain>/<verb-object>/` in kebab-case (for example, `customers/create-customer/`). Follow project-specific conventions from `docs.indexFile`.
+For user-facing behavior handoffs, choose use-case folders from user intent, never code structure: `<domain>/<verb-object>/` in kebab-case (for example, `customers/create-customer/`). Follow project-specific conventions from `docs.indexFile`. Use the scope-specific paths in the table above for non-behavioral handoffs.
 
 ## What to include
 
