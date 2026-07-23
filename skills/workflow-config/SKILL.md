@@ -69,7 +69,8 @@ Add links to architecture, actors, and other existing documentation entry points
 ## Documentation Map
 
 - `{docs.root}/actors/` — product user types and boundaries
-- `{docs.root}/{docs.capabilitiesRoot}/` — rules shared by multiple use cases
+- `{docs.root}/<domain>/<domain>.rules.md` — rules shared by the use cases of that one domain (feature hub)
+- `{docs.root}/{docs.capabilitiesRoot}/` — rules shared by use cases across more than one domain (cross-cutting)
 - `{docs.root}/<domain>/<verb-object>/` — behavior specs and implementation context
 - `{docs.root}/codebase/<initiative>/` — technical work without behavior changes
 
@@ -95,6 +96,7 @@ Compute these from config and the agreed behavior scope:
 | `{contextPath}`      | `{docsUseCase}/<use-case>.context.md`                                                          |
 | `{planPath}`         | `{docsUseCase}/plan.md`                                                                        |
 | `{handoffPath}`      | `{docsUseCase}/handoff.md`                                                                     |
+| `{docsDomainRules}`  | `{docsDomain}/<domain>.rules.md`                                                               |
 | `{docsCapability}`   | `{docs.root}/{capabilitiesRoot}/<capability>/` (default `{capabilitiesRoot}` = `capabilities`) |
 | `{architecturePath}` | `{docs.root}/architecture/architecture.md`                                                     |
 
@@ -114,10 +116,11 @@ Suggested layout under `{docs.root}`:
 ├── actors/
 │   ├── actors.index.md                # actor catalog
 │   └── <actor>.md                     # goals, responsibilities, and boundaries
-├── capabilities/<capability>/        # cross-cutting domain rules
+├── capabilities/<capability>/        # rules shared across more than one domain
 │   ├── <capability>.rules.md         # canonical rules (permanent)
 │   └── <capability>.scenarios.md     # shared acceptance scenarios (optional)
 ├── <domain>/                         # product or business domain
+│   ├── <domain>.rules.md             # rules shared across this domain's use cases — feature hub (optional)
 │   └── <use-case>/                   # user goal in verb-object form
 │       ├── <use-case>.spec.md        # behavior and acceptance criteria
 │       └── <use-case>.context.md     # implementation map
@@ -127,19 +130,20 @@ Suggested layout under `{docs.root}`:
 
 ### Documentation scope decision tree
 
-| Situation                                                 | Doc type             | Where to write                                                                    |
-| --------------------------------------------------------- | -------------------- | --------------------------------------------------------------------------------- |
-| User seeks an observable outcome                          | **Use case**         | `{specPath}` + `{contextPath}`                                                    |
-| User type has distinct goals, responsibilities, or limits | **Actor**            | `{docsActor}`                                                                     |
-| Rule or invariant is shared by multiple use cases         | **Capability**       | `{docsCapability}/<capability>.rules.md` (+ optional `<capability>.scenarios.md`) |
-| Refactor or technical initiative changes no user behavior | **Codebase context** | `{docs.root}/codebase/<initiative>/context.md`                                    |
-| Architecture affects the whole project                    | **Architecture**     | `{architecturePath}`                                                              |
+| Situation                                                   | Doc type               | Where to write                                                                    |
+| ----------------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------------- |
+| User seeks an observable outcome                            | **Use case**           | `{specPath}` + `{contextPath}`                                                    |
+| User type has distinct goals, responsibilities, or limits   | **Actor**              | `{docsActor}`                                                                     |
+| Rule or invariant is shared by use cases of **one** domain  | **Domain rules (hub)** | `{docsDomainRules}` (`<domain>/<domain>.rules.md`)                                |
+| Rule or invariant is shared by use cases **across domains** | **Capability**         | `{docsCapability}/<capability>.rules.md` (+ optional `<capability>.scenarios.md`) |
+| Refactor or technical initiative changes no user behavior   | **Codebase context**   | `{docs.root}/codebase/<initiative>/context.md`                                    |
+| Architecture affects the whole project                      | **Architecture**       | `{architecturePath}`                                                              |
 
 For each use case, identify the user goal, business domain, and affected actors before inspecting code. `<use-case>.spec.md` must remain useful without code paths. `<use-case>.context.md` links back to the spec and maps the current routes, components, APIs, schemas, persistence, tests, data flow, decisions, and dependencies. Repeating the use-case name makes Obsidian Graph View nodes, global search results, and exported files descriptive.
 
 When old use-case `spec.md` or `context.md` files exist, rename them and update Markdown links before writing new artifacts. Never create the new filenames beside stale canonical files.
 
-Create separate use cases for distinct user goals even when they share one implementation component. Put genuinely shared rules in a capability document and link to it instead of duplicating rules.
+Create separate use cases for distinct user goals even when they share one implementation component. When several use cases of one domain share rules, put them in that domain's rules hub (`<domain>/<domain>.rules.md`); promote them to a capability **only** when use cases from more than one domain share them. Link to the rules doc instead of duplicating.
 
 Create an actor document when a user type appears in multiple use cases or has materially different goals, responsibilities, or boundaries. Actor docs describe product meaning; authorization rules belong in a capability such as `access-control/access-control.rules.md`, and technical role identifiers may be linked from the actor doc.
 

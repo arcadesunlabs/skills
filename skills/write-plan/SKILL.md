@@ -31,11 +31,12 @@ Two modes:
 
 **Artifacts:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md)):
 
-| Scope            | Plan location                                              | Permanent docs updated during delivery                                    |
-| ---------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Use case         | `{docsUseCase}/plan.md` + `{contextPath}`                  | `{specPath}`, `{contextPath}`                                             |
-| Capability       | `{docsCapability}/plan.md` + `<capability>.rules.md`                    | `<capability>.rules.md`, optional `<capability>.scenarios.md`, affected use-case specs and contexts |
-| Codebase context | `{docs.root}/codebase/<initiative>/plan.md` + `context.md` | `context.md`                                                              |
+| Scope              | Plan location                                              | Permanent docs updated during delivery                                                              |
+| ------------------ | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Use case           | `{docsUseCase}/plan.md` + `{contextPath}`                  | `{specPath}`, `{contextPath}`                                                                       |
+| Domain rules (hub) | `{docsDomain}/plan.md` + `{docsDomainRules}`               | `{docsDomainRules}`, affected use-case specs and contexts                                           |
+| Capability         | `{docsCapability}/plan.md` + `<capability>.rules.md`       | `<capability>.rules.md`, optional `<capability>.scenarios.md`, affected use-case specs and contexts |
+| Codebase context   | `{docs.root}/codebase/<initiative>/plan.md` + `context.md` | `context.md`                                                                                        |
 
 See `project.conventionsFile` in config for project-specific rules.
 
@@ -45,12 +46,12 @@ See `project.conventionsFile` in config for project-specific rules.
 
 ## Entry paths
 
-| Path   | When                                                                       | Input                                                      |
-| ------ | -------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| **A**  | After `mode-brainstorm` → `write-feature-spec` (use case)                  | `{specPath}`                                               |
-| **A′** | Epic child slice — after user picks a slice from `tasks.md` (when present) | `{specPath}` + slice scope from `tasks.md` or conversation |
-| **B**  | No spec — direct implementation task                                       | Conversation                                               |
-| **C**  | Cross-cutting capability spanning multiple use cases                       | `{docsCapability}/<capability>.rules.md` or conversation                |
+| Path   | When                                                                                    | Input                                                                          |
+| ------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| **A**  | After `mode-brainstorm` → `write-feature-spec` (use case)                               | `{specPath}`                                                                   |
+| **A′** | Epic child slice — after user picks a slice from `tasks.md` (when present)              | `{specPath}` + slice scope from `tasks.md` or conversation                     |
+| **B**  | No spec — direct implementation task                                                    | Conversation                                                                   |
+| **C**  | Shared rules — a domain hub (`<domain>/<domain>.rules.md`) or a cross-domain capability | `{docsDomainRules}` / `{docsCapability}/<capability>.rules.md` or conversation |
 
 **Epic scoping (path A′):** Plan and implement **only** the selected slice — from `tasks.md` when it exists, otherwise from the agreed brainstorm breakdown. Reference the epic spec for shared context; do not plan phases for other slices.
 

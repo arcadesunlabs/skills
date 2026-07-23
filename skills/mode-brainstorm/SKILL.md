@@ -40,10 +40,11 @@ Do not proceed while any important flow or business rule is unclear.
 Before writing specs, decide where documentation lives (see [workflow-config](../workflow-config/SKILL.md) decision tree):
 
 - **Use case** — observable user goal → `{specPath}` and `{contextPath}`.
-- **Capability** — rule consumed by multiple use cases → `{docsCapability}/<capability>.rules.md`, linked from affected specs.
+- **Domain rules (hub)** — rule shared by use cases of **one** domain → `<domain>/<domain>.rules.md`, linked from affected specs.
+- **Capability** — rule shared by use cases **across more than one** domain → `{docsCapability}/<capability>.rules.md`, linked from affected specs.
 - **Codebase context** — technical change with no behavior change → `{docs.root}/codebase/<initiative>/context.md`.
 
-Identify the product/business domain and name each use case as a kebab-case verb-object goal before inspecting code. If **capability**, list the affected use cases and actors before drafting.
+Identify the product/business domain and name each use case as a kebab-case verb-object goal before inspecting code. Shared rules default to the domain hub; reach for a **capability** only when the consuming use cases span more than one domain. If **domain rules** or **capability**, list the affected use cases and actors before drafting.
 
 ### 3. Identify actors
 

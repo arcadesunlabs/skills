@@ -29,12 +29,14 @@ Load [workflow-config](../workflow-config/SKILL.md) first, then read `docs.index
 - **Location:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md) decision tree):
   - **Use case:** `{specPath}` (`<domain>/<use-case>/<use-case>.spec.md`; name `<use-case>` as a kebab-case verb-object user goal).
   - **Actor:** `{docsActor}` (`actors/<actor>.md`; name `<actor>` from product language, not a code role identifier).
-  - **Capability:** `{docsCapability}/<capability>.rules.md` (`<capability>` in kebab-case; name the shared domain concept, not a ticket or fix).
+  - **Domain rules (hub):** `{docsDomainRules}` (`<domain>/<domain>.rules.md`) — canonical rules shared by the use cases of one domain, and the entry point that links to them.
+  - **Capability:** `{docsCapability}/<capability>.rules.md` (`<capability>` in kebab-case; **only** for rules shared by use cases across more than one domain — name the shared concept, not a ticket or fix).
 - **No YAML frontmatter** in `docs/` feature files — start each file with a single `# Title`.
 - **Spec flavors:**
   - **Use-case spec** — a user-facing behavior being designed or documented. Use the structure in _Draft the specification_ below. Pair with `{contextPath}` for implementation context.
   - **Actor definition** — a reusable product user type. Use the [actor document template](#actor-document-template), update `{docsActors}/actors.index.md`, and stop unless a use-case or capability document was also requested.
-  - **Capability rules** — cross-cutting domain rules consumed by multiple use cases. Use the [capability template](#capability-rules-template) below. Optional `{docsCapability}/<capability>.scenarios.md` for shared Gherkin scenarios.
+  - **Domain rules (hub)** — canonical rules shared by the use cases of a **single** domain, and the entry point that links to them. Use the [domain rules template](#domain-rules-template). Lives at `<domain>/<domain>.rules.md`. This is the right home for rules several use cases of one feature share — do **not** reach for a capability just because more than one use case is involved.
+  - **Capability rules** — rules shared by use cases across **more than one** domain (genuinely cross-cutting). Use the [capability template](#capability-rules-template) below. Optional `{docsCapability}/<capability>.scenarios.md` for shared Gherkin scenarios.
 - **`<use-case>.context.md`** (same folder as `<use-case>.spec.md`) — implementation context for developers and agents. It links to the spec and maps the current flow, routes, components, APIs, schemas, persistence, tests, decisions, dependencies, and code paths. Create or update when implementation is known (see the [context template](../write-plan/REFERENCE.md#use-case-context-sections)).
 - `<use-case>.spec.md` must remain useful without code paths. Distinct user goals get separate use-case specs even when they share one component.
 
@@ -336,9 +338,33 @@ Maintain `{docsActors}/actors.index.md` as a short catalog linking every canonic
 | [Operator](operator.md) | Handles daily operational work | `operator`      |
 ```
 
+## Domain rules template
+
+Use for rules shared by the use cases of **one** domain — the feature hub (`<domain>/<domain>.rules.md`):
+
+```md
+# [Domain Name] — Canonical rules
+
+Central page for this feature: links to each use case and holds the rules shared between them. UI and layout stay in each use-case spec; only invariants, semantics, actors, and kernel contracts live here.
+
+## Affected use cases
+
+| Use case | Spec                                    |
+| -------- | --------------------------------------- |
+| …        | link to `<use-case>/<use-case>.spec.md` |
+
+## Affected actors
+
+Link canonical `{docsActor}` files only when a rule is exclusive to a persona. Otherwise state the scope once (e.g. "all actors defined here", "same for every persona").
+
+## Rules
+
+Canonical invariants, semantics tables, flags, and kernel contracts. No UI-specific layout.
+```
+
 ## Capability rules template
 
-Use for cross-cutting domain rules (`{docsCapability}/<capability>.rules.md`):
+Use **only** for rules shared by use cases across more than one domain — genuinely cross-cutting (`{docsCapability}/<capability>.rules.md`). If every consuming use case belongs to the same domain, use the domain rules template above instead.
 
 ```md
 # [Capability Name] — Canonical rules
