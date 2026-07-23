@@ -101,6 +101,8 @@ Describe the solution at a high level.
 
 Describe the main user journey step by step.
 
+{Optional: add `## Visual flow` when a page connection, journey, or state transition is materially easier to understand visually. Invoke [document-with-mermaid](../document-with-mermaid/SKILL.md) to select the smallest useful diagram. Keep this view product-facing; technical implementation belongs in `{contextPath}`.}
+
 ## 8. Use cases
 
 Describe the main scenarios the feature must support.
@@ -170,6 +172,10 @@ And show a success message
 ```
 
 Use Given/When/Then when it makes behavior easier to understand. Do not force it for every item if a checklist is clearer.
+
+### 4a. Add a visual flow when it clarifies behavior
+
+Mermaid is optional in a spec. Invoke [document-with-mermaid](../document-with-mermaid/SKILL.md) when a user journey, page navigation, or lifecycle state would otherwise be ambiguous. Do not use technical service, database, or code-path diagrams here; place those in `{contextPath}` or the architecture documentation.
 
 ### 5. Separate business rules from acceptance criteria
 

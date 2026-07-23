@@ -10,6 +10,7 @@
         "mode-brainstorm",
         "mode-grill",
         "write-feature-spec",
+        "document-with-mermaid",
         "write-plan",
         "write-handoff",
         "write-skill"

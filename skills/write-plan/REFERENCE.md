@@ -184,7 +184,7 @@ MODIFY ...
 
 ## Use-case context sections
 
-Keep `{contextPath}` focused on how the current system realizes the behavior in `{specPath}`. Link to the spec, show the flow, and map every participating technical responsibility to current code. For codebase context without user-visible behavior, use `context.md`, omit the spec link, and describe the technical scope in the opening sentence. Revise it as implementation changes:
+Keep `{contextPath}` focused on how the current system realizes the behavior in `{specPath}`. Link to the spec, use the smallest useful technical view, and map every participating technical responsibility to current code. For codebase context without user-visible behavior, use `context.md`, omit the spec link, and describe the technical scope in the opening sentence. Invoke [document-with-mermaid](../document-with-mermaid/SKILL.md) when a diagram clarifies the implementation. Revise it as implementation changes:
 
 ```markdown
 # {Use Case or Technical Initiative} Context
@@ -193,10 +193,11 @@ Keep `{contextPath}` focused on how the current system realizes the behavior in 
 
 {For codebase context only: one sentence defining the technical scope.}
 
-## Flow
+## Diagrams and flow
 
-{One or more mermaid diagrams showing the path of the flow — entry → steps → output.
-Use `flowchart` or `sequenceDiagram`. Label each node by its responsibility, not by code.}
+{Optional: use the smallest Mermaid diagram that answers the relevant technical question.
+Choose `flowchart` for paths and decisions, `sequenceDiagram` for interactions, `stateDiagram-v2` for lifecycles, `classDiagram` or `erDiagram` for models and persistence, and a boundary-oriented C4/flowchart view for systems and integrations.
+Label nodes by responsibility, domain concept, or system boundary — not by code. Explain what the diagram clarifies in one sentence.}
 
 ## Implementation map
 
@@ -211,7 +212,7 @@ Use `flowchart` or `sequenceDiagram`. Label each node by its responsibility, not
 {Only durable current decisions and dependencies needed to understand the implementation. No task status, temporary notes, or proposed changes.}
 ```
 
-**No code snippets** — represent behavior in `{specPath}`, flow in Mermaid, and code locations in `## Implementation map`.
+**No code snippets** — represent behavior in `{specPath}`, use Mermaid only when it clarifies the relevant flow or technical relationship, and record code locations in `## Implementation map`.
 
 ---
 
@@ -315,14 +316,14 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 
 **Merge map from transient files:**
 
-| `plan.md` section   | Destination in `{contextPath}`            |
-| ------------------- | ----------------------------------------- |
-| Files CREATE/MODIFY | `## Implementation map`                   |
-| Flow / steps        | Fold into the `## Flow` diagram(s)        |
-| Durable decisions   | `## Decisions and dependencies`           |
-| Skipped steps       | Discard                                   |
-| Checkboxes          | Discard                                   |
-| Validation commands | Discard unless needed to understand tests |
+| `plan.md` section   | Destination in `{contextPath}`                               |
+| ------------------- | ------------------------------------------------------------ |
+| Files CREATE/MODIFY | `## Implementation map`                                      |
+| Flow / steps        | Fold into `## Diagrams and flow` when a diagram adds clarity |
+| Durable decisions   | `## Decisions and dependencies`                              |
+| Skipped steps       | Discard                                                      |
+| Checkboxes          | Discard                                                      |
+| Validation commands | Discard unless needed to understand tests                    |
 
 | `handoff.md` section | Destination                        |
 | -------------------- | ---------------------------------- |
