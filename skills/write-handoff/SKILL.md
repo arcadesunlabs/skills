@@ -25,7 +25,7 @@ Invoke [workflow-config](../workflow-config/SKILL.md), read `skills.config.json`
 
 **Naming:** use `handoff.md`. Remove or replace an existing `handoff.md` in the same folder when writing a new handoff for the same slice of work.
 
-Choose use-case folders from user intent, never code structure: `<domain>/<verb-object>/` in kebab-case (for example, `customers/create-customer/`). Follow project-specific conventions from `docs.indexFile`.
+For user-facing behavior handoffs, choose use-case folders from user intent, never code structure: `<domain>/<verb-object>/` in kebab-case (for example, `customers/create-customer/`). Follow project-specific conventions from `docs.indexFile`. Use the scope-specific paths in the table above for non-behavioral handoffs.
 
 ## What to include
 
@@ -35,7 +35,7 @@ Choose use-case folders from user intent, never code structure: `<domain>/<verb-
 - What is in progress or blocked
 - Explicit next steps for the receiving agent
 - **Suggested skills** — which skills the next agent should invoke and why
-- Links to existing artifacts (`<use-case>.spec.md`, `<use-case>.context.md`, `rules.md`, `scenarios.md`, `plan.md`, PRs, branches) — do not duplicate their content
+- Links to existing artifacts (`<use-case>.spec.md`, `<use-case>.context.md`, `<capability>.rules.md`, `<capability>.scenarios.md`, `plan.md`, PRs, branches) — do not duplicate their content
 
 ## Rules
 

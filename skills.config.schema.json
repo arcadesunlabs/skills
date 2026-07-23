@@ -32,7 +32,7 @@
           "type": "string",
           "minLength": 1,
           "pattern": "^(?![\\\\/])(?![A-Za-z]:[\\\\/])(?!\\.\\.(?:[\\\\/]|$))(?!.*[\\\\/]\\.\\.(?:[\\\\/]|$)).+$",
-          "description": "Folder under docs.root for rules shared by multiple use cases."
+          "description": "Folder under docs.root for rules shared by use cases across more than one domain."
         }
       },
       "additionalProperties": false

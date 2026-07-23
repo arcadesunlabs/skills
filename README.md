@@ -51,7 +51,7 @@ Read or create `skills.config.json` at the project root. If it does not exist, a
 - project conventions file, such as `CLAUDE.md`, `AGENTS.md`, or equivalent;
 - documentation root, such as `.docs`, `.specs`, or `docs`;
 - documentation index file;
-- capabilities folder (relative to docs root; default: `capabilities`);
+- cross-domain capabilities folder (relative to docs root; default: `capabilities`);
 - main app or package root;
 - code search roots used to build technical context.
 

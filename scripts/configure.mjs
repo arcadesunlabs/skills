@@ -23,7 +23,7 @@ const configPath = path.join(root, "skills.config.json");
 const examplePath = path.join(root, "skills.config.example.json");
 const schemaPath = path.join(root, "skills.config.schema.json");
 const defaultDocsFinalization =
-  "Update docs.indexFile when domains, use cases, actors, capabilities, or navigation change. Use cases: update <use-case>.spec.md and <use-case>.context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
+  "Update docs.indexFile when domains, use cases, actors, domain rules hubs, capabilities, or navigation change. Use cases: update <use-case>.spec.md and <use-case>.context.md. Actors: update actor docs and actors/actors.index.md when definitions or relationships change. Domain rules: update <domain>/<domain>.rules.md when rules are shared within one domain. Capabilities: update <capability>.rules.md and <capability>.scenarios.md when rules cross more than one domain. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
 const preIndexDocsFinalization =
   "Use cases: update <use-case>.spec.md and <use-case>.context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
 const preUniqueNameDocsFinalization =
@@ -283,7 +283,7 @@ async function ensureDocsIndex(config) {
     "architecture",
     "architecture.md",
   );
-  const actorsIndexPath = path.join(docsRoot, "actors", "index.md");
+  const actorsIndexPath = path.join(docsRoot, "actors", "actors.index.md");
   const hasArchitecture =
     existsSync(architecturePath) && (await stat(architecturePath)).isFile();
   const hasActorsIndex =
@@ -336,8 +336,9 @@ ${startLinks}
 ## Documentation Map
 
 - ${markdownCode(`${docsPath("actors")}/`)} — product user types, goals, responsibilities, and boundaries
-- ${markdownCode(`${docsPath(capabilitiesRoot)}/`)} — rules and scenarios shared by multiple use cases
-- ${markdownCode(`${docsPath("<domain>", "<verb-object>")}/`)} — user behavior specs and implementation context
+- ${markdownCode(`${docsPath("<domain>", "<domain>.rules.md")}`)} — rules shared by use cases within one domain
+- ${markdownCode(`${docsPath(capabilitiesRoot)}/`)} — rules and scenarios shared across more than one domain
+- ${markdownCode(`${docsPath("<domain>", "<use-case>")}/`)} — user behavior specs and implementation context
 - ${markdownCode(`${docsPath("codebase", "<initiative>")}/`)} — technical work without user behavior changes
 
 Add links here for each domain, use case, actor catalog, capability, integration, setup guide, and other important documentation entry point.
@@ -347,6 +348,7 @@ Add links here for each domain, use case, actor catalog, capability, integration
 - Organize behavior by user intent, not code structure.
 - Name use cases as kebab-case verb-object goals.
 - Keep behavior in \`<use-case>.spec.md\` and implementation mapping in \`<use-case>.context.md\`.
+- Keep rules shared within one domain in \`<domain>/<domain>.rules.md\`; use capabilities only for rules shared across domains.
 - Keep this index navigational; do not duplicate architecture, rules, specs, or implementation details.
 
 ## Maintenance
