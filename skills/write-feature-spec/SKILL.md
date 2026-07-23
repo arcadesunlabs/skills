@@ -29,12 +29,12 @@ Load [workflow-config](../workflow-config/SKILL.md) first, then read `docs.index
 - **Location:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md) decision tree):
   - **Use case:** `{specPath}` (`<domain>/<use-case>/<use-case>.spec.md`; name `<use-case>` as a kebab-case verb-object user goal).
   - **Actor:** `{docsActor}` (`actors/<actor>.md`; name `<actor>` from product language, not a code role identifier).
-  - **Capability:** `{docsCapability}/rules.md` (`<capability>` in kebab-case; name the shared domain concept, not a ticket or fix).
+  - **Capability:** `{docsCapability}/<capability>.rules.md` (`<capability>` in kebab-case; name the shared domain concept, not a ticket or fix).
 - **No YAML frontmatter** in `docs/` feature files — start each file with a single `# Title`.
 - **Spec flavors:**
   - **Use-case spec** — a user-facing behavior being designed or documented. Use the structure in _Draft the specification_ below. Pair with `{contextPath}` for implementation context.
   - **Actor definition** — a reusable product user type. Use the [actor document template](#actor-document-template), update `{docsActors}/index.md`, and stop unless a use-case or capability document was also requested.
-  - **Capability rules** — cross-cutting domain rules consumed by multiple use cases. Use the [capability template](#capability-rules-template) below. Optional `{docsCapability}/scenarios.md` for shared Gherkin scenarios.
+  - **Capability rules** — cross-cutting domain rules consumed by multiple use cases. Use the [capability template](#capability-rules-template) below. Optional `{docsCapability}/<capability>.scenarios.md` for shared Gherkin scenarios.
 - **`<use-case>.context.md`** (same folder as `<use-case>.spec.md`) — implementation context for developers and agents. It links to the spec and maps the current flow, routes, components, APIs, schemas, persistence, tests, decisions, dependencies, and code paths. Create or update when implementation is known (see the [context template](../write-plan/REFERENCE.md#use-case-context-sections)).
 - `<use-case>.spec.md` must remain useful without code paths. Distinct user goals get separate use-case specs even when they share one component.
 
@@ -326,7 +326,7 @@ List authorization identifiers only when useful, and link to canonical access-co
 Link use-case specs involving this actor.
 ```
 
-Maintain `{docsActors}/index.md` as a short catalog linking every canonical actor. Keep actor-specific behavior in each use-case spec and canonical authorization matrices in a capability such as `access-control/rules.md`.
+Maintain `{docsActors}/index.md` as a short catalog linking every canonical actor. Keep actor-specific behavior in each use-case spec and canonical authorization matrices in a capability such as `access-control/access-control.rules.md`.
 
 ```md
 # Actors
@@ -338,7 +338,7 @@ Maintain `{docsActors}/index.md` as a short catalog linking every canonical acto
 
 ## Capability rules template
 
-Use for cross-cutting domain rules (`{docsCapability}/rules.md`):
+Use for cross-cutting domain rules (`{docsCapability}/<capability>.rules.md`):
 
 ```md
 # [Capability Name] — Canonical rules
@@ -349,7 +349,7 @@ Use for cross-cutting domain rules (`{docsCapability}/rules.md`):
 | -------- | -------------------- |
 | …        | link to `{specPath}` |
 
-Shared scenarios: [scenarios.md](scenarios.md) (create when multiple use cases share acceptance criteria).
+Shared scenarios: [<capability>.scenarios.md](<capability>.scenarios.md) (create when multiple use cases share acceptance criteria).
 
 ## Affected actors
 

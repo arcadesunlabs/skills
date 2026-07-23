@@ -287,12 +287,12 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 
 ### Capability folder (`{docsCapability}/`)
 
-- Update `rules.md` with shipped canonical rules and shared contracts.
-- Update `scenarios.md` when shared acceptance scenarios exist.
+- Update `<capability>.rules.md` with shipped canonical rules and shared contracts.
+- Update `<capability>.scenarios.md` when shared acceptance scenarios exist.
 - Link affected use-case specs to the capability rules instead of duplicating them.
 - Resolve `{contextPath}` separately for each affected use case and update every implementation map.
 - Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the capability folder.
-- Folder must end with only `rules.md` and optional `scenarios.md`.
+- Folder must end with only `<capability>.rules.md` and optional `<capability>.scenarios.md`.
 
 ### Actor docs affected by use-case or capability work (`{docsActors}/`)
 

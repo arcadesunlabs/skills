@@ -40,7 +40,7 @@ Do not proceed while any important flow or business rule is unclear.
 Before writing specs, decide where documentation lives (see [workflow-config](../workflow-config/SKILL.md) decision tree):
 
 - **Use case** — observable user goal → `{specPath}` and `{contextPath}`.
-- **Capability** — rule consumed by multiple use cases → `{docsCapability}/rules.md`, linked from affected specs.
+- **Capability** — rule consumed by multiple use cases → `{docsCapability}/<capability>.rules.md`, linked from affected specs.
 - **Codebase context** — technical change with no behavior change → `{docs.root}/codebase/<initiative>/context.md`.
 
 Identify the product/business domain and name each use case as a kebab-case verb-object goal before inspecting code. If **capability**, list the affected use cases and actors before drafting.
@@ -72,7 +72,7 @@ The spec is the source of truth for:
 
 Follow `write-feature-spec` exactly when writing behavior or capability rules. Do not invent a parallel spec structure here.
 
-For **capability** scope: write `{docsCapability}/rules.md` (and `scenarios.md` when shared Gherkin helps), then link it from every affected use-case spec.
+For **capability** scope: write `{docsCapability}/<capability>.rules.md` (and `<capability>.scenarios.md` when shared Gherkin helps), then link it from every affected use-case spec.
 
 Update `docs.indexFile` when this work adds or changes a domain, use case, actor, capability, or other documentation entry point. Add links only; keep canonical details in their own documents.
 

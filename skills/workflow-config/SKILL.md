@@ -24,7 +24,7 @@ Example file: [skills.config.example.json](../../../skills.config.example.json) 
 | `project.name`                | Human-readable project label in plans and handoffs          |
 | `project.conventionsFile`     | Repo rules file (e.g. `CLAUDE.md`)                          |
 | `docs.root`                   | Behavior docs folder (e.g. `.docs` or `docs`)               |
-| `docs.indexFile`              | Canonical docs navigation, taxonomy, and conventions file  |
+| `docs.indexFile`              | Canonical docs navigation, taxonomy, and conventions file   |
 | `docs.capabilitiesRoot`       | Cross-cutting capabilities folder (default: `capabilities`) |
 | `code.appRoot`                | Main app or package root                                    |
 | `code.searchRoots`            | Optional code roots to inspect when building context        |
@@ -86,7 +86,7 @@ Compute these from config and the agreed behavior scope:
 
 | Symbol               | Rule                                                                                           |
 | -------------------- | ---------------------------------------------------------------------------------------------- |
-| `{docsIndex}`        | Value of `docs.indexFile`                                                                       |
+| `{docsIndex}`        | Value of `docs.indexFile`                                                                      |
 | `{docsDomain}`       | `{docs.root}/<domain>/`                                                                        |
 | `{docsUseCase}`      | `{docsDomain}/<use-case>/`                                                                     |
 | `{docsActors}`       | `{docs.root}/actors/`                                                                          |
@@ -115,8 +115,8 @@ Suggested layout under `{docs.root}`:
 │   ├── index.md                       # actor catalog
 │   └── <actor>.md                     # goals, responsibilities, and boundaries
 ├── capabilities/<capability>/        # cross-cutting domain rules
-│   ├── rules.md                      # canonical rules (permanent)
-│   └── scenarios.md                  # shared acceptance scenarios (optional)
+│   ├── <capability>.rules.md         # canonical rules (permanent)
+│   └── <capability>.scenarios.md     # shared acceptance scenarios (optional)
 ├── <domain>/                         # product or business domain
 │   └── <use-case>/                   # user goal in verb-object form
 │       ├── <use-case>.spec.md        # behavior and acceptance criteria
@@ -127,13 +127,13 @@ Suggested layout under `{docs.root}`:
 
 ### Documentation scope decision tree
 
-| Situation                                                 | Doc type             | Where to write                                          |
-| --------------------------------------------------------- | -------------------- | ------------------------------------------------------- |
-| User seeks an observable outcome                          | **Use case**         | `{specPath}` + `{contextPath}`                          |
-| User type has distinct goals, responsibilities, or limits | **Actor**            | `{docsActor}`                                           |
-| Rule or invariant is shared by multiple use cases         | **Capability**       | `{docsCapability}/rules.md` (+ optional `scenarios.md`) |
-| Refactor or technical initiative changes no user behavior | **Codebase context** | `{docs.root}/codebase/<initiative>/context.md`          |
-| Architecture affects the whole project                    | **Architecture**     | `{architecturePath}`                                    |
+| Situation                                                 | Doc type             | Where to write                                                                    |
+| --------------------------------------------------------- | -------------------- | --------------------------------------------------------------------------------- |
+| User seeks an observable outcome                          | **Use case**         | `{specPath}` + `{contextPath}`                                                    |
+| User type has distinct goals, responsibilities, or limits | **Actor**            | `{docsActor}`                                                                     |
+| Rule or invariant is shared by multiple use cases         | **Capability**       | `{docsCapability}/<capability>.rules.md` (+ optional `<capability>.scenarios.md`) |
+| Refactor or technical initiative changes no user behavior | **Codebase context** | `{docs.root}/codebase/<initiative>/context.md`                                    |
+| Architecture affects the whole project                    | **Architecture**     | `{architecturePath}`                                                              |
 
 For each use case, identify the user goal, business domain, and affected actors before inspecting code. `<use-case>.spec.md` must remain useful without code paths. `<use-case>.context.md` links back to the spec and maps the current routes, components, APIs, schemas, persistence, tests, data flow, decisions, and dependencies. Repeating the use-case name makes Obsidian Graph View nodes, global search results, and exported files descriptive.
 
@@ -141,7 +141,7 @@ When old use-case `spec.md` or `context.md` files exist, rename them and update 
 
 Create separate use cases for distinct user goals even when they share one implementation component. Put genuinely shared rules in a capability document and link to it instead of duplicating rules.
 
-Create an actor document when a user type appears in multiple use cases or has materially different goals, responsibilities, or boundaries. Actor docs describe product meaning; authorization rules belong in a capability such as `access-control/rules.md`, and technical role identifiers may be linked from the actor doc.
+Create an actor document when a user type appears in multiple use cases or has materially different goals, responsibilities, or boundaries. Actor docs describe product meaning; authorization rules belong in a capability such as `access-control/access-control.rules.md`, and technical role identifiers may be linked from the actor doc.
 
 If `{architecturePath}` is missing during setup, remind the user to create it (even a short draft) before large features or refactors.
 
