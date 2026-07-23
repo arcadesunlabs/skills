@@ -112,7 +112,7 @@ Suggested layout under `{docs.root}`:
 ├── architecture/
 │   └── architecture.md               # project architecture reference
 ├── actors/
-│   ├── index.md                       # actor catalog
+│   ├── actors.index.md                # actor catalog
 │   └── <actor>.md                     # goals, responsibilities, and boundaries
 ├── capabilities/<capability>/        # cross-cutting domain rules
 │   ├── <capability>.rules.md         # canonical rules (permanent)
@@ -155,7 +155,7 @@ If the user has not run `npm run configure`, gather at minimum:
 2. Docs root, index file, and capabilities root; create the index from the contract above when missing
 3. Optional: app root and code search roots
 4. Optional: implementation flow, validation commands, review rule, and docs finalization rule
-5. Identify distinct product user types and create `{docsActors}/index.md` plus one `{docsActor}` per meaningful actor
+5. Identify distinct product user types and create `{docsActors}/actors.index.md` plus one `{docsActor}` per meaningful actor
 6. Remind the user to add `{docs.root}/architecture/architecture.md` when absent
 
 Write `skills.config.json` to the workspace root, then continue.

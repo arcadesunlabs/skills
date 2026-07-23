@@ -33,7 +33,7 @@ Load [workflow-config](../workflow-config/SKILL.md) first, then read `docs.index
 - **No YAML frontmatter** in `docs/` feature files — start each file with a single `# Title`.
 - **Spec flavors:**
   - **Use-case spec** — a user-facing behavior being designed or documented. Use the structure in _Draft the specification_ below. Pair with `{contextPath}` for implementation context.
-  - **Actor definition** — a reusable product user type. Use the [actor document template](#actor-document-template), update `{docsActors}/index.md`, and stop unless a use-case or capability document was also requested.
+  - **Actor definition** — a reusable product user type. Use the [actor document template](#actor-document-template), update `{docsActors}/actors.index.md`, and stop unless a use-case or capability document was also requested.
   - **Capability rules** — cross-cutting domain rules consumed by multiple use cases. Use the [capability template](#capability-rules-template) below. Optional `{docsCapability}/<capability>.scenarios.md` for shared Gherkin scenarios.
 - **`<use-case>.context.md`** (same folder as `<use-case>.spec.md`) — implementation context for developers and agents. It links to the spec and maps the current flow, routes, components, APIs, schemas, persistence, tests, decisions, dependencies, and code paths. Create or update when implementation is known (see the [context template](../write-plan/REFERENCE.md#use-case-context-sections)).
 - `<use-case>.spec.md` must remain useful without code paths. Distinct user goals get separate use-case specs even when they share one component.
@@ -64,7 +64,7 @@ Resolve actors before drafting the use-case spec:
 - Keep a generic `user` inline when no meaningful distinction exists.
 - Treat actor as product meaning, role as technical authorization, and persona as a research archetype. Do not use these terms interchangeably.
 
-For an actor-only request, create or update `{docsActor}` and `{docsActors}/index.md` using the template below. Do not invent a use case, acceptance criteria, or implementation context unless the user also requested behavioral work.
+For an actor-only request, create or update `{docsActor}` and `{docsActors}/actors.index.md` using the template below. Do not invent a use case, acceptance criteria, or implementation context unless the user also requested behavioral work.
 
 ### 2. Draft the specification
 
@@ -326,7 +326,7 @@ List authorization identifiers only when useful, and link to canonical access-co
 Link use-case specs involving this actor.
 ```
 
-Maintain `{docsActors}/index.md` as a short catalog linking every canonical actor. Keep actor-specific behavior in each use-case spec and canonical authorization matrices in a capability such as `access-control/access-control.rules.md`.
+Maintain `{docsActors}/actors.index.md` as a short catalog linking every canonical actor. Keep actor-specific behavior in each use-case spec and canonical authorization matrices in a capability such as `access-control/access-control.rules.md`.
 
 ```md
 # Actors
