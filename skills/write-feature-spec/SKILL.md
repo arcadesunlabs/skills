@@ -1,283 +1,108 @@
 ---
 name: write-feature-spec
-description: Create clear use-case specifications and actor definitions with goals, scope, flows, business rules, acceptance criteria, and edge cases. Use when the user wants to define, document, refine, or review a feature, product requirement, user story, use case, actor, user type, acceptance criteria, or implementation-ready specification.
+description: Create or refine concise, behavior-first use-case specifications and actor definitions with explicit scope, business rules, testable acceptance criteria, and edge cases. Use when defining or reviewing a feature, product requirement, user story, use case, actor, user type, or acceptance criteria, especially when separating product behavior from implementation context.
 ---
 
 # Write Feature Spec
 
-## Purpose
+## Goal
 
-Use this skill to create or improve feature specifications that are clear enough for product, design, development, QA, and stakeholders to understand what must be built and how to validate that it is done.
+Create the smallest specification that makes the expected product behavior clear
+to product, design, development, and QA.
 
-A good feature specification should answer:
+A use-case spec must explain:
 
-- What problem are we solving?
-- Why are we solving it?
-- Who is affected?
-- What is included?
-- What is not included?
-- How should the user flow work?
-- What rules must the system follow?
-- How do we know the feature is ready?
-- What edge cases and errors must be handled?
-- What is still undecided?
+- the problem and intended outcome;
+- what is included and excluded;
+- what the user does and observes;
+- which rules must always hold;
+- how completion is verified;
+- which failures or edge cases affect behavior.
 
-## Project conventions
+Do not turn the spec into an implementation map, decision log, test plan, or
+retrospective.
 
-Load [workflow-config](../workflow-config/SKILL.md) first, then read `docs.indexFile` for project-specific documentation taxonomy, conventions, and existing entry points. This skill is the **single source of truth** for spec structure. Settings below use config placeholders.
+## Load project conventions
 
-- **Location:** depends on documentation scope (see [workflow-config](../workflow-config/SKILL.md) decision tree):
-  - **Use case:** `{specPath}` (`<domain>/<use-case>/<use-case>.spec.md`; name `<use-case>` as a kebab-case verb-object user goal).
-  - **Actor:** `{docsActor}` (`actors/<actor>.md`; name `<actor>` from product language, not a code role identifier).
-  - **Domain rules (hub):** `{docsDomainRules}` (`<domain>/<domain>.rules.md`) — canonical rules shared by the use cases of one domain, and the entry point that links to them.
-  - **Capability:** `{docsCapability}/<capability>.rules.md` (`<capability>` in kebab-case; **only** for rules shared by use cases across more than one domain — name the shared concept, not a ticket or fix).
-- **No YAML frontmatter** in `docs/` feature files — start each file with a single `# Title`.
-- **Spec flavors:**
-  - **Use-case spec** — a user-facing behavior being designed or documented. Use the structure in _Draft the specification_ below. Pair with `{contextPath}` for implementation context.
-  - **Actor definition** — a reusable product user type. Use the [actor document template](#actor-document-template), update `{docsActors}/actors.index.md`, and stop unless a use-case or capability document was also requested.
-  - **Domain rules (hub)** — canonical rules shared by the use cases of a **single** domain, and the entry point that links to them. Use the [domain rules template](#domain-rules-template). Lives at `<domain>/<domain>.rules.md`. This is the right home for rules several use cases of one feature share — do **not** reach for a capability just because more than one use case is involved.
-  - **Capability rules** — rules shared by use cases across **more than one** domain (genuinely cross-cutting). Use the [capability template](#capability-rules-template) below. Optional `{docsCapability}/<capability>.scenarios.md` for shared Gherkin scenarios.
-- **`<use-case>.context.md`** (same folder as `<use-case>.spec.md`) — implementation context for developers and agents. It links to the spec and maps the current flow, routes, components, APIs, schemas, persistence, tests, decisions, dependencies, and code paths. Create or update when implementation is known (see the [context template](../write-plan/REFERENCE.md#use-case-context-sections)).
-- `<use-case>.spec.md` must remain useful without code paths. Distinct user goals get separate use-case specs even when they share one component.
+1. Load [workflow-config](../workflow-config/SKILL.md).
+2. Read `skills.config.json` and `docs.indexFile`.
+3. Follow the project's documentation conventions, including frontmatter,
+   naming, paths, and index requirements. Do not impose a generic frontmatter
+   policy over an explicit project convention.
 
-## Process
+Use the configured documentation taxonomy:
 
-### 1. Gather context
+| Document           | Location                                 |
+| ------------------ | ---------------------------------------- |
+| Use-case spec      | `{docsUseCase}/<use-case>.spec.md`       |
+| Technical context  | `{docsUseCase}/<use-case>.context.md`    |
+| Actor              | `{docsActors}/<actor>.md`                |
+| Domain rules       | `{docsDomain}/<domain>.rules.md`         |
+| Cross-domain rules | `{docsCapability}/<capability>.rules.md` |
 
-Before writing the specification, identify what is already known and what is missing.
+Organize use cases by user intent. Name a use case as a kebab-case verb-object
+goal. Keep distinct user goals in separate specs even when they share one
+implementation component.
 
-Ask only the most important questions when needed. If enough context exists, proceed with reasonable assumptions and list them clearly.
+## Choose the canonical home
 
-Useful questions:
+Keep each fact in one canonical document:
 
-- What problem does this feature solve?
-- Which actors participate, and what does each one want?
-- What should the user be able to do?
-- What is the expected business or product outcome?
-- Are there any existing screens, APIs, systems, or rules involved?
-- What should be explicitly out of scope?
-- Are there known edge cases, permissions, limits, or validations?
-- How will the team know this feature is complete?
+| Content                                                                 | Canonical home |
+| ----------------------------------------------------------------------- | -------------- |
+| User-visible behavior, scope, product rules, acceptance, error states   | Use-case spec  |
+| APIs, schemas, code paths, persistence mechanism, architecture, tests   | Context        |
+| Rules shared by use cases in one domain                                 | Domain rules   |
+| Rules shared by use cases across more than one domain                   | Capability     |
+| Reusable user type with distinct goals, responsibilities, or boundaries | Actor          |
 
-Resolve actors before drafting the use-case spec:
+Technical constraints may appear in a spec only when they change what the user
+can do or observe. Describe the observable constraint, not its implementation.
+For example, write “The report requires internet” instead of naming an HTTP
+client or endpoint.
 
-- Reuse and link existing `{docsActor}` files.
-- Create an actor document when the user type appears in multiple use cases or has distinct goals, responsibilities, or boundaries.
-- Keep a generic `user` inline when no meaningful distinction exists.
-- Treat actor as product meaning, role as technical authorization, and persona as a research archetype. Do not use these terms interchangeably.
+When removing a still-relevant technical detail from a spec, preserve it in the
+paired context instead of losing it.
 
-For an actor-only request, create or update `{docsActor}` and `{docsActors}/actors.index.md` using the template below. Do not invent a use case, acceptance criteria, or implementation context unless the user also requested behavioral work.
+## Workflow
 
-### 2. Draft the specification
+### 1. Gather only missing decisions
 
-Create a concise feature specification using this structure:
+Determine:
 
-```md
-# Feature Specification: [Feature Name]
+- problem and outcome;
+- affected actor;
+- scope and explicit exclusions;
+- main flow;
+- business rules;
+- important errors and edge cases;
+- unresolved product decisions.
 
-## 1. Context
+Inspect existing specs, rules, actors, and context before asking questions. Ask
+only what materially changes behavior or scope. If enough is known, proceed and
+record only consequential assumptions.
 
-Explain the current situation, problem, or opportunity.
+Do not invent product behavior. Treat permissions, ownership, shared visibility,
+destructive impact, money, privacy, compliance, retention, and user
+notifications as material decisions. Ask when one is unresolved. If interaction
+is not possible, list it under `Open questions` instead of turning it into a
+business rule or assumption.
 
-## 2. Objective
+Create or link an actor document only when the user type is reusable or has
+distinct goals, responsibilities, or boundaries. Keep a generic user inline
+otherwise. Treat actor, authorization role, and research persona as different
+concepts.
 
-Describe the expected outcome of the feature.
+### 2. Draft the lean specification
 
-## 3. Actors
-
-Link affected actor documents and describe actor-specific participation in this use case. Keep a generic user inline when no canonical actor document is needed.
-
-## 4. Scope
-
-List what is included in this feature.
-
-## 5. Out of scope
-
-List what will not be handled in this version.
-
-## 6. Proposed solution
-
-Describe the solution at a high level.
-
-## 7. User flow
-
-Describe the main user journey step by step.
-
-{Optional: add `## Visual flow` when a page connection, journey, or state transition is materially easier to understand visually. Invoke [document-with-mermaid](../document-with-mermaid/SKILL.md) to select the smallest useful diagram. Keep this view product-facing; technical implementation belongs in `{contextPath}`.}
-
-## 8. Use cases
-
-Describe the main scenarios the feature must support.
-
-## 9. Business rules
-
-List product, domain, permission, validation, or system behavior rules.
-
-## 10. Acceptance criteria
-
-Use a checklist format. Each item should be testable.
-
-## 11. Edge cases and error states
-
-List important alternative scenarios, failures, empty states, and validations.
-
-## 12. Analytics and metrics
-
-List events or metrics that should be tracked, if applicable.
-
-## 13. Dependencies
-
-List technical, design, product, API, legal, or operational dependencies.
-
-## 14. Open questions
-
-List decisions that still need to be made.
-
-## 15. Assumptions
-
-List assumptions made while writing the specification.
-```
-
-### 3. Make acceptance criteria testable
-
-Acceptance criteria must be objective and verifiable.
-
-Prefer:
+Start with this core:
 
 ```md
-- [ ] The user can submit the form only when all required fields are valid.
-- [ ] The system shows an error message when the request fails.
-- [ ] The system prevents users without permission from accessing the feature.
-```
-
-Avoid vague criteria:
-
-```md
-- [ ] The feature works well.
-- [ ] The page is beautiful.
-- [ ] The flow is intuitive.
-```
-
-### 4. Use Given/When/Then when useful
-
-For behavior-heavy features, write use cases or acceptance criteria using Given/When/Then.
-
-Example:
-
-```md
-### Use case: Submit a valid request
-
-Given the user has filled all required fields
-When the user submits the form
-Then the system should save the request
-And show a success message
-```
-
-Use Given/When/Then when it makes behavior easier to understand. Do not force it for every item if a checklist is clearer.
-
-### 4a. Add a visual flow when it clarifies behavior
-
-Mermaid is optional in a spec. Invoke [document-with-mermaid](../document-with-mermaid/SKILL.md) when a user journey, page navigation, or lifecycle state would otherwise be ambiguous. Do not use technical service, database, or code-path diagrams here; place those in `{contextPath}` or the architecture documentation.
-
-### 5. Separate business rules from acceptance criteria
-
-Business rules describe how the product or domain must behave.
-
-Example:
-
-```md
-- Only administrators can approve requests.
-- A request cannot be edited after approval.
-- The maximum upload size is 10 MB.
-```
-
-Acceptance criteria describe how to validate that the implementation is complete.
-
-Example:
-
-```md
-- [ ] Users without administrator permission cannot see the approve button.
-- [ ] Approved requests display the edit action as disabled.
-- [ ] Files larger than 10 MB show a validation error.
-```
-
-### 6. Keep scope explicit
-
-Always include both `Scope` and `Out of scope`.
-
-This prevents misunderstandings and protects the team from hidden expectations.
-
-Good out-of-scope examples:
-
-```md
-- Bulk editing will not be supported in this version.
-- Email notifications will be handled in a separate feature.
-- Historical data migration is not part of this implementation.
-```
-
-### 7. Include error and empty states
-
-Do not document only the happy path.
-
-Consider:
-
-- Empty data
-- Loading state
-- Network error
-- Permission denied
-- Invalid input
-- Partial success
-- Duplicated action
-- Timeout
-- External service failure
-- User cancellation
-- Unsupported file or format
-- Conflicting data
-- Retry behavior
-
-### 8. Review and refine
-
-After drafting, review the specification using this checklist:
-
-- [ ] The problem is clear.
-- [ ] The objective is clear.
-- [ ] Every meaningful canonical actor is identified and linked; generic inline users do not require actor documents.
-- [ ] Actor-specific behavior and restrictions are explicit.
-- [ ] Scope and out of scope are explicit.
-- [ ] The main user flow is understandable.
-- [ ] Use cases cover the main scenarios.
-- [ ] Business rules are separated from acceptance criteria.
-- [ ] Acceptance criteria are testable.
-- [ ] Error states and edge cases are included.
-- [ ] Dependencies are listed.
-- [ ] Open questions are clearly documented.
-- [ ] Assumptions are explicit.
-- [ ] `docs.indexFile` reflects any added, moved, renamed, or removed domain, use case, actor, or capability without duplicating its content.
-- [ ] The document is concise enough to be useful.
-
-## Output style
-
-When creating a specification, prefer clear markdown with practical wording.
-
-Avoid excessive jargon.
-
-If the user is technical, include implementation-relevant details.
-If the user is non-technical, keep the language product-focused and easy to understand.
-
-When information is missing, do not block unnecessarily. Continue with assumptions and add them to the `Assumptions` section.
-
-## Minimal template
-
-Use this shorter version when the user wants something lightweight:
-
-```md
-# Feature: [Name]
+# [Verb-object user goal]
 
 ## Problem
 
 ## Objective
-
-## Actors
 
 ## Scope
 
@@ -290,102 +115,113 @@ Use this shorter version when the user wants something lightweight:
 ## Acceptance criteria
 
 ## Edge cases and error states
-
-## Open questions
-
-## Assumptions
 ```
 
-## Actor document template
+Add a section only when it contains material information:
 
-Use for a product user type with distinct goals, responsibilities, or boundaries (`{docsActor}`):
+| Optional section      | Include when                                                               |
+| --------------------- | -------------------------------------------------------------------------- |
+| Actor                 | Participation or restrictions are not obvious from the problem             |
+| Use cases             | Alternate scenarios are clearer in Given/When/Then                         |
+| Visual flow           | Navigation, lifecycle, or state transitions remain ambiguous in prose      |
+| Analytics and metrics | Product success metrics or privacy constraints are part of the requirement |
+| Dependencies          | An external dependency can block or change the delivered behavior          |
+| Open questions        | A product decision is genuinely unresolved                                 |
+| Assumptions           | A low-risk fact is useful but does not change product behavior             |
+
+Omit empty sections. Do not add `Proposed solution` by default. If a product
+approach needs explanation, describe it briefly without code, services, schemas,
+or component names.
+
+### 3. Prevent duplication
+
+Give each section one job:
+
+- **User flow:** sequence of user actions and visible outcomes.
+- **Business rules:** invariants, permissions, validation, and state behavior.
+- **Acceptance criteria:** a concise verification set for the delivered
+  outcomes.
+- **Edge cases:** meaningful deviations from the main flow.
+
+Do not restate every business rule as a use case and again as an acceptance
+criterion. Acceptance criteria should prove the feature works, not mirror the
+document line by line.
+
+Remove:
+
+- resolved-question history;
+- implementation alternatives and rejected architecture;
+- code paths, class names, payload fields, database tables, and HTTP details;
+- test file names or mandatory test inventory;
+- empty sections and generic boilerplate;
+- diagrams that merely repeat prose;
+- assumptions already confirmed as decisions.
+
+Do not use `Assumptions` to silently close a material product decision.
+
+### 4. Make acceptance criteria testable
+
+Write objective outcomes:
 
 ```md
-# [Actor Name]
-
-## Definition
-
-Describe who this actor is in product or business language.
-
-## Goals
-
-List outcomes this actor seeks across the product.
-
-## Responsibilities
-
-List duties this actor is expected to perform.
-
-## Boundaries
-
-List actions or decisions outside this actor's responsibility.
-
-## Technical roles
-
-List authorization identifiers only when useful, and link to canonical access-control rules. This section is not the source of truth for permissions.
-
-## Related use cases
-
-Link use-case specs involving this actor.
+- [ ] The user cannot submit until all required fields are valid.
+- [ ] A failed save preserves the previously displayed state.
 ```
 
-Maintain `{docsActors}/actors.index.md` as a short catalog linking every canonical actor. Keep actor-specific behavior in each use-case spec and canonical authorization matrices in a capability such as `access-control/access-control.rules.md`.
+Avoid subjective language such as “works well”, “looks good”, or “is
+intuitive”. Cover the behavior with the fewest criteria that still demonstrate
+scope completion.
 
-```md
-# Actors
+### 5. Use scenarios and diagrams selectively
 
-| Actor                   | Definition                     | Technical roles |
-| ----------------------- | ------------------------------ | --------------- |
-| [Operator](operator.md) | Handles daily operational work | `operator`      |
-```
+Use Given/When/Then only when it makes a behavior-heavy branch easier to
+understand. Do not create a scenario for every rule.
 
-## Domain rules template
+Invoke [document-with-mermaid](../document-with-mermaid/SKILL.md) only when a
+product-facing journey, page connection, or state transition is materially
+clearer as a diagram. Put service, database, API, and code-path diagrams in the
+context.
 
-Use for rules shared by the use cases of **one** domain — the feature hub (`<domain>/<domain>.rules.md`):
+### 6. Keep implementation context aligned
 
-```md
-# [Domain Name] — Canonical rules
+Create or update `<use-case>.context.md` when implementation is known. It should
+link to the spec and own:
 
-Central page for this feature: links to each use case and holds the rules shared between them. UI and layout stay in each use-case spec; only invariants, semantics, actors, and kernel contracts live here.
+- current routes and components;
+- API and schema contracts;
+- persistence and data flow;
+- implementation decisions and dependencies;
+- code and test locations;
+- telemetry event shape and other technical constraints.
 
-## Affected use cases
+Do not duplicate the spec in the context. Link back to behavior instead.
 
-| Use case | Spec                                    |
-| -------- | --------------------------------------- |
-| …        | link to `<use-case>/<use-case>.spec.md` |
+### 7. Review for signal
 
-## Affected actors
+Before finishing, verify:
 
-Link canonical `{docsActor}` files only when a rule is exclusive to a persona. Otherwise state the scope once (e.g. "all actors defined here", "same for every persona").
+- [ ] The problem and objective are clear.
+- [ ] Scope and out of scope are explicit.
+- [ ] The main flow is understandable.
+- [ ] Business rules describe behavior rather than implementation.
+- [ ] Acceptance criteria are objective and non-duplicative.
+- [ ] Important error and empty states are covered.
+- [ ] Empty or speculative sections are absent.
+- [ ] Code paths, API contracts, architecture, and test topology live in context.
+- [ ] Removed technical details were preserved in context when still relevant.
+- [ ] Material product decisions are confirmed or explicit open questions, not
+      hidden assumptions.
+- [ ] The actor and shared-rule documents are used only when their scope warrants
+      them.
+- [ ] `docs.indexFile` is updated only when navigation changed.
+- [ ] The document is concise enough to scan and discuss.
 
-## Rules
+## Other document types
 
-Canonical invariants, semantics tables, flags, and kernel contracts. No UI-specific layout.
-```
+When the request targets an actor, domain rules, or a capability rather than a
+use case, read
+[references/document-templates.md](references/document-templates.md) and use
+only the matching template.
 
-## Capability rules template
-
-Use **only** for rules shared by use cases across more than one domain — genuinely cross-cutting (`{docsCapability}/<capability>.rules.md`). If every consuming use case belongs to the same domain, use the domain rules template above instead.
-
-```md
-# [Capability Name] — Canonical rules
-
-## Affected use cases
-
-| Use case | Spec                 |
-| -------- | -------------------- |
-| …        | link to `{specPath}` |
-
-Shared scenarios: [<capability>.scenarios.md](<capability>.scenarios.md) (create when multiple use cases share acceptance criteria).
-
-## Affected actors
-
-Link canonical `{docsActor}` files when rules differ by actor. Keep permission matrices here when this capability owns authorization.
-
-## Domain rules
-
-Canonical invariants, semantics tables, flags, and kernel contracts. No UI-specific layout.
-```
-
-## Example
-
-For a complete, filled-in product spec (password reset), see [EXAMPLES.md](EXAMPLES.md).
+For a concise filled example, read
+[references/examples.md](references/examples.md).
