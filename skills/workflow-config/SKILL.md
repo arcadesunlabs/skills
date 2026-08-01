@@ -19,19 +19,23 @@ Example file: [skills.config.example.json](../../../skills.config.example.json) 
 
 ## Config fields
 
-| Field                         | Used for                                                    |
-| ----------------------------- | ----------------------------------------------------------- |
-| `project.name`                | Human-readable project label in plans and handoffs          |
-| `project.conventionsFile`     | Repo rules file (e.g. `CLAUDE.md`)                          |
-| `docs.root`                   | Behavior docs folder (e.g. `.docs` or `docs`)               |
-| `docs.indexFile`              | Canonical docs navigation, taxonomy, and conventions file   |
-| `docs.capabilitiesRoot`       | Cross-cutting capabilities folder (default: `capabilities`) |
-| `code.appRoot`                | Main app or package root                                    |
-| `code.searchRoots`            | Optional code roots to inspect when building context        |
-| `workflow.implementationFlow` | Optional project-specific implementation phases             |
-| `workflow.validationCommands` | Optional validation commands                                |
-| `workflow.review`             | Optional review expectations                                |
-| `workflow.docsFinalization`   | Optional docs finalization rule                             |
+| Field                         | Used for                                                                                                    |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `project.name`                | Human-readable project label in plans and handoffs                                                          |
+| `project.conventionsFile`     | Repo rules file (e.g. `CLAUDE.md`)                                                                          |
+| `docs.root`                   | Behavior docs folder (e.g. `.docs` or `docs`)                                                               |
+| `docs.indexFile`              | Canonical docs navigation, taxonomy, and conventions file                                                   |
+| `docs.capabilitiesRoot`       | Cross-cutting capabilities folder (default: `capabilities`)                                                 |
+| `code.appRoot`                | Main app or package root                                                                                    |
+| `code.searchRoots`            | Optional code roots to inspect when building context                                                        |
+| `workflow.implementationFlow` | Optional project-specific implementation phases; each phase may list `skills` and/or `agents`               |
+| `workflow.validationCommands` | Optional validation commands                                                                                |
+| `workflow.review`             | Optional review expectations — plain string, or `{ instructions, agents }` when agents should be invoked    |
+| `workflow.docsFinalization`   | Optional docs finalization rule — plain string, or `{ instructions, agents }` when agents should be invoked |
+
+### Optional: project-specific agents
+
+If the project defines custom subagents under `.claude/agents/*.md` (for example, a deep code-quality reviewer or a spec/docs auditor), list their names in `workflow.implementationFlow[].agents`, `workflow.review.agents`, or `workflow.docsFinalization.agents` so `write-plan` invokes them automatically at the right step. This is entirely optional — skills-only workflows keep working with no `agents` field anywhere, and `workflow.review` / `workflow.docsFinalization` can stay plain strings.
 
 ## Documentation model
 

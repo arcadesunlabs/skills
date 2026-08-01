@@ -63,6 +63,11 @@
                 "type": "array",
                 "items": { "type": "string" }
               },
+              "agents": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Optional project-specific subagents (e.g. defined under .claude/agents/*.md) to invoke for this phase, alongside or instead of skills."
+              },
               "notes": { "type": "string" },
               "appliesTo": {
                 "type": "array",
@@ -79,8 +84,44 @@
           "type": "array",
           "items": { "type": "string" }
         },
-        "review": { "type": "string" },
-        "docsFinalization": { "type": "string" }
+        "review": {
+          "description": "Plain instructions string (legacy), or an object with instructions plus optional project-specific agents to invoke.",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "required": ["instructions"],
+              "properties": {
+                "instructions": { "type": "string" },
+                "agents": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "description": "Optional project-specific subagents to invoke for review (e.g. defined under .claude/agents/*.md)."
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "docsFinalization": {
+          "description": "Plain instructions string (legacy), or an object with instructions plus optional project-specific agents to invoke.",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "required": ["instructions"],
+              "properties": {
+                "instructions": { "type": "string" },
+                "agents": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "description": "Optional project-specific subagents to invoke for docs finalization (e.g. defined under .claude/agents/*.md)."
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
       }
     }
   }

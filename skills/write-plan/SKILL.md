@@ -101,7 +101,7 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 ### Step 4 — Files, workflow
 
 1. List every **CREATE** / **MODIFY** file (see [files example](REFERENCE.md#files-example)).
-2. In each `plan.md` step, add a `> Skills:` line containing **only** the skills that will be used in that step. Derive them from `workflow.implementationFlow[].skills` and the step's actual work; mark conditional triggers as `only if …` or record `none — <reason>` when no skill applies. Do not list generic skills that will not be invoked.
+2. In each `plan.md` step, add a `> Skills:` line containing **only** the skills that will be used in that step. Derive them from `workflow.implementationFlow[].skills` and the step's actual work; mark conditional triggers as `only if …` or record `none — <reason>` when no skill applies. Do not list generic skills that will not be invoked. When the phase also declares `workflow.implementationFlow[].agents`, add an `> Agents:` line the same way.
 3. Group into [increments](REFERENCE.md#increments).
 4. Derive the implementation workflow from project configuration and the touched code. Do not import phases from examples unless the project docs or user explicitly choose them.
 5. If no explicit workflow exists, propose a short workflow that fits the task and ask the user to confirm it before saving the plan.
@@ -142,7 +142,7 @@ If useful, use [REFERENCE.md — Frontend workflow example](REFERENCE.md#fronten
 - Match existing patterns in the touched domain — **ask** if unclear.
 - Use the project's configured workflow when it exists; otherwise derive one from the code and confirm it.
 - Purposeful tests only — test behavior that matters.
-- Use `code-reviewer` or inline review for large or cross-layer changes before finalizing docs.
+- When configured, invoke every agent in `workflow.review.agents` for large or cross-layer changes, and every agent in `workflow.docsFinalization.agents` whenever this task creates or updates `.docs/` specs — both before finalizing docs. Otherwise, fall back to inline review.
 - Finalize docs is **mandatory** — scope determines which folders to update. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
 
 For each workflow step: update `plan.md` checkboxes, invoke listed project skills when applicable, stop when blocked.
@@ -183,4 +183,6 @@ For each workflow step: update `plan.md` checkboxes, invoke listed project skill
 
 - [ ] All agreed workflow steps completed
 - [ ] Code review passed when appropriate
+- [ ] `workflow.review.agents` invoked when the change was large or cross-layer, if configured
+- [ ] `workflow.docsFinalization.agents` invoked when `.docs/` specs were created or updated, if configured
 - [ ] Docs finalized per scope and `docs.indexFile` updated when navigation changed — see [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs)
