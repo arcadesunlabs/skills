@@ -6,14 +6,9 @@
       "title": "Workflow",
       "description": "Config, planning, specs, and delivery.",
       "skills": [
-        "workflow-config",
-        "mode-brainstorm",
-        "mode-grill",
         "write-feature-spec",
         "document-with-mermaid",
-        "write-plan",
-        "write-handoff",
-        "write-skill"
+        "write-plan"
       ]
     }
   ]

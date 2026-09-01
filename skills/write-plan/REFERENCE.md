@@ -2,7 +2,7 @@
 
 Templates and optional workflow examples. Load when drafting `plan.md`, updating context documents, or finalizing docs.
 
-Load [workflow-config](../workflow-config/SKILL.md) first. Paths use `{docs.root}` from config.
+Load `skills.config.json` first. Documentation paths follow [write-feature-spec](../write-feature-spec/SKILL.md). Put `plan.md` in the same folder as the permanent artifact.
 
 Before planning file paths, architecture, or workflow order, read `project.conventionsFile`, `{docs.root}/architecture/architecture.md` when present, and inspect relevant code under `code.searchRoots` and `code.appRoot`. **Match what the project actually uses.**
 
@@ -130,11 +130,7 @@ Waiting for confirmation to start implementation.
 
 ## plan.md template
 
-Save to the folder matching documentation scope. Removed after delivery by finalization.
-
-- **Use case:** `{docsUseCase}/plan.md`
-- **Capability:** `{docsCapability}/plan.md`
-- **Codebase context:** `{docs.root}/codebase/<initiative>/plan.md`
+Save to the folder matching documentation scope. Removed after delivery by finalization. Put `plan.md` beside the spec, domain rules, capability rules, or codebase `context.md`.
 
 ```markdown
 # [Feature Name] Implementation Plan
@@ -184,7 +180,7 @@ MODIFY ...
 
 ## Use-case context sections
 
-Keep `{contextPath}` focused on how the current system realizes the behavior in `{specPath}`. Link to the spec, use the smallest useful technical view, and map every participating technical responsibility to current code. For codebase context without user-visible behavior, use `context.md`, omit the spec link, and describe the technical scope in the opening sentence. Invoke [document-with-mermaid](../document-with-mermaid/SKILL.md) when a diagram clarifies the implementation. Revise it as implementation changes:
+Keep the use-case context focused on how the current system realizes the behavior in the spec. Link to the spec, use the smallest useful technical view, and map every participating technical responsibility to current code. For codebase context without user-visible behavior, use `context.md`, omit the spec link, and describe the technical scope in the opening sentence. Invoke [document-with-mermaid](../document-with-mermaid/SKILL.md) when a diagram clarifies the implementation. Revise it as implementation changes:
 
 ```markdown
 # {Use Case or Technical Initiative} Context
@@ -212,7 +208,7 @@ Label nodes by responsibility, domain concept, or system boundary — not by cod
 {Only durable current decisions and dependencies needed to understand the implementation. No task status, temporary notes, or proposed changes.}
 ```
 
-**No code snippets** — represent behavior in `{specPath}`, use Mermaid only when it clarifies the relevant flow or technical relationship, and record code locations in `## Implementation map`.
+**No code snippets** — represent behavior in the spec, use Mermaid only when it clarifies the relevant flow or technical relationship, and record code locations in `## Implementation map`.
 
 ---
 
@@ -261,7 +257,6 @@ This is an optional example from a frontend workflow. Use it only if it matches 
 | 8    | Analytics             | Include only when product/project asks for tracking                 |
 | 9    | Code review           | Inline review or `code-reviewer` for large/cross-layer changes      |
 | 10   | Finalize docs         | Mandatory final step; see [Finalize docs](#finalize-docs)           |
-| 11   | New skill needed?     | Optional; propose only for recurring gaps                           |
 
 Do not force this on backend, CLI, data, infrastructure, content, or small maintenance work.
 
@@ -277,29 +272,29 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 - Keep the index navigational. Link canonical documents instead of copying their content.
 - Leave it unchanged when work changes no documentation entry point or project-specific documentation convention.
 
-### Use-case folder (`{docsUseCase}/`)
+### Use-case folder (`{docs.root}/<domain>/<use-case>/`)
 
-- Update `{specPath}` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
+- Update `<use-case>.spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
 - Link every meaningful canonical actor and keep actor-specific behavior explicit. Generic inline users do not require actor documents.
-- Update `{contextPath}`: link to `{specPath}`, refine the flow, and merge the final implementation map and durable decisions from `plan.md`.
+- Update `<use-case>.context.md`: link to the spec, refine the flow, and merge the final implementation map and durable decisions from `plan.md`.
 - Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the folder.
 - Folder must end with `<use-case>.spec.md` and `<use-case>.context.md`.
 
-### Capability folder (`{docsCapability}/`)
+### Capability folder (`{docs.root}/{capabilitiesRoot}/<capability>/`)
 
 - Update `<capability>.rules.md` with shipped canonical rules and shared contracts.
 - Update `<capability>.scenarios.md` when shared acceptance scenarios exist.
 - Link affected use-case specs to the capability rules instead of duplicating them.
-- Resolve `{contextPath}` separately for each affected use case and update every implementation map.
+- Update each affected use-case context separately.
 - Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the capability folder.
 - Folder must end with only `<capability>.rules.md` and optional `<capability>.scenarios.md`.
 
-### Actor docs affected by use-case or capability work (`{docsActors}/`)
+### Actor docs affected by use-case or capability work (`{docs.root}/actors/`)
 
-- Update `{docsActor}` when shipped behavior changes an actor's goals, responsibilities, boundaries, or related use cases.
+- Update `{docs.root}/actors/<actor>.md` when shipped behavior changes an actor's goals, responsibilities, boundaries, or related use cases.
 - Keep authorization matrices in the relevant capability rules; actor docs may link technical role identifiers but do not own permissions.
-- Update `index.md` when actors are added, renamed, or removed.
-- Delete transient `{docsActors}/handoff.md` when actor-definition work is complete.
+- Update `actors.index.md` when actors are added, renamed, or removed.
+- Delete transient `handoff.md` in that folder when actor-definition work is complete.
 
 ### Codebase context folder (`{docs.root}/codebase/<initiative>/`)
 
@@ -316,7 +311,7 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 
 **Merge map from transient files:**
 
-| `plan.md` section   | Destination in `{contextPath}`                               |
+| `plan.md` section   | Destination in `<use-case>.context.md`                       |
 | ------------------- | ------------------------------------------------------------ |
 | Files CREATE/MODIFY | `## Implementation map`                                      |
 | Flow / steps        | Fold into `## Diagrams and flow` when a diagram adds clarity |

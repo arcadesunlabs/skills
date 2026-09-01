@@ -160,7 +160,7 @@ try {
     `\nRecommended: add ${path.relative(root, architecturePath) || architecturePath}`,
   );
   console.log(
-    "  (stack, layers, module boundaries — read by brainstorm and write-plan skills)",
+    "  (stack, layers, module boundaries — read by write-feature-spec and write-plan)",
   );
   console.log(
     "Recommended: refine workflow.implementationFlow with your real project phases, dependencies, and skills.",

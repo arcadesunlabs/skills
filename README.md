@@ -1,6 +1,6 @@
 # Personal Agent Skills
 
-Agent skills for development workflows: specs, plans, handoffs, and documentation. Compatible with the [skills.sh](https://www.skills.sh/) ecosystem and the [`npx skills`](https://github.com/vercel-labs/skills) CLI.
+Agent skills for development workflows: specs, plans, and documentation. Compatible with the [skills.sh](https://www.skills.sh/) ecosystem and the [`npx skills`](https://github.com/vercel-labs/skills) CLI.
 
 ## Prerequisites
 
@@ -79,7 +79,6 @@ Most importantly, help me define an implementation-flow table similar to this ex
 | 7   | Analytics / telemetry  | analytics skill, when applicable                     |
 | 8   | Code review            | review skill or review agent                         |
 | 9   | Documentation finalize | update spec/context and remove transient artifacts   |
-| 10  | New skill needed?      | `write-skill` if approved                            |
 
 Do not copy this flow automatically. Use it only as a reference for the level of detail, and help me create the correct equivalent for this project.
 ```
@@ -102,7 +101,7 @@ npm --prefix skills run configure -- /path/to/your-project
 
 Main fields: `project`, `docs`, `code`, and optional `workflow`. Reference: [skills.config.example.json](./skills.config.example.json).
 
-Recommended: create `{docs.root}/architecture/architecture.md` with an overview of the stack, layers, and architectural decisions. The `mode-brainstorm` and `write-plan` skills read that file when it exists.
+Recommended: create `{docs.root}/architecture/architecture.md` with an overview of the stack, layers, and architectural decisions. The `write-feature-spec` and `write-plan` skills read that file when it exists.
 
 #### Behavior-first documentation
 
@@ -150,7 +149,7 @@ Document reusable actors under `{docs.root}/actors/`. Actor documents explain wh
     └── scenarios.md                     # optional shared Gherkin
 ```
 
-Distinct user goals get separate specs even when they share one component. Use `<use-case>.spec.md` and `<use-case>.context.md` so filenames remain descriptive in Obsidian Graph View, global search, backlinks, and exports. Put genuinely shared rules in `capabilities/` and link affected specs to them. `code.appRoot` and `code.searchRoots` guide technical discovery without determining documentation paths. See [workflow-config](./skills/workflow-config/SKILL.md) for the decision tree.
+Distinct user goals get separate specs even when they share one component. Use `<use-case>.spec.md` and `<use-case>.context.md` so filenames remain descriptive in Obsidian Graph View, global search, backlinks, and exports. Put genuinely shared rules in `capabilities/` and link affected specs to them. `code.appRoot` and `code.searchRoots` guide technical discovery without determining documentation paths. See [write-feature-spec](./skills/write-feature-spec/SKILL.md) for the decision tree.
 
 When migrating existing docs, rename each use-case `spec.md` and `context.md`, then update Markdown links before creating new files. For example: `customers/create-customer/spec.md` becomes `customers/create-customer/create-customer.spec.md`.
 
@@ -160,13 +159,12 @@ Ask the agent in natural language. It chooses the skill from the `description` f
 
 | Situation                    | What to ask                                         |
 | ---------------------------- | --------------------------------------------------- |
-| Epic brainstorm              | _"Brainstorm feature X"_ -> `mode-brainstorm`       |
+| Epic brainstorm              | _"Brainstorm feature X"_ -> `write-feature-spec`    |
 | Define product users         | _"Document our user types"_ -> `write-feature-spec` |
 | Write a product spec         | _"Spec for social login"_ -> `write-feature-spec`   |
 | Technical plan before coding | _"Technical plan for social login"_ -> `write-plan` |
-| Session handoff              | _"Handoff what we did"_ -> `write-handoff`          |
 
-The `workflow-config` skill is the entry point: the agent should load `skills.config.json` before the other workflow skills.
+Both `write-feature-spec` and `write-plan` read `skills.config.json` at the project root.
 
 ---
 
@@ -174,13 +172,9 @@ The `workflow-config` skill is the entry point: the agent should load `skills.co
 
 | Skill                | Purpose                                                    |
 | -------------------- | ---------------------------------------------------------- |
-| `workflow-config`    | Loads or creates `skills.config.json`                      |
-| `mode-brainstorm`    | Brainstorm, spec, and task breakdown (`tasks.md` optional) |
-| `mode-grill`         | Critical review mode                                       |
-| `write-feature-spec` | Use-case specs, actor definitions, and capability rules    |
+| `write-feature-spec` | Brainstorm, grill, specs, actors, and shared rules          |
 | `write-plan`         | Technical plan and implementation (`plan.md`)              |
-| `write-handoff`      | Session handoff                                            |
-| `write-skill`        | Create or improve skills                                   |
+| `document-with-mermaid` | Diagrams when prose is not enough                       |
 
 Visual organization on [skills.sh](https://skills.sh/): [skills.sh.json](./skills.sh.json).
 
@@ -241,16 +235,3 @@ npx skills add arcadesunlabs/skills --skill '*' -a cursor -g -y
 
 More options: [`vercel-labs/skills`](https://github.com/vercel-labs/skills).
 
----
-
-## Credits And Third-Party Notices
-
-The following skills are adapted from [Matt Pocock's skills repository](https://github.com/mattpocock/skills):
-
-| Skill                                              | Original                                                                                                          |
-| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| [`mode-grill`](./skills/mode-grill/SKILL.md)       | [`grilling`](https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling)                         |
-| [`write-handoff`](./skills/write-handoff/SKILL.md) | [`handoff`](https://github.com/mattpocock/skills/tree/main/skills/productivity/handoff)                           |
-| [`write-skill`](./skills/write-skill/SKILL.md)     | [`writing-great-skills`](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-great-skills) |
-
-Original work copyright (c) 2026 Matt Pocock and licensed under the MIT License. These versions include project-specific modifications. See [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) for the full license notice.

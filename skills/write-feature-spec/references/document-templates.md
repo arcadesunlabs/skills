@@ -5,7 +5,7 @@ Read only the section matching the requested document type.
 ## Actor
 
 Use for a reusable product user type with distinct goals, responsibilities, or
-boundaries. Update `{docsActors}/actors.index.md`.
+boundaries. Update `{docs.root}/actors/actors.index.md`.
 
 ```md
 # [Actor name]
