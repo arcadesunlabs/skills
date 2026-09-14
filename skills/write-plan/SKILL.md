@@ -29,7 +29,7 @@ Two modes:
 - Validation, review, and documentation expectations (`workflow.validationCommands`, `workflow.review`, `workflow.docsFinalization` when configured)
 - Project-specific skills, agents, scripts, or external systems to invoke
 
-**Artifacts:** follow [write-feature-spec](../write-feature-spec/SKILL.md) for where docs live. Put `plan.md` in the same folder as the permanent artifact (use-case spec, domain rules, capability rules, or `codebase/<initiative>/context.md`).
+**Artifacts:** follow [write-feature-spec](../write-feature-spec/SKILL.md) for where docs live. Put `plan.md` in the same folder as the permanent artifact (use-case spec, domain rules, capability rules, or `codebase/<initiative>/notes.md`).
 
 See `project.conventionsFile` in config for project-specific rules.
 
@@ -46,9 +46,9 @@ See `project.conventionsFile` in config for project-specific rules.
 | **B**  | No spec — direct implementation task                                                    | Conversation                                                                   |
 | **C**  | Shared rules — a domain hub or a cross-domain capability                                 | `<domain>.rules.md` / `<capability>.rules.md` or conversation                   |
 
-**Epic scoping (path A′):** Plan and implement **only** the selected slice — from `tasks.md` when it exists, otherwise from the agreed spec breakdown. Reference the epic spec for shared context; do not plan phases for other slices.
+**Epic scoping (path A′):** Plan and implement **only** the selected slice — from `tasks.md` when it exists, otherwise from the agreed spec breakdown. Reference the epic spec for shared behavior; do not plan phases for other slices.
 
-**Capability scoping (path C):** Put `plan.md` beside the capability rules. Update those rules and link them from affected use-case specs. Update each affected use-case context separately; do not duplicate canonical rules there.
+**Capability scoping (path C):** Put `plan.md` beside the capability rules. Update those rules and link them from affected use-case specs. Do not duplicate canonical rules in the specs.
 
 Skip this skill for trivial tasks (typo, single-line fix) — implement per `project.conventionsFile` in config.
 
@@ -68,7 +68,7 @@ Use `AskQuestion`:
 - `header`: "Task type"
 - `options`: New feature | Improvement / refactor | Bug fix
 
-Then classify **documentation scope** (see [write-feature-spec](../write-feature-spec/SKILL.md)): use case | capability | codebase context.
+Then classify **documentation scope** (see [write-feature-spec](../write-feature-spec/SKILL.md)): use case | capability | codebase.
 
 Informs — but does not by itself decide — the architecture pattern (see Step 2).
 
@@ -103,7 +103,7 @@ Task type is only the starting hint. The pattern is decided by the **architectur
 
 ### Step 5 — Confirm
 
-1. Save `plan.md` beside the permanent artifact and update that artifact (use-case context, `context.md` for codebase work, or capability rules) using [templates](REFERENCE.md#planmd-template).
+1. Save `plan.md` beside the permanent artifact.
 2. Present [confirmation summary](REFERENCE.md#confirmation-summary-template).
 
 **Do not write implementation code before user confirms.** Revise and re-confirm if requested.
@@ -159,7 +159,7 @@ For each workflow step: update `plan.md` checkboxes, invoke listed project skill
 2. **Mandatory:** Finalize docs per scope, including `docs.indexFile` when navigation changed. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
 3. Tell the user (adjust path to scope):
 
-> Implementation complete. Docs finalized — use case: `<domain>/<use-case>/` (spec + context); capability: `{capabilitiesRoot}/<capability>/` (rules + optional scenarios); or codebase context updated.
+> Implementation complete. Docs finalized — use case: `<domain>/<use-case>/` (spec + optional changelog); capability: `{capabilitiesRoot}/<capability>/`; or codebase notes updated.
 
 ---
 

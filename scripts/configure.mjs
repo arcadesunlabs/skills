@@ -23,15 +23,7 @@ const configPath = path.join(root, "skills.config.json");
 const examplePath = path.join(root, "skills.config.example.json");
 const schemaPath = path.join(root, "skills.config.schema.json");
 const defaultDocsFinalization =
-  "Update docs.indexFile when domains, use cases, actors, domain rules hubs, capabilities, or navigation change. Use cases: update <use-case>.spec.md and <use-case>.context.md. Actors: update actor docs and actors/actors.index.md when definitions or relationships change. Domain rules: update <domain>/<domain>.rules.md when rules are shared within one domain. Capabilities: update <capability>.rules.md and <capability>.scenarios.md when rules cross more than one domain. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
-const preIndexDocsFinalization =
-  "Use cases: update <use-case>.spec.md and <use-case>.context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
-const preUniqueNameDocsFinalization =
-  "Use cases: update spec.md and context.md. Actors: update actor docs and actors/index.md when definitions or relationships change. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
-const preActorDocsFinalization =
-  "Use cases: update spec.md and context.md. Capabilities: update rules.md and scenarios.md when applicable. Remove transient plan.md, tasks.md, and handoff.md files after merge.";
-const legacyDocsFinalization =
-  "Vertical features: update 01-spec.md and 02-context.md. Capabilities: update spec.md and scenarios.md (optional). Touchpoints: update features/<feature>/spec.md. Remove transient plan/task/handoff files after merge.";
+  "Update docs.indexFile when domains, use cases, actors, domain rules hubs, capabilities, or navigation change. Use cases: update <use-case>.spec.md and append a changelog.md line when something shipped or was fixed. Actors: update actor docs and actors/actors.index.md when definitions or relationships change. Domain rules: update <domain>/<domain>.rules.md when rules are shared within one domain. Capabilities: update <capability>.rules.md and <capability>.scenarios.md when rules cross more than one domain. Remove transient plan.md and tasks.md files after merge.";
 
 const rl = readline.createInterface({ input, output });
 
@@ -68,14 +60,6 @@ try {
   }
   delete config.docs.domainMirror;
   delete config.docs.touchpointsRoot;
-  if (
-    config.workflow?.docsFinalization === legacyDocsFinalization ||
-    config.workflow?.docsFinalization === preActorDocsFinalization ||
-    config.workflow?.docsFinalization === preUniqueNameDocsFinalization ||
-    config.workflow?.docsFinalization === preIndexDocsFinalization
-  ) {
-    config.workflow.docsFinalization = defaultDocsFinalization;
-  }
 
   console.log(
     "\nWorkflow skills setup — answer prompts or press Enter to keep defaults.\n",
@@ -169,10 +153,7 @@ try {
     "Docs convention: choose a business domain, then a verb-object user goal (for example, customers/create-customer).",
   );
   console.log(
-    "Use-case files repeat that goal for descriptive graph labels (for example, create-customer.spec.md and create-customer.context.md).",
-  );
-  console.log(
-    "Migration: rename existing use-case spec.md/context.md files and update their Markdown links before creating new docs.",
+    "Use-case files repeat that goal for descriptive graph labels (for example, create-customer.spec.md).",
   );
   console.log(
     `Actors convention: document distinct product user types under ${path.join(config.docs.root, "actors")} (for example, actors/operator.md).`,
@@ -338,7 +319,7 @@ ${startLinks}
 - ${markdownCode(`${docsPath("actors")}/`)} — product user types, goals, responsibilities, and boundaries
 - ${markdownCode(`${docsPath("<domain>", "<domain>.rules.md")}`)} — rules shared by use cases within one domain
 - ${markdownCode(`${docsPath(capabilitiesRoot)}/`)} — rules and scenarios shared across more than one domain
-- ${markdownCode(`${docsPath("<domain>", "<use-case>")}/`)} — user behavior specs and implementation context
+- ${markdownCode(`${docsPath("<domain>", "<use-case>")}/`)} — user behavior specs
 - ${markdownCode(`${docsPath("codebase", "<initiative>")}/`)} — technical work without user behavior changes
 
 Add links here for each domain, use case, actor catalog, capability, integration, setup guide, and other important documentation entry point.
@@ -347,13 +328,13 @@ Add links here for each domain, use case, actor catalog, capability, integration
 
 - Organize behavior by user intent, not code structure.
 - Name use cases as kebab-case verb-object goals.
-- Keep behavior in \`<use-case>.spec.md\` and implementation mapping in \`<use-case>.context.md\`.
+- Keep behavior in \`<use-case>.spec.md\`. After a ship or fix, append one line to optional \`changelog.md\`. Find current implementation in the code.
 - Keep rules shared within one domain in \`<domain>/<domain>.rules.md\`; use capabilities only for rules shared across domains.
 - Keep this index navigational; do not duplicate architecture, rules, specs, or implementation details.
 
 ## Maintenance
 
-Update this index when documentation entry points are added, moved, renamed, or removed. Remove transient \`plan.md\`, \`tasks.md\`, and \`handoff.md\` files after work is finalized.
+Update this index when documentation entry points are added, moved, renamed, or removed. Remove transient \`plan.md\` and \`tasks.md\` files after work is finalized.
 `;
 
   await mkdir(path.dirname(indexPath), { recursive: true });

@@ -7,7 +7,7 @@ description: Turn an idea into a concise behavior-first spec by closing unknowns
 
 Do not write code. Do not invent product behavior. Inspect the project before
 asking. Ask one question at a time and include a recommended answer. Behavior
-lives in the spec; implementation lives in the paired context.
+lives in the spec. Discover current implementation in the code.
 
 ## Load project conventions
 
@@ -35,11 +35,11 @@ Paths are under `docs.root`. `{capabilitiesRoot}` is `docs.capabilitiesRoot`.
 
 | Situation | Write |
 | --------- | ----- |
-| Observable user goal | `<domain>/<use-case>/<use-case>.spec.md` and `<use-case>.context.md` |
+| Observable user goal | `<domain>/<use-case>/<use-case>.spec.md` |
 | Rules shared by use cases of **one** domain | `<domain>/<domain>.rules.md` |
 | Rules shared **across** domains | `{capabilitiesRoot}/<capability>/<capability>.rules.md` |
 | Reusable user type with distinct goals, responsibilities, or boundaries | `actors/<actor>.md` |
-| Technical change with no behavior change | `codebase/<initiative>/context.md` |
+| Technical change with no behavior change | `codebase/<initiative>/notes.md` |
 
 Shared rules default to the domain hub. Promote to a capability only when
 consumers span more than one domain. Link rules; do not copy them.
@@ -63,8 +63,9 @@ Do not proceed while a material flow or rule is unclear.
 
 ## Write
 
-For **codebase context**, do not create a behavior spec. Record technical scope
-and stop, or continue to [write-plan](../write-plan/SKILL.md) if implementing.
+For **codebase work**, do not create a behavior spec. Record technical scope in
+`notes.md` and stop, or continue to [write-plan](../write-plan/SKILL.md) if
+implementing.
 
 For an actor, domain rules, or capability, use the matching template in
 [references/document-templates.md](references/document-templates.md).
@@ -108,8 +109,8 @@ Add a section only when it contains material information:
 Omit empty sections. Do not add `Proposed solution` by default.
 
 Put a technical constraint in the spec only when it changes what the user can
-do or observe (“The report requires internet”, not an HTTP client). Move
-removed but still-relevant technical detail to `<use-case>.context.md`.
+do or observe (“The report requires internet”, not an HTTP client). Do not
+document routes, components, APIs, or test files in the spec.
 
 Give each section one job. Do not restate every business rule as a use case and
 again as an acceptance criterion. When refining, drop resolved-question
@@ -118,8 +119,7 @@ history, rejected alternatives, and implementation detail.
 Use Given/When/Then only when a behavior-heavy branch is clearer that way. Invoke
 [document-with-mermaid](../document-with-mermaid/SKILL.md) only when a
 product-facing journey, page connection, or state transition is materially
-clearer as a diagram. Put service, database, API, and code-path diagrams in the
-context.
+clearer as a diagram.
 
 Write objective acceptance criteria. Avoid “works well”, “looks good”, or
 “is intuitive”:
@@ -129,8 +129,24 @@ Write objective acceptance criteria. Avoid “works well”, “looks good”, o
 - [ ] A failed save preserves the previously displayed state.
 ```
 
-Create or update `<use-case>.context.md` when implementation is known. Link to the
-spec; do not duplicate it. Update `docs.indexFile` only when navigation changed.
+Update `docs.indexFile` only when navigation changed.
+
+## Changelog
+
+Do not create `changelog.md` when writing the spec. After something ships, append
+one line in the same folder (`changelog.md` next to the spec, domain rules,
+capability rules, or codebase notes). Newest first. No file paths, plans, or
+maps.
+
+```md
+- 2026-08-31 Shipped (PR #12)
+- 2026-09-12 Fix: expired link did not offer a new request (#45)
+- 2026-09-20 Now uses `access-control` capability
+```
+
+Record first ship, bug fixes, and behavior-changing follow-ups. Link a
+capability from the spec; mention it here only when that relationship is new.
+Do not duplicate git history.
 
 ## After the spec
 

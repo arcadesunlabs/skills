@@ -1,6 +1,6 @@
 ---
 name: document-with-mermaid
-description: Add clear, purposeful Mermaid diagrams to product specifications, technical context, and architecture documentation. Use when a flow, interaction, state model, data relationship, system boundary, or page connection is easier to understand visually than in prose.
+description: Add clear, purposeful Mermaid diagrams to product specifications and architecture documentation. Use when a flow, interaction, state model, data relationship, system boundary, or page connection is easier to understand visually than in prose.
 ---
 
 # Document With Mermaid
@@ -10,8 +10,7 @@ Use the smallest diagram that removes a real ambiguity. Do not add Mermaid merel
 ## Choose the document
 
 - **Use-case spec** — optionally show a user journey, page/navigation flow, or meaningful state transition. Keep it product-facing; do not include code paths.
-- **Use-case or codebase context** — show how the current technical implementation realizes behavior: components, services, persistence, integrations, and boundaries.
-- **Architecture document** — show stable, cross-cutting system boundaries. Link to it from narrower contexts instead of copying the whole diagram.
+- **Architecture document** — show stable, cross-cutting system boundaries. Link to it from specs instead of copying the whole diagram.
 
 If a short paragraph or table is clearer, omit the diagram. One focused diagram is preferable to several overlapping ones.
 
@@ -35,7 +34,7 @@ For minimal, adaptable patterns for the supported types, read [references/diagra
 
 1. Start from the question the reader needs answered; inspect the current implementation before documenting it as fact.
 2. Include only participants and transitions relevant to that question. Represent responsibility, domain concept, or system boundary — not every class or file.
-3. Use readable, product or architectural labels. Add code paths only in the implementation map below or beside the diagram.
+3. Use readable, product or architectural labels. Do not put code paths on the diagram.
 4. For technical flows, make failure, retry, asynchronous, and persistence paths explicit when they materially change behavior.
 5. Add one sentence before or after the diagram explaining the boundary or decision it makes clear.
 6. Keep Mermaid syntax valid and render it when the documentation environment provides a renderer. Prefer simple syntax and avoid custom styling unless it increases clarity.
@@ -44,15 +43,11 @@ For minimal, adaptable patterns for the supported types, read [references/diagra
 
 ### In a spec
 
-Place an optional `## Visual flow` after `## Proposed solution` or `## User flow`. Use a flowchart, journey, or state diagram only when it clarifies behavior better than the written flow.
-
-### In a context document
-
-Use `## Diagrams and flow`. Start with the most useful view; add a second diagram only when it answers a different question, such as a sequence alongside an ER diagram. Follow it with `## Implementation map` linking each durable responsibility to current code.
+Place an optional `## Visual flow` after `## User flow`. Use a flowchart, journey, or state diagram only when it clarifies behavior better than the written flow.
 
 ### In architecture documentation
 
-Use a boundary-oriented context or container view. Keep use-case contexts to their relevant slice and link back to this canonical view.
+Use a boundary-oriented C4 or container view. Keep use-case diagrams to the relevant slice and link back to this canonical view.
 
 ## Quality check
 

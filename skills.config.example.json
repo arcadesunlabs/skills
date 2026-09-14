@@ -43,7 +43,7 @@
       "agents": ["code-reviewer"]
     },
     "docsFinalization": {
-      "instructions": "Update docs.indexFile when domains, use cases, actors, domain rules hubs, capabilities, or navigation change. Use cases: update <use-case>.spec.md and <use-case>.context.md. Actors: update actor docs and actors/actors.index.md when definitions or relationships change. Domain rules: update <domain>/<domain>.rules.md when rules are shared within one domain. Capabilities: update <capability>.rules.md and <capability>.scenarios.md when rules cross more than one domain. Remove transient plan.md, tasks.md, and handoff.md files after merge.",
+      "instructions": "Update docs.indexFile when domains, use cases, actors, domain rules hubs, capabilities, or navigation change. Use cases: update <use-case>.spec.md and append a changelog.md line when something shipped or was fixed. Actors: update actor docs and actors/actors.index.md when definitions or relationships change. Domain rules: update <domain>/<domain>.rules.md when rules are shared within one domain. Capabilities: update <capability>.rules.md and <capability>.scenarios.md when rules cross more than one domain. Remove transient plan.md and tasks.md files after merge.",
       "agents": ["spec-reviewer"]
     }
   }

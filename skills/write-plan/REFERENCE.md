@@ -1,6 +1,6 @@
 # Write Plan — Reference
 
-Templates and optional workflow examples. Load when drafting `plan.md`, updating context documents, or finalizing docs.
+Templates and optional workflow examples. Load when drafting `plan.md` or finalizing docs.
 
 Load `skills.config.json` first. Documentation paths follow [write-feature-spec](../write-feature-spec/SKILL.md). Put `plan.md` in the same folder as the permanent artifact.
 
@@ -110,7 +110,7 @@ Actors:   {linked product actors, when applicable}
 Slice:    {slice title if path A′}
 Branch:   {branch name if known}
 Entry:    A (with spec) | A′ (epic slice) | B (direct) | C (capability)
-Doc scope: use case | capability | codebase context
+Doc scope: use case | capability | codebase
 
 Files:
   CREATE ...
@@ -130,7 +130,7 @@ Waiting for confirmation to start implementation.
 
 ## plan.md template
 
-Save to the folder matching documentation scope. Removed after delivery by finalization. Put `plan.md` beside the spec, domain rules, capability rules, or codebase `context.md`.
+Save to the folder matching documentation scope. Removed after delivery by finalization. Put `plan.md` beside the spec, domain rules, capability rules, or codebase `notes.md`.
 
 ```markdown
 # [Feature Name] Implementation Plan
@@ -143,7 +143,7 @@ Save to the folder matching documentation scope. Removed after delivery by final
 **Use case:** {verb-object user goal, when applicable}
 **Actors:** {linked product actors, when applicable}
 **Entry path:** A | A′ | B | C
-**Doc scope:** use case | capability | codebase context
+**Doc scope:** use case | capability | codebase
 **Slice:** {slice title if A′}
 **Branch:** {branch name if known}
 
@@ -173,42 +173,21 @@ MODIFY ...
 ### Final step — Finalize docs
 
 - [ ] Permanent docs updated per scope — see [Finalize docs](#finalize-docs)
-- [ ] Deleted transient files (`plan.md`, `tasks.md`, `handoff.md`, etc.)
+- [ ] Deleted transient files (`plan.md`, `tasks.md`)
 ```
 
 ---
 
-## Use-case context sections
+## Changelog
 
-Keep the use-case context focused on how the current system realizes the behavior in the spec. Link to the spec, use the smallest useful technical view, and map every participating technical responsibility to current code. For codebase context without user-visible behavior, use `context.md`, omit the spec link, and describe the technical scope in the opening sentence. Invoke [document-with-mermaid](../document-with-mermaid/SKILL.md) when a diagram clarifies the implementation. Revise it as implementation changes:
+After shipping, append one line to `changelog.md` in the same folder as the
+permanent artifact. Newest first. Do not create the file during planning. Do
+not list files, routes, or tests.
 
-```markdown
-# {Use Case or Technical Initiative} Context
-
-{For use cases only: Behavior: [<use-case>.spec.md](<use-case>.spec.md)}
-
-{For codebase context only: one sentence defining the technical scope.}
-
-## Diagrams and flow
-
-{Optional: use the smallest Mermaid diagram that answers the relevant technical question.
-Choose `flowchart` for paths and decisions, `sequenceDiagram` for interactions, `stateDiagram-v2` for lifecycles, `classDiagram` or `erDiagram` for models and persistence, and a boundary-oriented C4/flowchart view for systems and integrations.
-Label nodes by responsibility, domain concept, or system boundary — not by code. Explain what the diagram clarifies in one sentence.}
-
-## Implementation map
-
-{Table of every route, component, API, schema, persistence path, and test that participates in the flow. From the plan.md Files section and final implementation.}
-
-| Responsibility | Path | Role in flow |
-| -------------- | ---- | ------------ |
-| ...            | ...  | ...          |
-
-## Decisions and dependencies
-
-{Only durable current decisions and dependencies needed to understand the implementation. No task status, temporary notes, or proposed changes.}
+```md
+- 2026-08-31 Shipped (PR #12)
+- 2026-09-12 Fix: expired link did not offer a new request (#45)
 ```
-
-**No code snippets** — represent behavior in the spec, use Mermaid only when it clarifies the relevant flow or technical relationship, and record code locations in `## Implementation map`.
 
 ---
 
@@ -276,53 +255,36 @@ Mandatory final step for non-trivial planned work. Apply the checklist for the *
 
 - Update `<use-case>.spec.md` per [write-feature-spec](../write-feature-spec/SKILL.md): present tense, shipped scope, testable acceptance criteria (`[x]` when met), no code snippets or file paths.
 - Link every meaningful canonical actor and keep actor-specific behavior explicit. Generic inline users do not require actor documents.
-- Update `<use-case>.context.md`: link to the spec, refine the flow, and merge the final implementation map and durable decisions from `plan.md`.
-- Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the folder.
-- Folder must end with `<use-case>.spec.md` and `<use-case>.context.md`.
+- Append one changelog line for the ship or fix. Do not write an implementation map.
+- Delete `plan.md`, `tasks.md`, and any other transient file in the folder.
+- Folder must end with `<use-case>.spec.md` and optional `changelog.md`.
 
 ### Capability folder (`{docs.root}/{capabilitiesRoot}/<capability>/`)
 
 - Update `<capability>.rules.md` with shipped canonical rules and shared contracts.
 - Update `<capability>.scenarios.md` when shared acceptance scenarios exist.
 - Link affected use-case specs to the capability rules instead of duplicating them.
-- Update each affected use-case context separately.
-- Delete `plan.md`, `tasks.md`, `handoff.md`, and any other transient file in the capability folder.
-- Folder must end with only `<capability>.rules.md` and optional `<capability>.scenarios.md`.
+- Append one changelog line when the shared rules themselves changed.
+- Delete `plan.md`, `tasks.md`, and any other transient file in the capability folder.
+- Folder must end with `<capability>.rules.md`, optional `<capability>.scenarios.md`, and optional `changelog.md`.
 
 ### Actor docs affected by use-case or capability work (`{docs.root}/actors/`)
 
 - Update `{docs.root}/actors/<actor>.md` when shipped behavior changes an actor's goals, responsibilities, boundaries, or related use cases.
 - Keep authorization matrices in the relevant capability rules; actor docs may link technical role identifiers but do not own permissions.
 - Update `actors.index.md` when actors are added, renamed, or removed.
-- Delete transient `handoff.md` in that folder when actor-definition work is complete.
 
-### Codebase context folder (`{docs.root}/codebase/<initiative>/`)
+### Codebase folder (`{docs.root}/codebase/<initiative>/`)
 
-- Update `context.md` with current architecture, flow, implementation map, and durable decisions.
-- Delete `plan.md`, `tasks.md`, `handoff.md`, and other transient files.
-- Do not create a behavior spec when user-visible behavior did not change.
+- Update `notes.md` with why this technical work exists. Do not create a behavior spec when user-visible behavior did not change.
+- Append one changelog line for the ship or fix.
+- Delete `plan.md`, `tasks.md`, and other transient files.
 
 **`<use-case>.spec.md` checklist (use cases only):**
 
-- [ ] Context describes current product state, not pre-implementation pain only
+- [ ] Spec describes current product state, not pre-implementation pain only
 - [ ] Scope = what shipped; out of scope = what was explicitly not built
 - [ ] Acceptance criteria: `[x]` for delivered items; remove cancelled items
 - [ ] Open questions: empty or only genuine follow-ups
 
-**Merge map from transient files:**
-
-| `plan.md` section   | Destination in `<use-case>.context.md`                       |
-| ------------------- | ------------------------------------------------------------ |
-| Files CREATE/MODIFY | `## Implementation map`                                      |
-| Flow / steps        | Fold into `## Diagrams and flow` when a diagram adds clarity |
-| Durable decisions   | `## Decisions and dependencies`                              |
-| Skipped steps       | Discard                                                      |
-| Checkboxes          | Discard                                                      |
-| Validation commands | Discard unless needed to understand tests                    |
-
-| `handoff.md` section | Destination                        |
-| -------------------- | ---------------------------------- |
-| Key files            | `## Implementation map` if missing |
-| PR / branch          | Discard                            |
-| Next steps           | Discard                            |
-| Durable decisions    | `## Decisions and dependencies`    |
+Durable decisions from `plan.md` that change behavior go into the spec. File lists, checkboxes, and next steps are discarded with `plan.md`.

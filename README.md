@@ -53,7 +53,7 @@ Read or create `skills.config.json` at the project root. If it does not exist, a
 - documentation index file;
 - cross-domain capabilities folder (relative to docs root; default: `capabilities`);
 - main app or package root;
-- code search roots used to build technical context.
+- code search roots used to inspect the codebase.
 
 The documentation index is the canonical navigation file for humans and agents. It links architecture, actor catalogs, domains, use cases, capabilities, and other documentation entry points; records project-specific documentation conventions; and points to canonical documents instead of duplicating their content.
 
@@ -78,7 +78,7 @@ Most importantly, help me define an implementation-flow table similar to this ex
 | 6   | Copy / localization    | i18n or content skill, when applicable               |
 | 7   | Analytics / telemetry  | analytics skill, when applicable                     |
 | 8   | Code review            | review skill or review agent                         |
-| 9   | Documentation finalize | update spec/context and remove transient artifacts   |
+| 9   | Documentation finalize | update spec and optional changelog; remove plan.md / tasks.md |
 
 Do not copy this flow automatically. Use it only as a reference for the level of detail, and help me create the correct equivalent for this project.
 ```
@@ -105,7 +105,7 @@ Recommended: create `{docs.root}/architecture/architecture.md` with an overview 
 
 #### Behavior-first documentation
 
-Documentation is organized by user intent, not code structure. Choose a product/business domain, then name each use case as a kebab-case verb-object goal. The use-case spec describes behavior; its context maps that behavior to current code.
+Documentation is organized by user intent, not code structure. Choose a product/business domain, then name each use case as a kebab-case verb-object goal. The use-case spec describes behavior. Find current implementation in the code. After a ship or fix, append one line to optional `changelog.md` in the same folder.
 
 **What is a domain?** A domain is a stable product or business area that groups related user goals. It describes what the product is about, not where code lives. Examples:
 
@@ -140,18 +140,15 @@ Document reusable actors under `{docs.root}/actors/`. Actor documents explain wh
 │   └── operator.md
 ├── customers/create-customer/
 │   ├── create-customer.spec.md          # user behavior and acceptance criteria
-│   └── create-customer.context.md       # routes, components, APIs, data, and tests
+│   └── changelog.md                    # optional: ship, fixes, notable follow-ups
 ├── customers/edit-customer/
-│   ├── edit-customer.spec.md
-│   └── edit-customer.context.md
+│   └── edit-customer.spec.md
 └── capabilities/<capability>/
     ├── rules.md                         # canonical rules shared by multiple use cases
     └── scenarios.md                     # optional shared Gherkin
 ```
 
-Distinct user goals get separate specs even when they share one component. Use `<use-case>.spec.md` and `<use-case>.context.md` so filenames remain descriptive in Obsidian Graph View, global search, backlinks, and exports. Put genuinely shared rules in `capabilities/` and link affected specs to them. `code.appRoot` and `code.searchRoots` guide technical discovery without determining documentation paths. See [write-feature-spec](./skills/write-feature-spec/SKILL.md) for the decision tree.
-
-When migrating existing docs, rename each use-case `spec.md` and `context.md`, then update Markdown links before creating new files. For example: `customers/create-customer/spec.md` becomes `customers/create-customer/create-customer.spec.md`.
+Distinct user goals get separate specs even when they share one component. Use `<use-case>.spec.md` so filenames remain descriptive in Obsidian Graph View, global search, backlinks, and exports. Put genuinely shared rules in `capabilities/` and link affected specs to them. `code.appRoot` and `code.searchRoots` guide technical discovery without determining documentation paths. See [write-feature-spec](./skills/write-feature-spec/SKILL.md) for the decision tree.
 
 ### 3. Use Day To Day
 
@@ -170,11 +167,11 @@ Both `write-feature-spec` and `write-plan` read `skills.config.json` at the proj
 
 ## Included Skills
 
-| Skill                | Purpose                                                    |
-| -------------------- | ---------------------------------------------------------- |
-| `write-feature-spec` | Brainstorm, grill, specs, actors, and shared rules          |
-| `write-plan`         | Technical plan and implementation (`plan.md`)              |
-| `document-with-mermaid` | Diagrams when prose is not enough                       |
+| Skill                   | Purpose                                            |
+| ----------------------- | -------------------------------------------------- |
+| `write-feature-spec`    | Brainstorm, grill, specs, actors, and shared rules |
+| `write-plan`            | Technical plan and implementation (`plan.md`)      |
+| `document-with-mermaid` | Diagrams when prose is not enough                  |
 
 Visual organization on [skills.sh](https://skills.sh/): [skills.sh.json](./skills.sh.json).
 
@@ -234,4 +231,3 @@ npx skills add arcadesunlabs/skills --skill '*' -a cursor -g -y
 ```
 
 More options: [`vercel-labs/skills`](https://github.com/vercel-labs/skills).
-
