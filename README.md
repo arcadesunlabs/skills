@@ -96,3 +96,7 @@ npm run new -- my-skill
 npm run validate
 npx skills add . --skill my-skill -a claude-code -y
 ```
+
+## Credits
+
+Inspired by [obra/superpowers](https://github.com/obra/superpowers) and the "grill me" skill in [mattpocock/skills](https://github.com/mattpocock/skills).
