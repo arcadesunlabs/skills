@@ -79,6 +79,7 @@ Add a section only when it holds material information:
 | ---------------- | ------------------------------------------------------ |
 | Actor            | Participation or restrictions are not obvious          |
 | Use cases        | Alternate scenarios are clearer in Given/When/Then     |
+| Analytics        | Product events or metrics are part of the requirement  |
 | Dependencies     | An external dependency can block or change behavior    |
 | Open questions   | A product decision is genuinely unresolved             |
 | Assumptions      | A low-risk fact is useful but does not change behavior |

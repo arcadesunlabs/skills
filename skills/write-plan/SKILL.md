@@ -47,6 +47,9 @@ touches.
 - Match the patterns the touched code already uses. Never introduce a foreign
   pattern. Ask when ambiguous.
 - When `tasks.md` exists, plan only the next open task.
+- Check whether the project conventions (`AGENTS.md`, `CLAUDE.md`, or loaded
+  rules) define an implementation flow, validation commands, review steps, or
+  docs steps. They fill steps 4–7.
 
 ### 2. Plan
 
@@ -54,12 +57,16 @@ Save `plan.md` with [the template](REFERENCE.md#plan-template). List every
 CREATE and MODIFY file with real paths. Group files into small, reviewable
 steps. Mark steps that can run in parallel.
 
+When the project defines an implementation flow, use its phases as the `plan.md`
+steps, in its order. Skip phases the task does not need. Under each step, list
+only the skills and agents that step actually uses.
+
 ### 3. Confirm
 
-| Mode | Behavior |
-| ---- | -------- |
+| Mode               | Behavior                                                                                                                                                         |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `guided`, `review` | Present [the summary](REFERENCE.md#confirmation-summary) and wait. In `review`, include the task breakdown from `split-tasks`. Revise and re-confirm when asked. |
-| `autonomous` | Show the summary and continue without waiting. |
+| `autonomous`       | Show the summary and continue without waiting.                                                                                                                   |
 
 ### 4. Implement
 
@@ -69,17 +76,19 @@ share files or contracts. Stop and ask when blocked.
 
 ### 5. Validate
 
-Take commands from the conventions file or the project manifest
-(`package.json`, `Makefile`, `pubspec.yaml`, etc.). Test behavior that matters.
+Use the validation commands from the project conventions. Otherwise take them
+from the project manifest (`package.json`, `Makefile`, `pubspec.yaml`, etc.).
+Test behavior that matters.
 
 ### 6. Review
 
-Review the diff inline. Use a review agent for large or cross-layer changes
-when one is available.
+Run the review skills and agents from the project conventions. Otherwise review
+the diff inline, and use a review agent for large or cross-layer changes when
+one is available.
 
 ### 7. Docs
 
-Always last:
+Always last. Also run the docs skills and agents from the project conventions:
 
 1. Update the spec or rules when shipped behavior differs from them.
 2. Run [write-flows](../write-flows/SKILL.md) for the affected use case,

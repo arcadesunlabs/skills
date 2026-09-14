@@ -19,7 +19,9 @@ MODIFY path/to/existing-file
 
 ## Steps
 
-### 1. [Step name]
+### 1. [Step or project phase name]
+
+> Skills: [only skills used here, or none]
 
 - [ ] ...
 
