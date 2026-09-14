@@ -16,19 +16,22 @@ No config file. Paths and workflow live in each `SKILL.md`; edit the installed s
 
 ```mermaid
 flowchart LR
-  R[Request] --> T[triage]
-  T -- open idea --> B[brainstorm]
-  T -- decided feature --> S
-  T -- tech change --> X
-  T -- open tech change --> B
-  T -- bug --> P
-  T -- document --> F
-  B -- behavior --> S[write-spec]
-  B -- technical --> X
-  S --> X[split-tasks]
-  X --> P[write-plan]
-  P --> F[write-flows]
+  T[triage] --> B[brainstorm] --> S[write-spec] --> X[split-tasks] --> P[write-plan] --> F[write-flows]
 ```
+
+`triage` skips the steps a request does not need:
+
+| Request                       | Path                                                       |
+| ----------------------------- | ---------------------------------------------------------- |
+| Feature with open decisions   | `brainstorm` → `write-spec` → `split-tasks` → `write-plan` |
+| Feature with decided behavior | `write-spec` → `split-tasks` → `write-plan`                |
+| Technical change, open        | `brainstorm` → `split-tasks` → `write-plan`                |
+| Technical change, decided     | `split-tasks` → `write-plan`                               |
+| Bug, unclear behavior         | `brainstorm` → `write-plan`                                |
+| Bug, clear behavior           | `write-plan`                                               |
+| Document existing feature     | `write-flows`                                              |
+
+`write-plan` always ends with `write-flows`.
 
 | Skill         | Writes                              |
 | ------------- | ----------------------------------- |
