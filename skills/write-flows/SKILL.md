@@ -11,7 +11,8 @@ draw undecided behavior.
 
 ## Paths
 
-Paths are fixed. Edit this file to change them.
+Paths are fixed. Edit this file to change them. Tags (`<domain>`,
+`<use-case>`, ...): see [write-spec — Scope](../write-spec/SKILL.md#scope).
 
 | Scope               | File                                                    |
 | ------------------- | ------------------------------------------------------- |

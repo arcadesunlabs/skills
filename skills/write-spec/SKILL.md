@@ -22,10 +22,17 @@ missing, create a short navigational index. Never overwrite an existing one.
 
 ## Scope
 
-Organize by user intent, not code folders. A **domain** is a product area
-(`customers`, `orders`). A **use case** is a kebab-case verb-object goal
-(`create-customer`). Distinct user goals get distinct specs even when they
-share one component.
+Organize by user intent, not code folders. Path tags are kebab-case:
+
+- `<domain>`: product area users recognize (`customers`, `orders`). Never a
+  component, route, package, or folder name (`forms`, `screens`).
+- `<use-case>`: verb-object user goal (`create-customer`). Distinct goals get
+  distinct specs even when they share one component.
+- `<capability>`: rules used by more than one domain (`access-control`).
+- `<actor>`: product user type (`operator`). Not a technical role
+  (`sales_manager`) or a research persona.
+- `<initiative>`: technical work with no behavior change
+  (`migrate-to-postgres`).
 
 | Situation                                            | Write                                                   |
 | ---------------------------------------------------- | ------------------------------------------------------- |

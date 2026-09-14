@@ -15,7 +15,8 @@ Paths are fixed. Edit this file to change them or the workflow.
 - Conventions: `AGENTS.md` or `CLAUDE.md` at the workspace root
 - Index: `.docs/index.md`
 - Architecture: `.docs/architecture/architecture.md`
-- Doc locations: see [write-spec](../write-spec/SKILL.md)
+- Doc locations and tags (`<domain>`, `<use-case>`, ...): see
+  [write-spec — Scope](../write-spec/SKILL.md#scope)
 - `plan.md`: beside the permanent artifact (use-case spec, domain rules,
   capability rules, or `codebase/<initiative>/notes.md`)
 

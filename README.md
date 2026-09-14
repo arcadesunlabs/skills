@@ -52,10 +52,9 @@ Typical path: `brainstorm` → `write-spec` → `write-plan` (which calls `write
     └── notes.md                          # technical work, no behavior change
 ```
 
-- **Domain**: a product area users recognize (`customers`, `orders`), not a code folder.
-- **Use case**: a kebab-case verb-object goal (`create-customer`).
-- **Actor**: a product user type with distinct goals or boundaries. Not a technical role or a persona.
-- **Spec** says what the product does. **Flows** say how the code does it today. **Changelog** says when it changed.
+Tags such as `<domain>` and `<use-case>` are defined in [write-spec — Scope](./skills/write-spec/SKILL.md#scope).
+
+**Spec** says what the product does. **Flows** say how the code does it today. **Changelog** says when it changed.
 
 ## Develop this repository
 
