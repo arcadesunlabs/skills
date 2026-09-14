@@ -13,12 +13,12 @@ draw undecided behavior.
 
 Paths are fixed. Edit this file to change them.
 
-| Scope | File |
-| ----- | ---- |
-| Use case | `.docs/<domain>/<use-case>/<use-case>.flows.md` |
-| Capability | `.docs/capabilities/<capability>/<capability>.flows.md` |
-| Codebase initiative | `.docs/codebase/<initiative>/<initiative>.flows.md` |
-| System boundaries | `.docs/architecture/architecture.md` |
+| Scope               | File                                                    |
+| ------------------- | ------------------------------------------------------- |
+| Use case            | `.docs/<domain>/<use-case>/<use-case>.flows.md`         |
+| Capability          | `.docs/capabilities/<capability>/<capability>.flows.md` |
+| Codebase initiative | `.docs/codebase/<initiative>/<initiative>.flows.md`     |
+| System boundaries   | `.docs/architecture/architecture.md`                    |
 
 ## Template
 
@@ -60,13 +60,13 @@ flowchart LR
 - No secrets, credentials, personal data, or payloads.
 - Link the canonical diagram in `architecture.md`. Do not copy it.
 
-| Question | Mermaid type |
-| -------- | ------------ |
-| Path, decision, or navigation? | `flowchart` |
-| Who calls whom, in what order? | `sequenceDiagram` |
-| Which lifecycle states exist? | `stateDiagram-v2` |
-| How is data persisted and related? | `erDiagram` |
-| Which systems participate? | `flowchart` (or `C4Container` in `architecture.md`) |
+| Question                           | Mermaid type                                        |
+| ---------------------------------- | --------------------------------------------------- |
+| Path, decision, or navigation?     | `flowchart`                                         |
+| Who calls whom, in what order?     | `sequenceDiagram`                                   |
+| Which lifecycle states exist?      | `stateDiagram-v2`                                   |
+| How is data persisted and related? | `erDiagram`                                         |
+| Which systems participate?         | `flowchart` (or `C4Container` in `architecture.md`) |
 
 Patterns: [references/diagram-patterns.md](references/diagram-patterns.md).
 

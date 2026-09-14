@@ -27,13 +27,13 @@ Organize by user intent, not code folders. A **domain** is a product area
 (`create-customer`). Distinct user goals get distinct specs even when they
 share one component.
 
-| Situation | Write |
-| --------- | ----- |
-| Observable user goal | `.docs/<domain>/<use-case>/<use-case>.spec.md` |
-| Rules shared by use cases of **one** domain | `.docs/<domain>/<domain>.rules.md` |
-| Rules shared **across** domains | `.docs/capabilities/<capability>/<capability>.rules.md` |
-| Reusable user type with distinct goals or boundaries | `.docs/actors/<actor>.md` |
-| Technical change with no behavior change | `.docs/codebase/<initiative>/notes.md` |
+| Situation                                            | Write                                                   |
+| ---------------------------------------------------- | ------------------------------------------------------- |
+| Observable user goal                                 | `.docs/<domain>/<use-case>/<use-case>.spec.md`          |
+| Rules shared by use cases of **one** domain          | `.docs/<domain>/<domain>.rules.md`                      |
+| Rules shared **across** domains                      | `.docs/capabilities/<capability>/<capability>.rules.md` |
+| Reusable user type with distinct goals or boundaries | `.docs/actors/<actor>.md`                               |
+| Technical change with no behavior change             | `.docs/codebase/<initiative>/notes.md`                  |
 
 Shared rules default to the domain hub. Promote to a capability only when
 consumers span more than one domain. Link rules; do not copy them.
@@ -53,9 +53,7 @@ For a use case:
 ```md
 # [Verb-object user goal]
 
-## Problem
-
-## Objective
+## Goal
 
 ## Scope
 
@@ -63,35 +61,32 @@ For a use case:
 
 ## User flow
 
-## Business rules
-
-## Acceptance criteria
-
-## Edge cases and error states
+## Rules
 ```
 
 Filled example: [references/examples.md](references/examples.md).
 
 Add a section only when it holds material information:
 
-| Optional section | Include when |
-| ---------------- | ------------ |
-| Actor | Participation or restrictions are not obvious |
-| Use cases | Alternate scenarios are clearer in Given/When/Then |
-| Dependencies | An external dependency can block or change behavior |
-| Open questions | A product decision is genuinely unresolved |
-| Assumptions | A low-risk fact is useful but does not change behavior |
+| Optional section | Include when                                           |
+| ---------------- | ------------------------------------------------------ |
+| Actor            | Participation or restrictions are not obvious          |
+| Use cases        | Alternate scenarios are clearer in Given/When/Then     |
+| Dependencies     | An external dependency can block or change behavior    |
+| Open questions   | A product decision is genuinely unresolved             |
+| Assumptions      | A low-risk fact is useful but does not change behavior |
 
 Omit empty sections.
 
 Rules:
 
-- Give each section one job. Do not restate a rule as a use case and again as
-  an acceptance criterion.
+- `Goal` states the problem and the outcome in one or two sentences.
+- `Rules` are the acceptance criteria: one checkbox per testable rule,
+  including edge cases and error states. Do not repeat a rule elsewhere.
 - Put a technical constraint in the spec only when the user can observe it.
 - No routes, components, APIs, file paths, or diagrams. Diagrams live in
   `<use-case>.flows.md` ([write-flows](../write-flows/SKILL.md)).
-- Write objective acceptance criteria:
+- Write objective rules. Avoid "works well" or "is intuitive":
 
 ```md
 - [ ] The user cannot submit until all required fields are valid.

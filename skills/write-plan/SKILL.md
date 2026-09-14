@@ -21,15 +21,15 @@ Paths are fixed. Edit this file to change them or the workflow.
 
 ## Workflow
 
-| # | Step | Done when |
-| - | ---- | --------- |
-| 1 | Explore | Scope, touched code, and patterns are known |
-| 2 | Plan | `plan.md` is saved |
-| 3 | Confirm | User approved the plan |
-| 4 | Implement | Every plan step is checked |
-| 5 | Validate | Tests, lint, and typecheck pass |
-| 6 | Review | Diff reviewed |
-| 7 | Docs | Spec, flows, changelog, and index are updated; transient files are deleted |
+| #   | Step      | Done when                                                                  |
+| --- | --------- | -------------------------------------------------------------------------- |
+| 1   | Explore   | Scope, touched code, and patterns are known                                |
+| 2   | Plan      | `plan.md` is saved                                                         |
+| 3   | Confirm   | User approved the plan                                                     |
+| 4   | Implement | Every plan step is checked                                                 |
+| 5   | Validate  | Tests, lint, and typecheck pass                                            |
+| 6   | Review    | Diff reviewed                                                              |
+| 7   | Docs      | Spec, flows, changelog, and index are updated; transient files are deleted |
 
 Never write implementation code before step 3.
 

@@ -78,5 +78,5 @@ Newest first. No file paths.
 
 - [ ] Describes current behavior, in present tense
 - [ ] Scope is what shipped; out of scope is what was not built
-- [ ] Delivered acceptance criteria are `[x]`; cancelled items are removed
+- [ ] Delivered rules are `[x]`; cancelled rules are removed
 - [ ] Open questions are empty or genuine follow-ups

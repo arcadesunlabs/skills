@@ -41,7 +41,7 @@ Typical path: `brainstorm` → `write-spec` → `write-plan` (which calls `write
 ├── customers/
 │   ├── customers.rules.md                # rules shared inside one domain
 │   └── create-customer/
-│       ├── create-customer.spec.md       # behavior and acceptance criteria
+│       ├── create-customer.spec.md       # behavior and testable rules
 │       ├── create-customer.flows.md      # diagrams and code entry points
 │       ├── changelog.md                  # one line per completed task
 │       └── plan.md                       # transient, deleted when done

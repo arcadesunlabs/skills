@@ -1,13 +1,9 @@
 ```md
 # Reset password
 
-## Problem
+## Goal
 
-Users who forget their password must contact support to recover access.
-
-## Objective
-
-Allow users to securely regain access without support assistance.
+Users who forget their password regain access without contacting support.
 
 ## Scope
 
@@ -26,25 +22,15 @@ Allow users to securely regain access without support assistance.
    a new password.
 3. The product confirms success and allows login with the new password.
 
-## Business rules
+## Rules
 
-- A reset link expires after the configured period and can be used only once.
-- The request must not reveal whether an email is registered.
-- The new password must satisfy the password policy.
-
-## Acceptance criteria
-
-- [ ] A user can request a reset link with a valid email format.
-- [ ] The confirmation does not reveal whether the account exists.
-- [ ] A valid, unused link allows the user to set a compliant password and log in.
-- [ ] Expired or used links are rejected and offer a new request.
-
-## Edge cases and error states
-
-- Invalid email format.
-- Weak password.
-- Network or email delivery failure.
-- Repeated submission.
+- [ ] The confirmation never reveals whether the email is registered.
+- [ ] A link expires after the configured period and works only once.
+- [ ] An expired or used link is rejected and offers a new request.
+- [ ] The new password must satisfy the password policy.
+- [ ] An invalid email format blocks the request.
+- [ ] A delivery failure shows an error and keeps the entered email.
+- [ ] Repeated requests do not send duplicate links within a short interval.
 
 ## Open questions
 
