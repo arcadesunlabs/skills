@@ -1,181 +1,92 @@
 ---
 name: write-plan
-description: Plan and implement non-trivial feature work using the project's configured workflow. Requires project conventions and architecture/workflow docs; it does not define phases or file patterns by itself. Use after write-feature-spec or for direct implementation tasks.
+description: Plan and implement non-trivial work with a fixed workflow - explore, plan, confirm, implement, validate, review, update docs. Use after write-spec, for direct implementation tasks, bug fixes, or refactors that need a plan.
 ---
 
 # Write Plan
 
-**Announce at start:** "I'm using the write-plan skill."
+Plan, confirm, then implement. Skip this skill for trivial changes (typo,
+single-line fix).
 
-Plan **and** implement non-trivial feature work, but only as an orchestrator over the user's project workflow. This skill does not define architecture, phases, file locations, validation commands, or review rules by itself.
+## Paths
 
-The result is only as good as the project's configuration. The user/team must describe how the project works in `skills.config.json` (`workflow.*` when present), `docs.indexFile`, `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, or nearby project docs. If those sources are missing or too generic, this skill has no reliable workflow to execute: stop, explain what is missing, and ask the user to configure or confirm the needed decisions.
+Paths are fixed. Edit this file to change them or the workflow.
 
-Two modes:
+- Conventions: `AGENTS.md` or `CLAUDE.md` at the workspace root
+- Index: `.docs/index.md`
+- Architecture: `.docs/architecture/architecture.md`
+- Doc locations: see [write-spec](../write-spec/SKILL.md)
+- `plan.md`: beside the permanent artifact (use-case spec, domain rules,
+  capability rules, or `codebase/<initiative>/notes.md`)
 
-| Mode             | What it does                                                                                                                                |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Write**        | Map scope, architecture, files, workflow steps, artifacts, and validation from project configuration; save artifacts; get user confirmation |
-| **Read/Execute** | Implement step by step from the confirmed project-specific plan                                                                             |
+## Workflow
 
-**Prerequisite:** Read `skills.config.json` at the workspace root (create it if missing; required fields are in [write-feature-spec](../write-feature-spec/SKILL.md)). Then read `docs.indexFile`, `project.conventionsFile`, `{docs.root}/architecture/architecture.md`, and any linked local docs. For use-case or capability work, also read relevant actor docs under `{docs.root}/actors/` when present.
+| # | Step | Done when |
+| - | ---- | --------- |
+| 1 | Explore | Scope, touched code, and patterns are known |
+| 2 | Plan | `plan.md` is saved |
+| 3 | Confirm | User approved the plan |
+| 4 | Implement | Every plan step is checked |
+| 5 | Validate | Tests, lint, and typecheck pass |
+| 6 | Review | Diff reviewed |
+| 7 | Docs | Spec, flows, changelog, and index are updated; transient files are deleted |
 
-**Configuration contract:** before planning, verify that project docs answer the essentials below. If not, inspect the repo for local patterns and ask the user to confirm the missing pieces before saving `plan.md`.
+Never write implementation code before step 3.
 
-- Architecture boundaries, naming conventions, and allowed patterns
-- For use-case or capability work: actor definitions, actor-specific behavior, and canonical authorization rules
-- Where code, tests, routes, copy, schemas, generated files, and docs belong
-- Preferred workflow order for the task type, including hard dependencies (`workflow.implementationFlow` when configured)
-- Validation, review, and documentation expectations (`workflow.validationCommands`, `workflow.review`, `workflow.docsFinalization` when configured)
-- Project-specific skills, agents, scripts, or external systems to invoke
+### 1. Explore
 
-**Artifacts:** follow [write-feature-spec](../write-feature-spec/SKILL.md) for where docs live. Put `plan.md` in the same folder as the permanent artifact (use-case spec, domain rules, capability rules, or `codebase/<initiative>/notes.md`).
+Read the conventions, architecture, index, the spec or rules for this work, the
+related actors, and the existing `.flows.md`. Then inspect the code the work
+touches.
 
-See `project.conventionsFile` in config for project-specific rules.
+- Confirm entry point, exit point, and affected call paths.
+- Match the patterns the touched code already uses. Never introduce a foreign
+  pattern. Ask when ambiguous.
+- For an epic, plan only the selected slice.
 
-**Reference:** templates and optional examples → [REFERENCE.md](REFERENCE.md). The reference file is not the user's workflow; use it only to structure the project-specific decisions above.
+### 2. Plan
 
----
+Save `plan.md` with [the template](REFERENCE.md#plan-template). List every
+CREATE and MODIFY file with real paths. Group files into small, reviewable
+steps. Mark steps that can run in parallel.
 
-## Entry paths
+### 3. Confirm
 
-| Path   | When                                                                                    | Input                                                                          |
-| ------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| **A**  | After `write-feature-spec` (use case)                                                 | the use-case spec                                                              |
-| **A′** | Epic child slice — after user picks a slice from `tasks.md` (when present)              | spec + slice scope from `tasks.md` or conversation                               |
-| **B**  | No spec — direct implementation task                                                    | Conversation                                                                   |
-| **C**  | Shared rules — a domain hub or a cross-domain capability                                 | `<domain>.rules.md` / `<capability>.rules.md` or conversation                   |
+Present [the summary](REFERENCE.md#confirmation-summary) and wait. Revise and
+re-confirm when asked.
 
-**Epic scoping (path A′):** Plan and implement **only** the selected slice — from `tasks.md` when it exists, otherwise from the agreed spec breakdown. Reference the epic spec for shared behavior; do not plan phases for other slices.
+### 4. Implement
 
-**Capability scoping (path C):** Put `plan.md` beside the capability rules. Update those rules and link them from affected use-case specs. Do not duplicate canonical rules in the specs.
+Follow `plan.md` step by step and check boxes as you go. Run independent steps
+in parallel or in subagents when that is faster. Stay sequential when steps
+share files or contracts. Stop and ask when blocked.
 
-Skip this skill for trivial tasks (typo, single-line fix) — implement per `project.conventionsFile` in config.
+### 5. Validate
 
----
+Take commands from the conventions file or the project manifest
+(`package.json`, `Makefile`, `pubspec.yaml`, etc.). Test behavior that matters.
 
-## Mode Write — Plan before code
+### 6. Review
 
-### Step 0 — Flow boundaries
+Review the diff inline. Use a review agent for large or cross-layer changes
+when one is available.
 
-Confirm entry point, exit point, user/system surfaces, and affected call paths. For behavioral work, also confirm affected actors. **Stop and ask** if unclear. Do not proceed until boundaries are defined.
+### 7. Docs
 
-### Step 1 — Classify the task
+Always last:
 
-Use `AskQuestion`:
+1. Update the spec or rules when shipped behavior differs from them.
+2. Run [write-flows](../write-flows/SKILL.md) for the affected use case,
+   capability, or initiative.
+3. Add one line to `changelog.md` beside the permanent artifact (see
+   [Changelog](REFERENCE.md#changelog)).
+4. Update actor docs when goals, responsibilities, or boundaries changed.
+5. Update `.docs/index.md` when navigation changed.
+6. Delete `plan.md` and `tasks.md` when the last slice is done.
 
-- `question`: "What type of task is this?"
-- `header`: "Task type"
-- `options`: New feature | Improvement / refactor | Bug fix
+## Stop and ask
 
-Then classify **documentation scope** (see [write-feature-spec](../write-feature-spec/SKILL.md)): use case | capability | codebase.
-
-Informs — but does not by itself decide — the architecture pattern (see Step 2).
-
-### Step 2 — Architecture pattern
-
-Task type is only the starting hint. The pattern is decided by the **architecture the touched code already uses** — read `{docs.root}/architecture/architecture.md` when present, then inspect the files you will modify before choosing:
-
-| Situation                                      | Pattern              | Reference                                                                     |
-| ---------------------------------------------- | -------------------- | ----------------------------------------------------------------------------- |
-| New feature (greenfield in this area)          | Match project stack  | `project.conventionsFile`, [REFERENCE.md](REFERENCE.md#architecture-patterns) |
-| Improvement / bug fix on existing feature code | Match existing files | Inspect touched files first; same reference when extending                    |
-
-> **Rule:** never introduce foreign patterns unless the touched area already uses them. Do not downgrade an area to a simpler pattern just because the task is an "improvement". When ambiguous, inspect relevant code under `code.searchRoots` and `code.appRoot`, then **ask the user**.
-
-### Step 3 — Scope
-
-- **Business domain** — product area that owns the behavior (e.g. `customers`, `billing`, `authentication`).
-- **Use case** — observable user goal in verb-object form (e.g. `create-customer`, `approve-payment`).
-- **Actors** — when applicable, product user types participating in the use case; link `{docs.root}/actors/<actor>.md` and distinguish them from technical roles.
-- **Module / package** — single app, monorepo package, or client + server? Confirm with user if unclear.
-- **Layers** — map project-specific layers using [architecture patterns](REFERENCE.md#architecture-patterns).
-
-### Step 4 — Files, workflow
-
-1. List every **CREATE** / **MODIFY** file (see [files example](REFERENCE.md#files-example)).
-2. In each `plan.md` step, add a `> Skills:` line containing **only** the skills that will be used in that step. Derive them from `workflow.implementationFlow[].skills` and the step's actual work; mark conditional triggers as `only if …` or record `none — <reason>` when no skill applies. Do not list generic skills that will not be invoked. When the phase also declares `workflow.implementationFlow[].agents`, add an `> Agents:` line the same way.
-3. Group into [increments](REFERENCE.md#increments).
-4. Derive the implementation workflow from project configuration and the touched code. Do not import phases from examples unless the project docs or user explicitly choose them.
-5. If no explicit workflow exists, propose a short workflow that fits the task and ask the user to confirm it before saving the plan.
-6. Add checklist items per agreed workflow step to `plan.md`. Document intentionally skipped or irrelevant steps only when that helps review.
-7. For behavioral work with distinct actors, map actor-specific permissions, behavior, and tests. Link canonical access-control rules instead of duplicating permission matrices in the plan.
-
-### Step 5 — Confirm
-
-1. Save `plan.md` beside the permanent artifact.
-2. Present [confirmation summary](REFERENCE.md#confirmation-summary-template).
-
-**Do not write implementation code before user confirms.** Revise and re-confirm if requested.
-
----
-
-## Mode Read/Execute — Implement after confirmation
-
-Use the confirmed project workflow from `plan.md`. There is no built-in default order, phase table, architecture pattern, validation command, or review rule in this skill.
-
-If the plan lacks the information needed to execute safely, pause and get the missing project-specific decision from the user instead of filling the gap from generic examples.
-
-### Execution flexibility
-
-During implementation the agent may:
-
-- **Run steps in parallel** when they have no dependency on each other.
-- **Delegate to subagents** when it speeds up isolated work, such as exploration or code review.
-- **Stay inline** when steps are tightly coupled, touch the same files, or need sequential validation.
-
-Respect **hard dependencies** from the project workflow and code. Finalize docs is always the last required step.
-
-Note parallel work or subagent use in `plan.md` when it helps traceability. Details: [REFERENCE.md — Execution strategy](REFERENCE.md#execution-strategy).
-
-If useful, use [REFERENCE.md — Frontend workflow example](REFERENCE.md#frontend-workflow-example) only as a checklist of questions to ask. Do not apply it as an implementation order unless the user's project config or explicit confirmation says it matches.
-
-**Key rules:**
-
-- Match existing patterns in the touched domain — **ask** if unclear.
-- Use the project's configured workflow when it exists; otherwise derive one from the code and confirm it.
-- Purposeful tests only — test behavior that matters.
-- When configured, invoke every agent in `workflow.review.agents` for large or cross-layer changes, and every agent in `workflow.docsFinalization.agents` whenever this task creates or updates `.docs/` specs — both before finalizing docs. Otherwise, fall back to inline review.
-- Finalize docs is **mandatory** — scope determines which folders to update. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
-
-For each workflow step: update `plan.md` checkboxes, invoke listed project skills when applicable, stop when blocked.
-
----
-
-## When to stop and ask
-
-- Flow boundaries, surfaces, or call paths unclear
-- Architecture pattern ambiguous for touched files
-- Blocker (missing dependency, failing verification, unclear requirement)
-- User has not confirmed the plan (Write phase)
-
-**Ask rather than guess.**
-
----
-
-## Completion
-
-1. Update `plan.md` checkboxes and the relevant permanent docs.
-2. **Mandatory:** Finalize docs per scope, including `docs.indexFile` when navigation changed. See [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs).
-3. Tell the user (adjust path to scope):
-
-> Implementation complete. Docs finalized — use case: `<domain>/<use-case>/` (spec + optional changelog); capability: `{capabilitiesRoot}/<capability>/`; or codebase notes updated.
-
----
-
-## Output checklist
-
-**After Write (before code):**
-
-- [ ] Plan saved to the folder matching documentation scope
-- [ ] Architecture pattern chosen and justified
-- [ ] File list identified
-- [ ] User confirmed
-
-**After Read/Execute:**
-
-- [ ] All agreed workflow steps completed
-- [ ] Code review passed when appropriate
-- [ ] `workflow.review.agents` invoked when the change was large or cross-layer, if configured
-- [ ] `workflow.docsFinalization.agents` invoked when `.docs/` specs were created or updated, if configured
-- [ ] Docs finalized per scope and `docs.indexFile` updated when navigation changed — see [REFERENCE.md — Finalize docs](REFERENCE.md#finalize-docs)
+- Boundaries or call paths are unclear.
+- The pattern for touched files is ambiguous.
+- A dependency, validation, or requirement blocks progress.
+- The user has not confirmed the plan.

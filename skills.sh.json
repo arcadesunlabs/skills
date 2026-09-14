@@ -4,11 +4,12 @@
   "groupings": [
     {
       "title": "Workflow",
-      "description": "Config, planning, specs, and delivery.",
+      "description": "Brainstorm, specs, plans, and flow docs.",
       "skills": [
-        "write-feature-spec",
-        "document-with-mermaid",
-        "write-plan"
+        "brainstorm",
+        "write-spec",
+        "write-plan",
+        "write-flows"
       ]
     }
   ]
