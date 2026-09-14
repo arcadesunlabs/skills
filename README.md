@@ -1,6 +1,6 @@
 # Personal Agent Skills
 
-Agent skills for development workflows: brainstorm, specs, plans, and flow docs. Compatible with [skills.sh](https://www.skills.sh/) and the [`npx skills`](https://github.com/vercel-labs/skills) CLI.
+Agent skills for development workflows: triage, brainstorm, specs, task breakdown, plans, and flow docs. Compatible with [skills.sh](https://www.skills.sh/) and the [`npx skills`](https://github.com/vercel-labs/skills) CLI.
 
 ## Install
 
@@ -20,14 +20,58 @@ No configuration file. Paths and the plan workflow are written in each `SKILL.md
 
 ## Skills
 
-| Skill         | Does                                                       | Writes                               |
-| ------------- | ---------------------------------------------------------- | ------------------------------------ |
-| `brainstorm`  | Explores an idea, one question at a time, until it is closed | nothing                              |
-| `write-spec`  | Behavior-first spec, actors, and shared rules              | `<use-case>.spec.md`, rules, actors  |
-| `write-plan`  | Plans, confirms, implements, validates, reviews, docs      | `plan.md` (transient), `changelog.md` |
-| `write-flows` | Short Mermaid diagrams of existing flows plus entry points  | `<use-case>.flows.md`                |
+| Skill         | Does                                                          | Writes                                |
+| ------------- | ------------------------------------------------------------- | ------------------------------------- |
+| `triage`      | Classifies a new task, picks the mode and the path, starts it | nothing                               |
+| `brainstorm`  | Closes every material decision for an idea                    | nothing                               |
+| `write-spec`  | Behavior-first spec, actors, and shared rules                 | `<use-case>.spec.md`, rules, actors   |
+| `split-tasks` | Decides one task or several                                   | `tasks.md` (transient)                |
+| `write-plan`  | Plans, confirms, implements, validates, reviews, docs         | `plan.md` (transient), `changelog.md` |
+| `write-flows` | Short Mermaid diagrams of existing flows plus entry points    | `<use-case>.flows.md`                 |
 
-Typical path: `brainstorm` → `write-spec` → `write-plan` (which calls `write-flows` at the end).
+`triage` chooses the path. Examples:
+
+| Request                           | Path                                                     |
+| --------------------------------- | -------------------------------------------------------- |
+| Bug with clear expected behavior  | `write-plan`                                             |
+| Feature with open decisions       | `brainstorm` → `write-spec` → `split-tasks` → `write-plan` |
+| Technical change                  | `split-tasks` → `write-plan`                             |
+| Document an existing feature      | `write-flows`                                            |
+
+`write-plan` calls `write-flows` at the end.
+
+### Modes
+
+Say the mode in your request ("autonomous mode"). Default: `guided` for features, `review` for bugs and technical changes.
+
+| Mode         | Behavior                                                                                        |
+| ------------ | ----------------------------------------------------------------------------------------------- |
+| `guided`     | The agent asks one question at a time. You approve the task breakdown and the plan.            |
+| `review`     | The agent decides, then lists each decision and reason for you to accept. You approve the plan. |
+| `autonomous` | The agent decides and implements. Limits come only from your agent's own permissions.          |
+
+### Triage hook (Claude Code)
+
+Optional. Asks the agent to run `triage` until it has run once in the session. After that it adds nothing. Add to `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/skills/triage/scripts/prompt-hook.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+For a global install, use `~/.claude/skills/triage/scripts/prompt-hook.mjs`. Other agents trigger `triage` from its description, or you call it directly.
 
 ## Documentation layout
 
@@ -44,6 +88,7 @@ Typical path: `brainstorm` → `write-spec` → `write-plan` (which calls `write
 │       ├── create-customer.spec.md       # behavior and testable rules
 │       ├── create-customer.flows.md      # diagrams and code entry points
 │       ├── changelog.md                  # one line per completed task
+│       ├── tasks.md                      # transient, when split
 │       └── plan.md                       # transient, deleted when done
 ├── capabilities/<capability>/
 │   ├── <capability>.rules.md             # rules shared across domains

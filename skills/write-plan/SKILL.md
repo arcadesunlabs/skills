@@ -26,13 +26,16 @@ Paths are fixed. Edit this file to change them or the workflow.
 | --- | --------- | -------------------------------------------------------------------------- |
 | 1   | Explore   | Scope, touched code, and patterns are known                                |
 | 2   | Plan      | `plan.md` is saved                                                         |
-| 3   | Confirm   | User approved the plan                                                     |
+| 3   | Confirm   | User approved the plan (skipped in `autonomous`)                           |
 | 4   | Implement | Every plan step is checked                                                 |
 | 5   | Validate  | Tests, lint, and typecheck pass                                            |
 | 6   | Review    | Diff reviewed                                                              |
 | 7   | Docs      | Spec, flows, changelog, and index are updated; transient files are deleted |
 
 Never write implementation code before step 3.
+
+The mode comes from [triage](../triage/SKILL.md#2-choose-the-mode). Without
+triage, use `guided`.
 
 ### 1. Explore
 
@@ -43,7 +46,7 @@ touches.
 - Confirm entry point, exit point, and affected call paths.
 - Match the patterns the touched code already uses. Never introduce a foreign
   pattern. Ask when ambiguous.
-- For an epic, plan only the selected slice.
+- When `tasks.md` exists, plan only the next open task.
 
 ### 2. Plan
 
@@ -53,8 +56,10 @@ steps. Mark steps that can run in parallel.
 
 ### 3. Confirm
 
-Present [the summary](REFERENCE.md#confirmation-summary) and wait. Revise and
-re-confirm when asked.
+| Mode | Behavior |
+| ---- | -------- |
+| `guided`, `review` | Present [the summary](REFERENCE.md#confirmation-summary) and wait. In `review`, include the task breakdown from `split-tasks`. Revise and re-confirm when asked. |
+| `autonomous` | Show the summary and continue without waiting. |
 
 ### 4. Implement
 
@@ -83,11 +88,12 @@ Always last:
    [Changelog](REFERENCE.md#changelog)).
 4. Update actor docs when goals, responsibilities, or boundaries changed.
 5. Update `.docs/index.md` when navigation changed.
-6. Delete `plan.md` and `tasks.md` when the last slice is done.
+6. Delete `plan.md`. Check the task in `tasks.md`; delete `tasks.md` after the
+   last task. In a path from triage, continue with the next open task.
 
 ## Stop and ask
 
 - Boundaries or call paths are unclear.
 - The pattern for touched files is ambiguous.
 - A dependency, validation, or requirement blocks progress.
-- The user has not confirmed the plan.
+- The user has not confirmed the plan (`guided`, `review`).

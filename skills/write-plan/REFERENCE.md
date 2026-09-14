@@ -8,8 +8,9 @@
 **Goal:** [one sentence]
 **Type:** New feature | Improvement | Bug fix
 **Scope:** use case | capability | codebase
+**Mode:** guided | review | autonomous
 **Spec:** [link, when present]
-**Slice:** [slice title, for epics]
+**Task:** [task from `tasks.md`, when present]
 
 ## Files
 
@@ -51,6 +52,8 @@ Plan
 Goal:  ...
 Type:  New feature | Improvement | Bug fix
 Scope: use case | capability | codebase
+Mode:  guided | review | autonomous
+Tasks: [breakdown and reason, in review mode]
 
 Files:
   CREATE ...

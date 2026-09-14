@@ -102,16 +102,8 @@ Rules:
 
 Update `.docs/index.md` only when navigation changed.
 
-## After the spec
+## Next
 
-Recommend a breakdown and confirm with the user:
-
-- **Single task**: one coherent, reviewable change
-- **Micro-tasks**: small steps when risk or review size is high
-- **Layer tasks**: UI, data, tests, or platform reviewed separately
-- **Epic + slices**: several user-visible use cases
-
-Write `tasks.md` beside the spec only for epic or cross-cutting work.
-
-If the user wants to implement now, invoke [write-plan](../write-plan/SKILL.md)
-for the selected task or slice. Otherwise stop.
+Continue the path from [triage](../triage/SKILL.md), usually
+[split-tasks](../split-tasks/SKILL.md). Without triage, recommend split-tasks
+and stop.

@@ -4,10 +4,12 @@
   "groupings": [
     {
       "title": "Workflow",
-      "description": "Brainstorm, specs, plans, and flow docs.",
+      "description": "Triage, brainstorm, specs, task breakdown, plans, and flow docs.",
       "skills": [
+        "triage",
         "brainstorm",
         "write-spec",
+        "split-tasks",
         "write-plan",
         "write-flows"
       ]
