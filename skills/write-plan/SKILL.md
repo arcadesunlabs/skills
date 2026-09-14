@@ -34,7 +34,7 @@ Paths are fixed. Edit this file to change them or the workflow.
 
 Never write implementation code before step 3.
 
-The mode comes from [triage](../triage/SKILL.md#2-choose-the-mode). Without
+The mode comes from [triage](../triage/SKILL.md#3-choose-the-mode). Without
 triage, use `guided`.
 
 ### 1. Explore

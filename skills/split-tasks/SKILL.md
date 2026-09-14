@@ -29,7 +29,7 @@ to ship at once. Every task must leave the product working.
 
 ## Mode
 
-The mode comes from [triage](../triage/SKILL.md#2-choose-the-mode). Without
+The mode comes from [triage](../triage/SKILL.md#3-choose-the-mode). Without
 triage, use `guided`.
 
 | Mode | Behavior |

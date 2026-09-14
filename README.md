@@ -1,58 +1,74 @@
 # Personal Agent Skills
 
-Agent skills for development workflows: triage, brainstorm, specs, task breakdown, plans, and flow docs. Compatible with [skills.sh](https://www.skills.sh/) and the [`npx skills`](https://github.com/vercel-labs/skills) CLI.
+Agent skills that take a request from idea to shipped code and docs. Works with [`npx skills`](https://github.com/vercel-labs/skills).
 
 ## Install
 
-Run from the root of the project where you code:
-
 ```bash
-# All skills
-npx skills add arcadesunlabs/skills --skill '*' -a cursor -y
-
-# One skill
-npx skills add arcadesunlabs/skills --skill write-plan -a cursor -y
+npx skills add arcadesunlabs/skills --skill '*' -a claude-code -y
 ```
 
-Replace `cursor` with your agent (`codex`, `claude-code`, etc.). Add `-g` to install globally. List skills with `npx skills add arcadesunlabs/skills --list`.
+Use your agent after `-a` (`cursor`, `codex`, ...). Add `-g` for a global install.
 
-No configuration file. Paths and the plan workflow are written in each `SKILL.md`. To change them, edit the installed skill.
+No config file. Paths and workflow live in each `SKILL.md`; edit the installed skill to change them.
 
-## Skills
+## How it works
 
-| Skill         | Does                                                          | Writes                                |
-| ------------- | ------------------------------------------------------------- | ------------------------------------- |
-| `triage`      | Classifies a new task, picks the mode and the path, starts it | nothing                               |
-| `brainstorm`  | Closes every material decision for an idea                    | nothing                               |
-| `write-spec`  | Behavior-first spec, actors, and shared rules                 | `<use-case>.spec.md`, rules, actors   |
-| `split-tasks` | Decides one task or several                                   | `tasks.md` (transient)                |
-| `write-plan`  | Plans, confirms, implements, validates, reviews, docs         | `plan.md` (transient), `changelog.md` |
-| `write-flows` | Short Mermaid diagrams of existing flows plus entry points    | `<use-case>.flows.md`                 |
+```mermaid
+flowchart LR
+  R[Request] --> T[triage]
+  T -- open idea --> B[brainstorm]
+  T -- decided feature --> S
+  T -- tech change --> X
+  T -- open tech change --> B
+  T -- bug --> P
+  T -- document --> F
+  B -- behavior --> S[write-spec]
+  B -- technical --> X
+  S --> X[split-tasks]
+  X --> P[write-plan]
+  P --> F[write-flows]
+```
 
-`triage` chooses the path. Examples:
+| Skill         | Writes                              |
+| ------------- | ----------------------------------- |
+| `triage`      | nothing; picks path and mode        |
+| `brainstorm`  | nothing; closes decisions           |
+| `write-spec`  | `<use-case>.spec.md`, rules, actors |
+| `split-tasks` | `tasks.md` when split               |
+| `write-plan`  | `plan.md`, code, `changelog.md`     |
+| `write-flows` | `<use-case>.flows.md`               |
 
-| Request                           | Path                                                     |
-| --------------------------------- | -------------------------------------------------------- |
-| Bug with clear expected behavior  | `write-plan`                                             |
-| Feature with open decisions       | `brainstorm` → `write-spec` → `split-tasks` → `write-plan` |
-| Technical change                  | `split-tasks` → `write-plan`                             |
-| Document an existing feature      | `write-flows`                                            |
+## Modes
 
-`write-plan` calls `write-flows` at the end.
+Name one in your request. Default: `guided` for features, `review` for bugs and technical changes.
 
-### Modes
+- `guided`: the agent asks, you answer. You approve the breakdown and the plan.
+- `review`: the agent decides, then you accept each decision. You approve the plan.
+- `autonomous`: the agent decides and ships. Only your agent's permissions apply.
 
-Say the mode in your request ("autonomous mode"). Default: `guided` for features, `review` for bugs and technical changes.
+## Docs layout
 
-| Mode         | Behavior                                                                                        |
-| ------------ | ----------------------------------------------------------------------------------------------- |
-| `guided`     | The agent asks one question at a time. You approve the task breakdown and the plan.            |
-| `review`     | The agent decides, then lists each decision and reason for you to accept. You approve the plan. |
-| `autonomous` | The agent decides and implements. Limits come only from your agent's own permissions.          |
+```text
+.docs/
+├── index.md
+├── architecture/architecture.md
+├── actors/<actor>.md
+├── <domain>/
+│   ├── <domain>.rules.md
+│   └── <use-case>/
+│       ├── <use-case>.spec.md     # what it does
+│       ├── <use-case>.flows.md    # how the code does it
+│       └── changelog.md           # when it changed
+├── capabilities/<capability>/
+└── codebase/<initiative>/
+```
 
-### Triage hook (Claude Code)
+Tags are defined in [write-spec — Scope](./skills/write-spec/SKILL.md#scope). `plan.md` and `tasks.md` are deleted when work is done.
 
-Optional. Asks the agent to run `triage` until it has run once in the session. After that it adds nothing. Add to `.claude/settings.json`:
+## Triage hook (Claude Code)
+
+Optional. Nudges the agent to run `triage` once per session. Add to `.claude/settings.json`:
 
 ```json
 {
@@ -71,42 +87,12 @@ Optional. Asks the agent to run `triage` until it has run once in the session. A
 }
 ```
 
-For a global install, use `~/.claude/skills/triage/scripts/prompt-hook.mjs`. Other agents trigger `triage` from its description, or you call it directly.
+Global install: `~/.claude/skills/triage/scripts/prompt-hook.mjs`.
 
-## Documentation layout
-
-```text
-.docs/
-├── index.md                              # navigation
-├── architecture/architecture.md          # stack, layers, boundaries
-├── actors/
-│   ├── actors.index.md
-│   └── operator.md
-├── customers/
-│   ├── customers.rules.md                # rules shared inside one domain
-│   └── create-customer/
-│       ├── create-customer.spec.md       # behavior and testable rules
-│       ├── create-customer.flows.md      # diagrams and code entry points
-│       ├── changelog.md                  # one line per completed task
-│       ├── tasks.md                      # transient, when split
-│       └── plan.md                       # transient, deleted when done
-├── capabilities/<capability>/
-│   ├── <capability>.rules.md             # rules shared across domains
-│   └── <capability>.flows.md
-└── codebase/<initiative>/
-    └── notes.md                          # technical work, no behavior change
-```
-
-Tags such as `<domain>` and `<use-case>` are defined in [write-spec — Scope](./skills/write-spec/SKILL.md#scope).
-
-**Spec** says what the product does. **Flows** say how the code does it today. **Changelog** says when it changed.
-
-## Develop this repository
+## Develop
 
 ```bash
-npm run new -- my-skill       # create a skill
-npm run validate              # validate SKILL.md files
-npx skills add . --skill my-skill -a cursor -y   # test local install
+npm run new -- my-skill
+npm run validate
+npx skills add . --skill my-skill -a claude-code -y
 ```
-
-Structure: `skills/<name>/SKILL.md`, with optional `references/`, `scripts/`, and `assets/`.

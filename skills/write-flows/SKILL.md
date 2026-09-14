@@ -55,6 +55,12 @@ flowchart LR
 
 - One diagram per flow. One diagram answers one question.
 - Labels have 1–3 words. Name responsibilities, not classes or files.
+- Size limits:
+  - `flowchart`, `stateDiagram-v2`: 8 nodes or states
+  - `sequenceDiagram`: 5 participants, 10 messages
+  - `erDiagram`: 6 entities, key fields only
+- At most one error or alternate branch per diagram.
+- Over a limit: split into two flows. Never shrink labels to fit.
 - Show failure, retry, async, and persistence paths only when they change
   behavior.
 - No prose around diagrams unless one sentence removes a real doubt.

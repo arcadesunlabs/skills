@@ -34,7 +34,7 @@ Stop only when no material flow, rule, or boundary is open.
 
 ## Mode
 
-The mode comes from [triage](../triage/SKILL.md#2-choose-the-mode). Without
+The mode comes from [triage](../triage/SKILL.md#3-choose-the-mode). Without
 triage, use `guided`.
 
 ### guided

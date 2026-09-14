@@ -14,10 +14,21 @@ Run once per demand. Do not triage again when the user answers a question,
 approves a step, or continues the current demand. Run again when the user
 starts a different demand.
 
-## 1. Classify
+## 1. Check impact
 
-Read the request. Inspect `.docs/` and the code only as much as needed to
-classify.
+Before classifying, find the docs the request touches:
+
+1. Search `.docs/**/*.flows.md` entry points for the files or areas the
+   request changes. Entry points map code back to use cases and capabilities.
+2. Read the specs and rules of those use cases and capabilities.
+
+Inspect `.docs/` and the code only as much as needed to classify.
+
+## 2. Classify
+
+A **technical change** changes nothing the user sees or does: refactor, library
+or dependency change, migration, performance, CI, infrastructure, or
+observability.
 
 | Request | Path |
 | ------- | ---- |
@@ -25,14 +36,18 @@ classify.
 | Question about the code | answer directly |
 | Bug with a clear expected behavior | `write-plan` |
 | Bug with an unclear expected behavior | `brainstorm`, `write-plan` |
-| Technical change with no behavior change | `split-tasks`, `write-plan` |
+| Technical change with decided approach | `split-tasks`, `write-plan` |
+| Technical change with open decisions | `brainstorm`, `split-tasks`, `write-plan` |
 | Feature or improvement with open decisions | `brainstorm`, `write-spec`, `split-tasks`, `write-plan` |
 | Feature or improvement with decided behavior | `write-spec`, `split-tasks`, `write-plan` |
 | Document an existing feature | `write-flows` |
 
+If a technical change alters a rule in an affected spec or rules file, it is
+an improvement. Use the improvement path.
+
 When unsure between two paths, choose the one with more steps.
 
-## 2. Choose the mode
+## 3. Choose the mode
 
 Use the mode the user names. Otherwise use `guided` for features and
 improvements, and `review` for bugs and technical changes.
@@ -50,13 +65,16 @@ confirmations come only from the agent's own configuration (permissions,
 The user can change the mode at any time. Apply the new mode from the next
 step.
 
-## 3. Announce and start
+## 4. Announce and start
 
-State the decision in one line, then invoke the first skill:
+State the decision in one line, with affected docs, then invoke the first
+skill:
 
 ```text
-Triage: Bug fix · mode review · write-plan
+Triage: Technical change · mode review · brainstorm → split-tasks → write-plan · affects: create-customer (flows)
 ```
+
+Use `affects: none` when no doc is affected.
 
 Pass the mode to each skill in the path. When one skill ends, start the next
 one. Stop the path when the user asks.
