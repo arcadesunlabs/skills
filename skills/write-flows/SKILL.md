@@ -49,6 +49,11 @@ flowchart LR
 - API: `apps/api/src/customers/create-customer.handler.ts`
 - Core rule: `apps/api/src/customers/create-customer.service.ts`
 - Test: `apps/api/test/customers/create-customer.test.ts`
+
+## Decisions
+
+- ABC-12: the tax ID check lives in the service, not the form. The import job
+  creates customers without passing through the form.
 ````
 
 ## Diagrams
@@ -87,6 +92,21 @@ begins in code.
   the core rule, and the main test.
 - Short label plus path. No explanation.
 - Verify every path exists each time the file is updated. Remove dead paths.
+
+## Decisions
+
+Comes after the entry points. Keeps the reason behind a non-obvious technical
+decision in this use case: the kind a reader would undo without knowing it was
+a decision. Why a guard lives in one place and not another, why an alternative
+was rejected, a constraint imposed by an external contract.
+
+- One bullet per decision. State the decision, then the reason.
+- When the project tracks work by ticket, start the bullet with the ticket key.
+- Not what the code already says.
+- Not product rules. Those belong in the spec or in `<domain>.rules.md`.
+- Not project architecture. That belongs in `architecture/`.
+- Current decisions only. Delete a bullet when it stops being true. History
+  lives in `changelog.md`.
 
 ## Update
 
