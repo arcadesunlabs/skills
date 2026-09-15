@@ -1,4 +1,4 @@
-# Mermaid Documentation Patterns
+# Mermaid Patterns
 
 Adapt these patterns to the current system. Keep only the nodes, messages, fields, and transitions that answer the reader's question.
 

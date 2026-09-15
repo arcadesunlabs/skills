@@ -7,5 +7,5 @@ This repository stores personal agent skills.
 - Keep skill frontmatter limited to `name` and `description`.
 - Do not add README or extra documentation files inside individual skill folders.
 - Put detailed optional context in `references/`, deterministic helpers in `scripts/`, and reusable output files in `assets/`.
-- Workflow skills read `skills.config.json` at the workspace root; use `npm run configure` to generate it.
+- Do not add configuration files. Workflow skills use fixed paths written in their `SKILL.md`.
 - Run `npm run validate` after adding or changing skills.
