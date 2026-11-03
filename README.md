@@ -16,7 +16,24 @@ No config file. Paths and workflow live in each `SKILL.md`; edit the installed s
 
 ```mermaid
 flowchart LR
-  T[triage] --> B[brainstorm] --> S[write-spec] --> X[split-tasks] --> P[write-plan] --> F[write-flows]
+  T{triage}
+  B[brainstorm]
+  S[write-spec]
+  X[split-tasks]
+  P[write-plan]
+  F[write-flows]
+
+  T -->|open decisions| B
+  T -->|feature, decided| S
+  T -->|technical change, decided| X
+  T -->|bug, clear behavior| P
+  T -->|document existing feature| F
+
+  B -->|feature| S
+  B -->|technical change| X
+  B -->|bug| P
+
+  S --> X --> P --> F
 ```
 
 `triage` skips the steps a request does not need:
