@@ -113,3 +113,8 @@ was rejected, a constraint imposed by an external contract.
 When code changes, update the affected diagram and entry points. Delete
 diagrams for flows that no longer exist. Keep the file in sync with the code,
 not with history.
+
+The docs site rules in
+[write-spec](../write-spec/SKILL.md#keep-the-docs-site-building) apply here
+too: escape curly braces, do not link to `tasks.md`, `plan.md`, or folders,
+and run the docs build when the project has one.

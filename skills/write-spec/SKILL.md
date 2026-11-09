@@ -103,6 +103,39 @@ Rules:
 
 Update `.docs/index.md` only when navigation changed.
 
+## Report where it is
+
+Whenever you create or change a spec, rules, or actor document, finish by
+telling the user where to find it in the docs site sidebar, besides the file
+path. Do this every time, including small edits.
+
+- The docs are rendered by a site whose sidebar follows the folders (for
+  example Docusaurus). Read the labels from the files, never guess them: each
+  parent folder's `label` in its `_category_.json`, then the file's
+  `sidebar_label` front matter, joined with `›`.
+- Example: `Transações › Abrir a caixa de entrada › Especificação`
+  (`.docs/transactions/open-inbox/open-inbox.spec.md`).
+- Give one line per document touched. If a folder has no `_category_.json`
+  label, use its name and say so.
+- Without a docs site, give only the file path.
+
+## Keep the docs site building
+
+Docs are often rendered by an MDX site (for example Docusaurus). These slips
+break its build, even in plain `.md` files:
+
+- **Curly braces in prose are JavaScript.** `"Purchase {code}"` fails with
+  `code is not defined`. Escape them (`\{code\}`) or use inline code.
+- **`<` followed by a letter is read as a tag.** Write `<name>` in inline
+  code or escape it.
+- **Do not link to files the site excludes**, such as the transient
+  `tasks.md`, `plan.md`, and `handoff.md` (see `exclude` in the site config),
+  or to folders such as `shots/`. Name them in inline code instead.
+- Links to other docs use relative paths to files that exist.
+
+When docs changed and the project has a docs build (here, `make docs_build`),
+run it before finishing and fix what it reports.
+
 ## Next
 
 Continue the path from [triage](../triage/SKILL.md), usually
